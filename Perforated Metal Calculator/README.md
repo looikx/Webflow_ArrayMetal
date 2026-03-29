@@ -56,11 +56,15 @@ In brief: the embed is a single IIFE containing all CSS, HTML, and JavaScript. K
 
 ---
 
-## Deployment Script
+## Deployment
 
-See [`deploy/README-deploy.md`](deploy/README-deploy.md) for setup instructions.
+The embed is deployed manually:
+1. Edit `embed/calculator-embed.txt`
+2. Open Webflow Designer → `open-area-calculator` page → Page Settings → Custom Code
+3. Paste the full file contents into **Before `</body>` tag**
+4. Save → Publish
 
-The scripts in `deploy/` use the Webflow API to upload images and inject the embed automatically. The API token must be provided via the `WEBFLOW_TOKEN` environment variable — never hardcoded in a file.
+The `deploy/` folder contains Python scripts for Webflow API automation (image upload, page injection). These are **not actively used** — deployment is done manually via Webflow Designer. See [`deploy/README-deploy.md`](deploy/README-deploy.md) for details.
 
 ---
 

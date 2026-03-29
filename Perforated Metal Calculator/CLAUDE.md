@@ -92,13 +92,13 @@ All CSS is scoped with `oa-` prefix to avoid conflicts with Webflow styles.
 
 ## Deployment
 
-Deploy via script (uploads images + injects embed):
-```bash
-export WEBFLOW_TOKEN=your_token_here
-python deploy/deploy_oa_v3.py
-```
+**Deployment is done manually — the Python scripts are NOT actively used.**
 
-For content-only edits: paste `embed/calculator-embed.txt` directly into Webflow Designer → Page Settings → Custom Code → Before `</body>` tag.
+1. Edit `embed/calculator-embed.txt`
+2. Webflow Designer → `open-area-calculator` → Page Settings → Custom Code → Before `</body>` tag
+3. Paste full file → Save → Publish
+
+The `deploy/` scripts are kept for reference only (they automate image upload + embed injection via Webflow API).
 
 CDN base URL: `https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/`
 

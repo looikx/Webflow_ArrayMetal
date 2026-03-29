@@ -1,5 +1,7 @@
 # Deployment Guide
 
+> **Note:** The Python scripts in this folder are **not actively used** for deployment. The calculator embed is deployed manually by pasting `embed/calculator-embed.txt` directly into Webflow Designer. The scripts are kept here for reference.
+
 The scripts in this folder use the Webflow API to upload images and inject the calculator embed into the Webflow page.
 
 ## Prerequisites
