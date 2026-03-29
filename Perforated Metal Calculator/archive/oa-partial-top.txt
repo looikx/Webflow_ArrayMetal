@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Area Calculator — Array Metal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.5; }
+  .page { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  /* ── Hero ── */
+  .hero { margin-bottom: 2.5rem; }
+  .hero-label { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: #aaa; margin-bottom: 0.75rem; }
+  .hero h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; margin-bottom: 0.75rem; line-height: 1.25; }
+  .hero p { font-size: 14px; color: #555; max-width: 600px; line-height: 1.7; }
+
+  /* ── Pattern selector ── */
+  .selector-section { margin-bottom: 1.75rem; }
+  .selector-group { margin-bottom: 0.75rem; }
+  .selector-group-label { font-size: 11px; font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; color: #aaa; margin-bottom: 0.5rem; }
+  .selector-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px;
+    border: 0.5px solid #ddd; background: #fafaf8; color: #555;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .pill:hover { border-color: #185FA5; color: #185FA5; background: #f0f6fc; }
+  .pill.active { background: #185FA5; color: #fff; border-color: #185FA5; }
+
+  /* ── Calculator card ── */
+  .calc-card {
+    border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1.75rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  }
+
+  /* ── Diagram panel ── */
+  .diagram-panel { display: flex; flex-direction: column; }
+  .diagram-title { font-size: 12px; font-weight: 600; color: #888; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 1rem; }
+  .diagram-wrap {
+    flex: 1; border: 0.5px solid #e8e8e8; border-radius: 8px;
+    background: #fafaf8; display: flex; align-items: center; justify-content: center;
+    padding: 1rem; min-height: 220px;
+  }
+  .diagram-wrap svg { width: 100%; height: auto; max-height: 220px; }
+
+  /* ── Inputs panel ── */
+  .inputs-panel { display: flex; flex-direction: column; gap: 1rem; }
+  .pattern-header { margin-bottom: 0.25rem; }
+  .pattern-name { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+  .pattern-desc { font-size: 12px; color: #888; margin-top: 2px; }
+
+  .fields { display: flex; flex-direction: column; gap: 0.75rem; }
+  .field-row { display: flex; flex-direction: column; gap: 3px; }
+  .field-label { font-size: 11px; font-weight: 500; color: #666; }
+  .field-input-wrap { display: flex; align-items: center; gap: 8px; }
+  .field-input {
+    flex: 1; padding: 7px 10px; border: 0.5px solid #d0d0d0; border-radius: 7px;
+    font-size: 13px; color: #1a1a1a; background: #fff; outline: none;
+    font-family: inherit; transition: border-color 0.15s;
+  }
+  .field-input:focus { border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.08); }
+  .field-unit { font-size: 12px; color: #999; min-width: 20px; }
+
+  /* ── Results ── */
+  .results { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 0.5rem; }
+  .result-box { border: 0.5px solid #e0e0e0; border-radius: 8px; padding: 12px 14px; background: #fafaf8; }
+  .result-label { font-size: 11px; font-weight: 500; color: #888; letter-spacing: 0.3px; margin-bottom: 4px; }
+  .result-value { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; color: #888; }
+  .result-value.low    { color: #888; }
+  .result-value.medium { color: #185FA5; }
+  .result-value.good   { color: #3b6d11; }
+  .result-value.high   { color: #7a4f00; }
+  .result-unit { font-size: 13px; font-weight: 400; color: #aaa; margin-left: 2px; }
+  .result-holes { font-size: 18px; font-weight: 600; color: #1a1a1a; font-variant-numeric: tabular-nums; }
+
+  /* ── Formula note ── */
+  .formula-note {
+    margin-top: 1rem; padding: 10px 13px; background: #f5f5f3;
+    border-radius: 7px; font-size: 11px; color: #666; line-height: 1.7;
+  }
+  .formula-note code { font-family: 'SF Mono', 'Consolas', monospace; font-size: 11px; color: #185FA5; }
+
+  /* ── Footer ── */
+  .footer-note { margin-top: 3rem; padding-top: 1.5rem; border-top: 0.5px solid #e0e0e0; }
+  .footer-note p { font-size: 12px; color: #888; line-height: 1.7; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .page { padding: 2rem 1rem 3rem; }
+    .hero h1 { font-size: 22px; }
+    .calc-card { grid-template-columns: 1fr; }
+    .results { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ Hero ══ -->
+  <div class="hero">
+    <div class="hero-label">Array Metal (M) Sdn. Bhd.</div>
+    <h1>Open Area Calculator</h1>
+    <p>Calculate the open area percentage and number of holes per m² for all perforation pattern types. Select a pattern, enter the hole dimensions and pitch, and results update instantly.</p>
+  </div>
+
+  <!-- ══ Pattern Selector ══ -->
+  <div class="selector-section">
+    <div class="selector-group">
+      <div class="selector-group-label">Round Holes</div>
+      <div class="selector-pills">
+        <button class="pill active" data-pattern="RT">R-T &nbsp;·&nbsp; 60° Triangular</button>
+        <button class="pill" data-pattern="RM">R-M &nbsp;·&nbsp; 45° Diagonal</button>
+        <button class="pill" data-pattern="RU">R-U &nbsp;·&nbsp; 90° Rectangular</button>
+      </div>
+    </div>
+    <div class="selector-group">
+      <div class="selector-group-label">Oblong Holes</div>
+      <div class="selector-pills">
+        <button class="pill" data-pattern="LRU">LR-U &nbsp;·&nbsp; Rectangular</button>
+        <button class="pill" data-pattern="LRZ">LR-Z×Z &nbsp;·&nbsp; Staggered</button>
+      </div>
+    </div>
+    <div class="selector-group">
+      <div class="selector-group-label">Square Holes</div>
+      <div class="selector-pills">
+        <button class="pill" data-pattern="CT">C-T &nbsp;·&nbsp; 60° Triangular</button>
+        <button class="pill" data-pattern="CU">C-U &nbsp;·&nbsp; 90° Rectangular</button>
+        <button class="pill" data-pattern="CDM">CD-M &nbsp;·&nbsp; 45° Diagonal</button>
+      </div>
+    </div>
+    <div class="selector-group">
+      <div class="selector-group-label">Hexagon Holes</div>
+      <div class="selector-pills">
+        <button class="pill" data-pattern="HT">H-T &nbsp;·&nbsp; 60° Triangular</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Calculator Card ══ -->
+  <div class="calc-card">
+    <!-- Diagram -->
+    <div class="diagram-panel">
+      <div class="diagram-title">Pattern Diagram</div>
+      <div class="diagram-wrap" id="diagramWrap">
+        <!-- SVG injected by JS -->
+      </div>
+    </div>
+
+    <!-- Inputs + Results -->
+    <div class="inputs-panel">
+      <div class="pattern-header">
+        <div class="pattern-name" id="patternName">R-T</div>
+        <div class="pattern-desc" id="patternDesc">Round holes, 60° triangular pitch</div>
+      </div>
+      <div class="fields" id="fieldsContainer">
+        <!-- Fields injected by JS -->
+      </div>
+      <div class="results">
+        <div class="result-box">
+          <div class="result-label">OPEN AREA</div>
+          <div class="result-value" id="resultOpenArea">—</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">HOLES PER M²</div>
+          <div class="result-holes" id="resultHoles">—</div>
+        </div>
+      </div>
+      <div class="formula-note" id="formulaNote"></div>
+    </div>
+  </div>
+
+  <!-- ══ Footer ══ -->
+  <div class="footer-note">
+    <p>Formulas based on the Array Metal (M) Sdn. Bhd. Perforated Materials Catalogue. Results are theoretical values; actual open area may vary due to manufacturing tolerances.</p>
+  </div>
+
+</div>
+
+<script>
+// ─── Pattern definitions ───────────────────────────────────────────────────
+const PATTERNS = {
+  RT: {
+    name: 'R-T',
+    desc: 'Round holes, 60° triangular pitch',
+    fields: [
+      { id: 'R', label: 'R — Hole Diameter' },
+      { id: 'T', label: 'T — Pitch' },
+    ],
+    openArea: (v) => (v.R ** 2 / v.T ** 2) * 90.69,
+    holesPerM2: (v) => 1154700 / v.T ** 2,
+    formula: 'Open Area = (R² / T²) × 90.69%',
+    holesFormula: 'Holes/m² = 1,154,700 / T²',
+    valid: (v) => v.R > 0 && v.T > 0 && v.R < v.T,
+  },
+  RM: {
+    name: 'R-M',
+    desc: 'Round holes, 45° diagonal pitch',
+    fields: [
+      { id: 'R', label: 'R — Hole Diameter' },
+      { id: 'M', label: 'M — Pitch' },
+    ],
+    openArea: (v) => (v.R ** 2 / v.M ** 2) * 78.54,
+    holesPerM2: (v) => 1000000 / v.M ** 2,
+    formula: 'Open Area = (R² / M²) × 78.54%',
+    holesFormula: 'Holes/m² = 1,000,000 / M²',
+    valid: (v) => v.R > 0 && v.M > 0 && v.R < v.M,
+  },
+  RU: {
+    name: 'R-U',
+    desc: 'Round holes, 90° rectangular pitch',
+    fields: [
+      { id: 'R', label: 'R — Hole Diameter' },
+      { id: 'U1', label: 'U₁ — Pitch (row)' },
+      { id: 'U2', label: 'U₂ — Pitch (column)' },
+    ],
+    openArea: (v) => (v.R ** 2 / (v.U1 * v.U2)) * 78.54,
+    holesPerM2: (v) => 1000000 / (v.U1 * v.U2),
+    formula: 'Open Area = (R² / (U₁ × U₂)) × 78.54%',
+    holesFormula: 'Holes/m² = 1,000,000 / (U₁ × U₂)',
+    valid: (v) => v.R > 0 && v.U1 > 0 && v.U2 > 0,
+  },
+  LRU: {
+    name: 'LR-U',
+    desc: 'Oblong holes, rectangular pitch',
+    fields: [
+      { id: 'R', label: 'R — Slot Width' },
+      { id: 'L', label: 'L — Slot Length' },
+      { id: 'U1', label: 'U₁ — Pitch (row)' },
+      { id: 'U2', label: 'U₂ — Pitch (column)' },
+    ],
+    openArea: (v) => (v.R * v.L - 0.215 * v.R ** 2) * 100 / (v.U1 * v.U2),
+    holesPerM2: (v) => 1000000 / (v.U1 * v.U2),
+    formula: 'Open Area = (R × L − 0.215 × R²) × 100 / (U₁ × U₂)',
+    holesFormula: 'Holes/m² = 1,000,000 / (U₁ × U₂)',
+    valid: (v) => v.R > 0 && v.L > 0 && v.U1 > 0 && v.U2 > 0 && v.L >= v.R,
+  },
+  LRZ: {
+    name: 'LR-Z×Z',
+    desc: 'Oblong holes, staggered pitch',
+    fields: [
+      { id: 'R', label: 'R — Slot Width' },
+      { id: 'L', label: 'L — Slot Length' },
+      { id: 'Z1', label: 'Z₁ — Pitch 1' },
+      { id: 'Z2', label: 'Z₂ — Pitch 2' },
+    ],
+    openArea: (v) => (v.R * v.L - 0.215 * v.R ** 2) * 100 / (v.Z1 * v.Z2),
+    holesPerM2: (v) => 1000000 / (v.Z1 * v.Z2),
+    formula: 'Open Area = (R × L − 0.215 × R²) × 100 / (Z₁ × Z₂)',
+    holesFormula: 'Holes/m² = 1,000,000 / (Z₁ × Z₂)',
+    valid: (v) => v.R > 0 && v.L > 0 && v.Z1 > 0 && v.Z2 > 0 && v.L >= v.R,
+  },
+  CT: {
+    name: 'C-T',
+    desc: 'Square holes, 60° triangular pitch',
+    fields: [
+      { id: 'C', label: 'C — Hole Side Length' },
+      { id: 'T', label: 'T — Pitch' },
+    ],
+    openArea: (v) => (v.C ** 2 / v.T ** 2) * 115.47,
+    holesPerM2: (v) => 1154700 / v.T ** 2,
+    formula: 'Open Area = (C² / T²) × 115.47%',
+    holesFormula: 'Holes/m² = 1,154,700 / T²',
+    valid: (v) => v.C > 0 && v.T > 0 && v.C < v.T,
+  },
+  CU: {
+    name: 'C-U',
+    desc: 'Square holes, 90° rectangular pitch',
+    fields: [
+      { id: 'C', label: 'C — Hole Side Length' },
+      { id: 'U1', label: 'U₁ — Pitch (row)' },
+      { id: 'U2', label: 'U₂ — Pitch (column)' },
+    ],
+    openArea: (v) => (v.C ** 2 / (v.U1 * v.U2)) * 100,
+    holesPerM2: (v) => 1000000 / (v.U1 * v.U2),
+    formula: 'Open Area = (C² / (U₁ × U₂)) × 100%',
+    holesFormula: 'Holes/m² = 1,000,000 / (U₁ × U₂)',
+    valid: (v) => v.C > 0 && v.U1 > 0 && v.U2 > 0,
+  },
+  CDM: {
+    name: 'CD-M',
+    desc: 'Square holes (diagonal), 45° pitch',
+    fields: [
+      { id: 'CD', label: 'CD — Hole Side Length' },
+      { id: 'M', label: 'M — Pitch' },
+    ],
+    openArea: (v) => (v.CD ** 2 / v.M ** 2) * 100,
+    holesPerM2: (v) => 1000000 / v.M ** 2,
+    formula: 'Open Area = (CD² / M²) × 100%',
+    holesFormula: 'Holes/m² = 1,000,000 / M²',
+    valid: (v) => v.CD > 0 && v.M > 0 && v.CD < v.M,
+  },
+  HT: {
+    name: 'H-T',
+    desc: 'Hexagon holes, 60° triangular pitch',
+    fields: [
+      { id: 'H', label: 'H — Hex Width (flat-to-flat)' },
+      { id: 'T', label: 'T — Pitch' },
+    ],
+    openArea: (v) => (v.H ** 2 / v.T ** 2) * 100,
+    holesPerM2: (v) => 1154700 / v.T ** 2,
+    formula: 'Open Area = (H² / T²) × 100%',
+    holesFormula: 'Holes/m² = 1,154,700 / T²',
+    valid: (v) => v.H > 0 && v.T > 0 && v.H < v.T,
+  },
+};
+
+// ─── SVG Diagrams ──────────────────────────────────────────────────────────
+// Style follows catalogue: grey background holes tile full area; one unit-cell
+// highlighted in light blue; red dimension lines + black label text matching catalogue.
+// DIM colour: #b31b1b (catalogue red). Label colour: #1a1a1a bold.
+const DIAGRAMS = {
+
+  // R-T: round holes, 60° triangular pitch — catalogue style

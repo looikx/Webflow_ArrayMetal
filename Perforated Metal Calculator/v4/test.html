@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ghost Form Submission Test</title>
+<style>
+body { font-family: sans-serif; padding: 2rem; max-width: 700px; margin: 0 auto; }
+h2 { margin-top: 2rem; margin-bottom: .5rem; }
+.result { background: #f5f5f5; border-radius: 6px; padding: .75rem 1rem; font-family: monospace; font-size: 13px; margin-top: .5rem; white-space: pre-wrap; }
+.pass { background: #edf7f0; color: #27ae60; }
+.fail { background: #fdecea; color: #c0392b; }
+.warn { background: #fef9e7; color: #e67e22; }
+button { padding: .5rem 1.2rem; border: none; border-radius: 6px; background: #09318b; color: #fff; cursor: pointer; font-size: 14px; margin-right: .5rem; margin-top: .5rem; }
+input, textarea { border: 1px solid #ccc; border-radius: 5px; padding: .4rem .7rem; font-size: 14px; margin-right: .5rem; }
+#log { background: #1a1a1a; color: #eee; border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 12px; min-height: 120px; white-space: pre-wrap; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<h1>Ghost Form Submission — Unit Tests</h1>
+<p style="color:#555;font-size:13px">Tests run against a simulated ghost form. No actual network request is made.</p>
+
+<!-- ── Simulated ghost form wrapper (mimics Webflow FormBlock) ── -->
+<div class="oa-form-ghost" id="sim-ghost-wrap" style="position:absolute;left:-9999px;visibility:hidden">
+  <div class="w-form">
+    <form id="sim-ghost-form" name="Open Area Inquiry" data-name="Open Area Inquiry">
+      <input type="text"  name="Name"          id="sim-f-name"     placeholder="Name">
+      <input type="email" name="Email Address"  id="sim-f-email"    placeholder="Email">
+      <input type="text"  name="Phone"          id="sim-f-phone"    placeholder="Phone">
+      <input type="text"  name="Company"        id="sim-f-company"  placeholder="Company">
+      <textarea           name="Message"        id="sim-f-message"  placeholder="Message"></textarea>
+      <input type="text"  name="Pattern"        id="sim-f-pattern"  placeholder="Pattern">
+      <input type="text"  name="Dimensions"     id="sim-f-dimensions" placeholder="Dimensions">
+      <input type="text"  name="Open Area"      id="sim-f-open-area" placeholder="Open Area">
+      <input type="text"  name="Holes per m2"   id="sim-f-holes"    placeholder="Holes">
+      <input type="submit" value="Submit" id="sim-submit-btn">
+    </form>
+    <div class="w-form-done" style="display:none">Thank you!</div>
+    <div class="w-form-fail" style="display:none">Error</div>
+  </div>
+</div>
+
+<!-- ── Simulated modal visible inputs ── -->
+<div id="oa-modal">
+  <input type="text"  id="oa-vis-name"    value="" placeholder="Name">
+  <input type="email" id="oa-vis-email"   value="" placeholder="Email">
+  <input type="tel"   id="oa-vis-phone"   value="" placeholder="Phone">
+  <input type="text"  id="oa-vis-company" value="" placeholder="Company">
+  <textarea           id="oa-vis-message" placeholder="Message"></textarea>
+</div>
+<div id="oa-modal-status" style="font-size:13px;margin-top:.5rem"></div>
+<button id="oa-modal-submit" type="button">Send Inquiry</button>
+
+<h2>Test Controls</h2>
+<label>Name: <input id="t-name" value="John Doe"></label>
+<label>Email: <input id="t-email" value="john@example.com"></label>
+<button onclick="prefillModal()">Prefill Modal Inputs</button>
+<button onclick="clearModal()">Clear Modal Inputs</button>
+
+<h2>Run Tests</h2>
+<button onclick="runAll()">Run All Tests</button>
+<button onclick="runSubmitTest()">Test Submit Flow Only</button>
+
+<div id="log">Ready. Click "Run All Tests" to start.</div>
+
+<script>
+var log = document.getElementById('log');
+var results = [];
+
+function print(msg, type) {
+  var prefix = type === 'pass' ? '✅ PASS' : type === 'fail' ? '❌ FAIL' : type === 'warn' ? '⚠️  WARN' : '   INFO';
+  log.textContent += '\n' + prefix + ' — ' + msg;
+  results.push({ type: type, msg: msg });
+}
+
+function prefillModal() {
+  document.getElementById('oa-vis-name').value    = document.getElementById('t-name').value;
+  document.getElementById('oa-vis-email').value   = document.getElementById('t-email').value;
+  document.getElementById('oa-vis-phone').value   = '012-3456789';
+  document.getElementById('oa-vis-company').value = 'Acme Corp';
+  document.getElementById('oa-vis-message').value = 'Test message';
+}
+
+function clearModal() {
+  ['oa-vis-name','oa-vis-email','oa-vis-phone','oa-vis-company','oa-vis-message'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+/* ── TEST 1: Ghost form DOM structure ── */
+function testGhostFormExists() {
+  print('--- TEST 1: Ghost form DOM structure ---', 'info');
+  var ghostWrap = document.querySelector('.oa-form-ghost');
+  if (!ghostWrap) { print('Ghost wrapper (.oa-form-ghost) not found in DOM', 'fail'); return false; }
+  print('Ghost wrapper found', 'pass');
+
+  var ghostForm = ghostWrap.querySelector('form');
+  if (!ghostForm) { print('No <form> inside ghost wrapper', 'fail'); return false; }
+  print('Ghost <form> found', 'pass');
+
+  var submitBtn = ghostForm.querySelector('[type="submit"]');
+  if (!submitBtn) { print('No submit button inside ghost form', 'fail'); return false; }
+  print('Submit button found: ' + submitBtn.tagName + ' value="' + submitBtn.value + '"', 'pass');
+
+  return true;
+}
+
+/* ── TEST 2: Ghost form field name attributes ── */
+function testGhostFieldNames() {
+  print('\n--- TEST 2: Ghost form field name attributes ---', 'info');
+  var ghostForm = document.querySelector('.oa-form-ghost form');
+  if (!ghostForm) { print('No ghost form — skipping', 'warn'); return; }
+
+  var expected = ['Name', 'Email Address', 'Phone', 'Company', 'Message', 'Pattern', 'Dimensions', 'Open Area', 'Holes per m2'];
+  expected.forEach(function(name) {
+    var el = ghostForm.querySelector('[name="' + name + '"]');
+    if (el) {
+      print('Field [name="' + name + '"] found (' + el.tagName + ')', 'pass');
+    } else {
+      print('Field [name="' + name + '"] NOT FOUND', 'fail');
+      // Show what names ARE present
+      var present = Array.from(ghostForm.querySelectorAll('[name]')).map(function(e){ return '"' + e.name + '"'; });
+      print('  Available names: ' + present.join(', '), 'info');
+    }
+  });
+}
+
+/* ── TEST 3: Validation logic ── */
+function testValidation() {
+  print('\n--- TEST 3: Validation (empty fields should fail) ---', 'info');
+  clearModal();
+
+  var modal     = document.getElementById('oa-modal');
+  var nameEl    = modal ? modal.querySelector('#oa-vis-name')  : null;
+  var emailEl   = modal ? modal.querySelector('#oa-vis-email') : null;
+
+  var valid = true;
+  [nameEl, emailEl].forEach(function(el) {
+    if (!el || !el.value.trim()) { valid = false; }
+  });
+
+  if (!valid) {
+    print('Validation correctly rejects empty name+email', 'pass');
+  } else {
+    print('Validation should have failed for empty fields but did not', 'fail');
+  }
+
+  // Now fill them
+  if (nameEl)  nameEl.value  = 'Test User';
+  if (emailEl) emailEl.value = 'test@example.com';
+  valid = true;
+  [nameEl, emailEl].forEach(function(el) {
+    if (!el || !el.value.trim()) { valid = false; }
+  });
+  if (valid) {
+    print('Validation correctly passes when name+email are filled', 'pass');
+  } else {
+    print('Validation failed even when fields are filled', 'fail');
+  }
+}
+
+/* ── TEST 4: Value copy to ghost form ── */
+function testValueCopy() {
+  print('\n--- TEST 4: Value copy from modal → ghost form ---', 'info');
+  prefillModal();
+
+  var modal     = document.getElementById('oa-modal');
+  var nameEl    = modal.querySelector('#oa-vis-name');
+  var emailEl   = modal.querySelector('#oa-vis-email');
+  var phoneEl   = modal.querySelector('#oa-vis-phone');
+  var companyEl = modal.querySelector('#oa-vis-company');
+  var msgEl     = modal.querySelector('#oa-vis-message');
+
+  var ghostForm = document.querySelector('.oa-form-ghost form');
+  var fName    = ghostForm ? ghostForm.querySelector('[name="Name"]')          : null;
+  var fEmail   = ghostForm ? ghostForm.querySelector('[name="Email Address"]') : null;
+  var fPhone   = ghostForm ? ghostForm.querySelector('[name="Phone"]')         : null;
+  var fCompany = ghostForm ? ghostForm.querySelector('[name="Company"]')       : null;
+  var fMsg     = ghostForm ? ghostForm.querySelector('[name="Message"]')       : null;
+
+  if (fName)    fName.value    = nameEl    ? nameEl.value.trim()    : '';
+  if (fEmail)   fEmail.value   = emailEl   ? emailEl.value.trim()   : '';
+  if (fPhone)   fPhone.value   = phoneEl   ? phoneEl.value.trim()   : '';
+  if (fCompany) fCompany.value = companyEl ? companyEl.value.trim() : '';
+  if (fMsg)     fMsg.value     = msgEl     ? msgEl.value.trim()     : '';
+
+  var checks = [
+    { field: fName,    expected: nameEl ? nameEl.value.trim() : '',    label: 'Name' },
+    { field: fEmail,   expected: emailEl ? emailEl.value.trim() : '',  label: 'Email Address' },
+    { field: fPhone,   expected: phoneEl ? phoneEl.value.trim() : '',  label: 'Phone' },
+    { field: fCompany, expected: companyEl ? companyEl.value.trim() : '', label: 'Company' },
+    { field: fMsg,     expected: msgEl ? msgEl.value.trim() : '',      label: 'Message' }
+  ];
+
+  checks.forEach(function(c) {
+    if (!c.field) {
+      print('Ghost field "' + c.label + '" is null — copy skipped', 'fail');
+    } else if (c.field.value === c.expected) {
+      print('Ghost "' + c.label + '" = "' + c.field.value + '"', 'pass');
+    } else {
+      print('Ghost "' + c.label + '" mismatch: got "' + c.field.value + '" expected "' + c.label + '"', 'fail');
+    }
+  });
+}
+
+/* ── TEST 5: Submit trigger mechanism ── */
+function testSubmitTrigger() {
+  print('\n--- TEST 5: Submit trigger (jQuery vs click vs dispatchEvent) ---', 'info');
+
+  var ghostForm = document.querySelector('.oa-form-ghost form');
+  if (!ghostForm) { print('No ghost form — skipping', 'warn'); return; }
+
+  // Track which events fire
+  var submitFired = false;
+  var clickFired  = false;
+
+  ghostForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitFired = true;
+    print('submit event fired — isTrusted: ' + e.isTrusted, e.isTrusted ? 'pass' : 'warn');
+  });
+
+  var submitBtn = ghostForm.querySelector('[type="submit"]');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function(e) {
+      clickFired = true;
+      print('submit button click fired — isTrusted: ' + e.isTrusted, e.isTrusted ? 'pass' : 'warn');
+    });
+  }
+
+  // Test 5a: dispatchEvent submit
+  print('5a: dispatchEvent("submit") —', 'info');
+  submitFired = false;
+  ghostForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  print('  submit event fired: ' + submitFired + ', isTrusted would be false', submitFired ? 'warn' : 'fail');
+
+  // Test 5b: button.click()
+  print('5b: submitBtn.click() —', 'info');
+  submitFired = false; clickFired = false;
+  if (submitBtn) {
+    submitBtn.click();
+    print('  button click fired: ' + clickFired, clickFired ? 'pass' : 'fail');
+    print('  form submit fired from click: ' + submitFired, submitFired ? 'pass' : 'warn');
+  } else {
+    print('  No submit button found', 'fail');
+  }
+
+  // Test 5c: jQuery submit (if available)
+  print('5c: jQuery available: ' + (typeof jQuery !== 'undefined'), typeof jQuery !== 'undefined' ? 'pass' : 'warn');
+  if (typeof jQuery !== 'undefined') {
+    submitFired = false;
+    jQuery(ghostForm).submit();
+    print('  jQuery submit fired: ' + submitFired, submitFired ? 'pass' : 'warn');
+  } else {
+    print('  jQuery not available — will use button.click() fallback', 'warn');
+  }
+}
+
+/* ── TEST 6: MutationObserver detects w-form-done ── */
+function testMutationObserver() {
+  print('\n--- TEST 6: MutationObserver detects .w-form-done visibility ---', 'info');
+
+  var ghostWrap = document.querySelector('.oa-form-ghost');
+  if (!ghostWrap) { print('No ghost wrap — skipping', 'warn'); return; }
+
+  var done = ghostWrap.querySelector('.w-form-done');
+  var fail = ghostWrap.querySelector('.w-form-fail');
+  if (!done) { print('.w-form-done element not found', 'fail'); return; }
+  if (!fail) { print('.w-form-fail element not found', 'fail'); return; }
+  print('.w-form-done and .w-form-fail found', 'pass');
+
+  var detected = false;
+  var observer = new MutationObserver(function() {
+    // Same logic as production code
+    if (done.style.display === 'block' || (done.style.display !== 'none' && getComputedStyle(done).display !== 'none')) {
+      detected = true;
+    }
+  });
+  observer.observe(ghostWrap, { attributes: true, subtree: true, childList: true, attributeFilter: ['style', 'class'] });
+
+  // Simulate Webflow showing success
+  done.style.display = 'block';
+
+  setTimeout(function() {
+    observer.disconnect();
+    if (detected) {
+      print('MutationObserver correctly detected .w-form-done becoming visible', 'pass');
+    } else {
+      print('MutationObserver did NOT detect .w-form-done change', 'fail');
+    }
+    // Reset
+    done.style.display = 'none';
+  }, 100);
+}
+
+/* ── TEST 7: Double-init guard ── */
+function testDoubleInitGuard() {
+  print('\n--- TEST 7: Double-init / double-bind guard ---', 'info');
+  var submitBtn = document.getElementById('oa-modal-submit');
+  if (!submitBtn) { print('No #oa-modal-submit button', 'fail'); return; }
+
+  var clickCount = 0;
+  // Simulate bindModal() being called twice
+  function fakeHandler() { clickCount++; }
+  submitBtn.addEventListener('click', fakeHandler);
+  submitBtn.addEventListener('click', fakeHandler);  // second bind
+
+  submitBtn.click();
+  if (clickCount === 2) {
+    print('Double-bind detected: handler fired ' + clickCount + 'x per click — this causes double-submit', 'fail');
+    print('Fix: ensure init() is only called once (remove DOMContentLoaded fallback)', 'info');
+  } else {
+    print('Single bind confirmed: handler fired ' + clickCount + 'x', 'pass');
+  }
+  submitBtn.removeEventListener('click', fakeHandler);
+  submitBtn.removeEventListener('click', fakeHandler);
+}
+
+function runSubmitTest() {
+  log.textContent = 'Running submit flow test...\n';
+  testGhostFormExists();
+  testGhostFieldNames();
+  testValueCopy();
+  testSubmitTrigger();
+  printSummary();
+}
+
+function runAll() {
+  log.textContent = 'Running all tests...\n';
+  results = [];
+  testGhostFormExists();
+  testGhostFieldNames();
+  testValidation();
+  testValueCopy();
+  testSubmitTrigger();
+  testMutationObserver();
+  testDoubleInitGuard();
+  printSummary();
+}
+
+function printSummary() {
+  var pass = results.filter(function(r){ return r.type === 'pass'; }).length;
+  var fail = results.filter(function(r){ return r.type === 'fail'; }).length;
+  var warn = results.filter(function(r){ return r.type === 'warn'; }).length;
+  log.textContent += '\n\n════════════════════════════════\n';
+  log.textContent += 'SUMMARY: ' + pass + ' pass, ' + fail + ' fail, ' + warn + ' warn\n';
+  if (fail === 0) {
+    log.textContent += 'All critical tests passed.\n';
+  } else {
+    log.textContent += 'Fix the FAIL items above before deploying.\n';
+  }
+}
+</script>
+
+</body>
+</html>

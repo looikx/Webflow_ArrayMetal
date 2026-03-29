@@ -1,0 +1,31 @@
+<div id="oa-top">
+  <div class="oa-hero">
+    <div class="oa-hero-label">Array Metal (M) Sdn. Bhd.</div>
+    <h1>Open Area Calculator</h1>
+    <p>Select a perforation pattern to calculate open area percentage and hole density for your perforated metal sheet.</p>
+  </div>
+  <div id="oa-thumb-section"></div>
+  <div id="oa-sections" class="oa-sections-wrap"></div>
+</div>
+
+<!-- Inquiry modal -->
+<div class="oa-modal-overlay" id="oa-modal">
+  <div class="oa-modal-box">
+    <button class="oa-modal-close" id="oa-modal-close" aria-label="Close">&times;</button>
+    <div class="oa-modal-title">Send Inquiry</div>
+    <div class="oa-modal-subtitle" id="oa-modal-subtitle"></div>
+    <div class="oa-modal-summary" id="oa-modal-summary"></div>
+    <div class="oa-modal-fields">
+      <input type="text"  id="oa-vis-name"    placeholder="Your Name *"        autocomplete="name">
+      <input type="email" id="oa-vis-email"   placeholder="Email Address *"    autocomplete="email">
+      <input type="tel"   id="oa-vis-phone"   placeholder="Phone / WhatsApp"   autocomplete="tel">
+      <input type="text"  id="oa-vis-company" placeholder="Company"            autocomplete="organization">
+      <textarea           id="oa-vis-message" placeholder="Message"></textarea>
+    </div>
+    <div class="oa-btn-row">
+      <button type="button" class="oa-btn oa-btn-inquiry" id="oa-modal-submit">Send Inquiry</button>
+      <button type="button" class="oa-btn oa-btn-reset"   id="oa-modal-cancel">Cancel</button>
+    </div>
+    <div class="oa-modal-status" id="oa-modal-status"></div>
+  </div>
+</div>

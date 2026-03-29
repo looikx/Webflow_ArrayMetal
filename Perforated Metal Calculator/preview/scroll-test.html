@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; }
+nav {
+  position: sticky;
+  top: 0;
+  background: #185FA5;
+  color: white;
+  padding: 20px 40px;
+  z-index: 100;
+  font-weight: bold;
+}
+.thumb-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; padding: 40px; }
+.thumb { background: #eee; padding: 20px; cursor: pointer; border: 2px solid #ccc; border-radius: 8px; text-align: center; }
+.section { height: 400px; background: #f5f5f5; margin: 20px 40px; border-radius: 8px; padding: 20px; border: 1px solid #ddd; }
+.section h2 { font-size: 22px; color: #185FA5; }
+</style>
+</head>
+<body>
+<nav id="site-nav">ARRAY METAL — Navbar (sticky)</nav>
+<div class="thumb-grid">
+  <div class="thumb" onclick="goTo('s1')">R-T</div>
+  <div class="thumb" onclick="goTo('s2')">R-M</div>
+  <div class="thumb" onclick="goTo('s3')">R-U</div>
+</div>
+<div id="s1" class="section"><h2>R-T — Round holes, 60° triangular pitch</h2></div>
+<div id="s2" class="section"><h2>R-M — Round holes, 45° diagonal pitch</h2></div>
+<div id="s3" class="section"><h2>R-U — Round holes, 90° rectangular pitch</h2></div>
+<script>
+function goTo(id) {
+  var sec = document.getElementById(id);
+  if (!sec) return;
+  var navH = 0;
+  var bodyChildren = document.body.children;
+  for (var i = 0; i < bodyChildren.length; i++) {
+    var st = window.getComputedStyle(bodyChildren[i]);
+    if (st.position === 'sticky' || st.position === 'fixed') {
+      navH = Math.max(navH, bodyChildren[i].getBoundingClientRect().height);
+    }
+  }
+  var secTop = sec.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+  window.scrollTo({ top: secTop, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

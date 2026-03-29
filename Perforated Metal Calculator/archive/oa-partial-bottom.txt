@@ -1,0 +1,87 @@
+
+// ─── State ─────────────────────────────────────────────────────────────────
+let currentPattern = 'RT';
+
+// ─── Render ────────────────────────────────────────────────────────────────
+function renderPattern(key) {
+  const p = PATTERNS[key];
+  document.getElementById('patternName').textContent = p.name;
+  document.getElementById('patternDesc').textContent = p.desc;
+  document.getElementById('diagramWrap').innerHTML = DIAGRAMS[key] || '';
+  document.getElementById('formulaNote').innerHTML =
+    `<code>${p.formula}</code><br><code>${p.holesFormula}</code>`;
+
+  const container = document.getElementById('fieldsContainer');
+  container.innerHTML = '';
+  p.fields.forEach(f => {
+    const row = document.createElement('div');
+    row.className = 'field-row';
+    row.innerHTML = `
+      <label class="field-label" for="inp_${f.id}">${f.label}</label>
+      <div class="field-input-wrap">
+        <input class="field-input" id="inp_${f.id}" type="number" min="0.01" step="any" placeholder="0.00" autocomplete="off">
+        <span class="field-unit">mm</span>
+      </div>`;
+    container.appendChild(row);
+    document.getElementById(`inp_${f.id}`).addEventListener('input', calculate);
+  });
+
+  calculate();
+}
+
+function getValues() {
+  const p = PATTERNS[currentPattern];
+  const v = {};
+  let allFilled = true;
+  p.fields.forEach(f => {
+    const el = document.getElementById(`inp_${f.id}`);
+    const val = parseFloat(el.value);
+    if (!el.value || isNaN(val) || val <= 0) allFilled = false;
+    v[f.id] = val;
+  });
+  return allFilled ? v : null;
+}
+
+function calculate() {
+  const p = PATTERNS[currentPattern];
+  const v = getValues();
+  const oaEl = document.getElementById('resultOpenArea');
+  const holesEl = document.getElementById('resultHoles');
+
+  if (!v || !p.valid(v)) {
+    oaEl.textContent = '—';
+    oaEl.className = 'result-value';
+    holesEl.textContent = '—';
+    return;
+  }
+
+  const oa = p.openArea(v);
+  const holes = p.holesPerM2(v);
+
+  if (oa < 0 || oa > 100) {
+    oaEl.textContent = '—';
+    oaEl.className = 'result-value';
+    holesEl.textContent = '—';
+    return;
+  }
+
+  oaEl.innerHTML = `${oa.toFixed(1)}<span class="result-unit">%</span>`;
+  oaEl.className = 'result-value ' + (oa < 20 ? 'low' : oa < 40 ? 'medium' : oa < 60 ? 'good' : 'high');
+  holesEl.textContent = Math.round(holes).toLocaleString();
+}
+
+// ─── Tab switching ─────────────────────────────────────────────────────────
+document.querySelectorAll('.pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentPattern = btn.dataset.pattern;
+    renderPattern(currentPattern);
+  });
+});
+
+// ─── Init ──────────────────────────────────────────────────────────────────
+renderPattern(currentPattern);
+</script>
+</body>
+</html>

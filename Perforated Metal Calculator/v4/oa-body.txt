@@ -1,0 +1,599 @@
+<script>
+(function () {
+
+  /* ============================================================
+     IMAGE URLs — one CDN url per pattern key
+  ============================================================ */
+  var IMGS = {
+    RT:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656b2e7349d087a9a02_R-T.png',
+    RM:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656810281570103c754_R-M.png',
+    RU:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656b66880abc837dc4c_R-U.png',
+    LRU: 'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c796566ec91a5df3233445_LR-U.png',
+    LRZ: 'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656ece6d0a65ad16b3f_LR-ZxZ.png',
+    CT:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656ed39203b224109b6_C-T.png',
+    CU:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656b84d191bc56d75cb_C-U.png',
+    CDM: 'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656036811a3aa3d261c_CD-M.png',
+    HT:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656c36bad2a709937c8_H-T.png'
+  };
+
+  /* ============================================================
+     PATTERNS
+  ============================================================ */
+  var PATTERNS = {
+    RT: {
+      name: 'R-T',
+      desc: 'Round holes, 60\u00b0 triangular pitch',
+      fields: [
+        { id: 'R', label: 'R \u2014 Hole Diameter' },
+        { id: 'T', label: 'T \u2014 Pitch' }
+      ],
+      openArea:     function (v) { return v.R * v.R / (v.T * v.T) * 90.69; },
+      holesPerM2:   function (v) { return 1154700 / (v.T * v.T); },
+      formula:      'Open Area = (R\u00b2 / T\u00b2) \u00d7 90.69%',
+      holesFormula: 'Holes/m\u00b2 = 1,154,700 / T\u00b2',
+      valid:        function (v) { return v.R > 0 && v.T > 0 && v.R < v.T; }
+    },
+    RM: {
+      name: 'R-M',
+      desc: 'Round holes, 45\u00b0 diagonal pitch',
+      fields: [
+        { id: 'R', label: 'R \u2014 Hole Diameter' },
+        { id: 'M', label: 'M \u2014 Pitch' }
+      ],
+      openArea:     function (v) { return v.R * v.R / (v.M * v.M) * 78.54; },
+      holesPerM2:   function (v) { return 1000000 / (v.M * v.M); },
+      formula:      'Open Area = (R\u00b2 / M\u00b2) \u00d7 78.54%',
+      holesFormula: 'Holes/m\u00b2 = 1,000,000 / M\u00b2',
+      valid:        function (v) { return v.R > 0 && v.M > 0 && v.R < v.M; }
+    },
+    RU: {
+      name: 'R-U',
+      desc: 'Round holes, 90\u00b0 rectangular pitch',
+      fields: [
+        { id: 'R',  label: 'R \u2014 Hole Diameter' },
+        { id: 'U1', label: 'U\u2081 \u2014 Pitch (row)' },
+        { id: 'U2', label: 'U\u2082 \u2014 Pitch (column)' }
+      ],
+      openArea:     function (v) { return v.R * v.R / (v.U1 * v.U2) * 78.54; },
+      holesPerM2:   function (v) { return 1000000 / (v.U1 * v.U2); },
+      formula:      'Open Area = (R\u00b2 / (U\u2081 \u00d7 U\u2082)) \u00d7 78.54%',
+      holesFormula: 'Holes/m\u00b2 = 1,000,000 / (U\u2081 \u00d7 U\u2082)',
+      valid:        function (v) { return v.R > 0 && v.U1 > 0 && v.U2 > 0; }
+    },
+    LRU: {
+      name: 'LR-U',
+      desc: 'Oblong holes, rectangular pitch',
+      fields: [
+        { id: 'R',  label: 'R \u2014 Slot Width' },
+        { id: 'L',  label: 'L \u2014 Slot Length' },
+        { id: 'U1', label: 'U\u2081 \u2014 Pitch (row)' },
+        { id: 'U2', label: 'U\u2082 \u2014 Pitch (column)' }
+      ],
+      openArea:     function (v) { return (v.R * v.L - 0.215 * v.R * v.R) * 100 / (v.U1 * v.U2); },
+      holesPerM2:   function (v) { return 1000000 / (v.U1 * v.U2); },
+      formula:      'Open Area = (R \u00d7 L \u2212 0.215 \u00d7 R\u00b2) \u00d7 100 / (U\u2081 \u00d7 U\u2082)',
+      holesFormula: 'Holes/m\u00b2 = 1,000,000 / (U\u2081 \u00d7 U\u2082)',
+      valid:        function (v) { return v.R > 0 && v.L > 0 && v.U1 > 0 && v.U2 > 0 && v.L >= v.R; }
+    },
+    LRZ: {
+      name: 'LR-Z\u00d7Z',
+      desc: 'Oblong holes, staggered pitch',
+      fields: [
+        { id: 'R',  label: 'R \u2014 Slot Width' },
+        { id: 'L',  label: 'L \u2014 Slot Length' },
+        { id: 'Z1', label: 'Z\u2081 \u2014 Pitch 1' },
+        { id: 'Z2', label: 'Z\u2082 \u2014 Pitch 2' }
+      ],
+      openArea:     function (v) { return (v.R * v.L - 0.215 * v.R * v.R) * 100 / (v.Z1 * v.Z2); },
+      holesPerM2:   function (v) { return 1000000 / (v.Z1 * v.Z2); },
+      formula:      'Open Area = (R \u00d7 L \u2212 0.215 \u00d7 R\u00b2) \u00d7 100 / (Z\u2081 \u00d7 Z\u2082)',
+      holesFormula: 'Holes/m\u00b2 = 1,000,000 / (Z\u2081 \u00d7 Z\u2082)',
+      valid:        function (v) { return v.R > 0 && v.L > 0 && v.Z1 > 0 && v.Z2 > 0 && v.L >= v.R; }
+    },
+    CT: {
+      name: 'C-T',
+      desc: 'Square holes, 60\u00b0 triangular pitch',
+      fields: [
+        { id: 'C', label: 'C \u2014 Hole Side Length' },
+        { id: 'T', label: 'T \u2014 Pitch' }
+      ],
+      openArea:     function (v) { return v.C * v.C / (v.T * v.T) * 115.47; },
+      holesPerM2:   function (v) { return 1154700 / (v.T * v.T); },
+      formula:      'Open Area = (C\u00b2 / T\u00b2) \u00d7 115.47%',
+      holesFormula: 'Holes/m\u00b2 = 1,154,700 / T\u00b2',
+      valid:        function (v) { return v.C > 0 && v.T > 0 && v.C < v.T; }
+    },
+    CU: {
+      name: 'C-U',
+      desc: 'Square holes, 90\u00b0 rectangular pitch',
+      fields: [
+        { id: 'C',  label: 'C \u2014 Hole Side Length' },
+        { id: 'U1', label: 'U\u2081 \u2014 Pitch (row)' },
+        { id: 'U2', label: 'U\u2082 \u2014 Pitch (column)' }
+      ],
+      openArea:     function (v) { return v.C * v.C / (v.U1 * v.U2) * 100; },
+      holesPerM2:   function (v) { return 1000000 / (v.U1 * v.U2); },
+      formula:      'Open Area = (C\u00b2 / (U\u2081 \u00d7 U\u2082)) \u00d7 100%',
+      holesFormula: 'Holes/m\u00b2 = 1,000,000 / (U\u2081 \u00d7 U\u2082)',
+      valid:        function (v) { return v.C > 0 && v.U1 > 0 && v.U2 > 0; }
+    },
+    CDM: {
+      name: 'CD-M',
+      desc: 'Square holes (diagonal), 45\u00b0 pitch',
+      fields: [
+        { id: 'CD', label: 'CD \u2014 Hole Side Length' },
+        { id: 'M',  label: 'M \u2014 Pitch' }
+      ],
+      openArea:     function (v) { return v.CD * v.CD / (v.M * v.M) * 100; },
+      holesPerM2:   function (v) { return 1000000 / (v.M * v.M); },
+      formula:      'Open Area = (CD\u00b2 / M\u00b2) \u00d7 100%',
+      holesFormula: 'Holes/m\u00b2 = 1,000,000 / M\u00b2',
+      valid:        function (v) { return v.CD > 0 && v.M > 0 && v.CD < v.M; }
+    },
+    HT: {
+      name: 'H-T',
+      desc: 'Hexagon holes, 60\u00b0 triangular pitch',
+      fields: [
+        { id: 'H', label: 'H \u2014 Hole Across Flats' },
+        { id: 'T', label: 'T \u2014 Pitch' }
+      ],
+      openArea:     function (v) { return v.H * v.H / (v.T * v.T) * 100; },
+      holesPerM2:   function (v) { return 1154700 / (v.T * v.T); },
+      formula:      'Open Area = (H\u00b2 / T\u00b2) \u00d7 100%',
+      holesFormula: 'Holes/m\u00b2 = 1,154,700 / T\u00b2',
+      valid:        function (v) { return v.H > 0 && v.T > 0 && v.H < v.T; }
+    }
+  };
+
+  /* ============================================================
+     GROUPS
+  ============================================================ */
+  var GROUPS = [
+    { label: 'Round Holes',   keys: ['RT', 'RM', 'RU'] },
+    { label: 'Oblong Holes',  keys: ['LRU', 'LRZ'] },
+    { label: 'Square Holes',  keys: ['CT', 'CU', 'CDM'] },
+    { label: 'Hexagon Holes', keys: ['HT'] }
+  ];
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  function init() {
+    var root = document.getElementById('oa-top');
+    if (!root || root.dataset.oaInit) return;
+    root.dataset.oaInit = '1';
+    buildThumbs(document.getElementById('oa-thumb-section'));
+    buildSections(document.getElementById('oa-sections'));
+    bindModal();
+  }
+
+  /* ============================================================
+     BUILD THUMBNAILS
+  ============================================================ */
+  function buildThumbs(wrap) {
+    if (!wrap) return;
+    GROUPS.forEach(function (g) {
+      var hdr = document.createElement('div');
+      hdr.className = 'oa-grid-header';
+      hdr.textContent = g.label;
+      wrap.appendChild(hdr);
+
+      var grid = document.createElement('div');
+      grid.className = 'oa-thumb-grid';
+
+      g.keys.forEach(function (key) {
+        var p = PATTERNS[key];
+        var card = document.createElement('a');
+        card.className = 'oa-thumb-card';
+        card.href = '#oa-section-' + key;
+        card.setAttribute('data-target', 'oa-section-' + key);
+
+        var img = document.createElement('img');
+        img.src = IMGS[key];
+        img.alt = p.name;
+        img.loading = 'lazy';
+        card.appendChild(img);
+
+        var name = document.createElement('div');
+        name.className = 'oa-thumb-name';
+        name.textContent = p.name;
+        card.appendChild(name);
+
+        var desc = document.createElement('div');
+        desc.className = 'oa-thumb-desc';
+        desc.textContent = p.desc;
+        card.appendChild(desc);
+
+        card.addEventListener('click', function (e) {
+          e.preventDefault();
+          var sec = document.getElementById(this.getAttribute('data-target'));
+          if (!sec) return;
+          var navEl = document.querySelector('.navbar.w-nav') || document.querySelector('.w-nav');
+          var navH = navEl ? navEl.offsetHeight : 81;
+          var top = sec.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        });
+
+        grid.appendChild(card);
+      });
+
+      wrap.appendChild(grid);
+    });
+  }
+
+  /* ============================================================
+     BUILD CALCULATOR SECTIONS
+  ============================================================ */
+  function buildSections(wrap) {
+    if (!wrap) return;
+    var keys = [];
+    GROUPS.forEach(function (g) { g.keys.forEach(function (k) { keys.push(k); }); });
+
+    keys.forEach(function (key, idx) {
+      var p = PATTERNS[key];
+
+      if (idx > 0) {
+        var hr = document.createElement('hr');
+        hr.className = 'oa-section-divider';
+        wrap.appendChild(hr);
+      }
+
+      var sec = document.createElement('div');
+      sec.className = 'oa-pattern-section';
+      sec.id = 'oa-section-' + key;
+
+      var hdr = document.createElement('div');
+      hdr.className = 'oa-section-heading';
+      hdr.innerHTML =
+        '<span class="oa-pat-name">' + p.name + '</span>' +
+        '<span class="oa-pat-desc">' + p.desc + '</span>';
+      sec.appendChild(hdr);
+
+      var card = document.createElement('div');
+      card.className = 'oa-calc-card';
+
+      /* Left: diagram */
+      var diagPanel = document.createElement('div');
+      diagPanel.className = 'oa-diagram-panel';
+      var dImg = document.createElement('img');
+      dImg.src = IMGS[key];
+      dImg.alt = p.name + ' diagram';
+      dImg.loading = 'lazy';
+      diagPanel.appendChild(dImg);
+      var dLabel = document.createElement('div');
+      dLabel.className = 'oa-diagram-label';
+      dLabel.textContent = p.name + ' \u2014 ' + p.desc;
+      diagPanel.appendChild(dLabel);
+      card.appendChild(diagPanel);
+
+      /* Right: inputs panel */
+      var inputsPanel = document.createElement('div');
+      inputsPanel.className = 'oa-inputs-panel';
+
+      var fieldsWrap = document.createElement('div');
+      fieldsWrap.className = 'oa-fields-wrap';
+      p.fields.forEach(function (f) {
+        var row = document.createElement('div');
+        row.className = 'oa-field-row';
+        var inputId = 'oa-' + key + '-' + f.id;
+        row.innerHTML =
+          '<label class="oa-field-label" for="' + inputId + '">' + f.label + '</label>' +
+          '<div class="oa-field-input-wrap">' +
+            '<input class="oa-field-input" id="' + inputId + '" type="number" min="0.01" step="any" placeholder="0.00" autocomplete="off">' +
+            '<span class="oa-field-unit">mm</span>' +
+          '</div>';
+        fieldsWrap.appendChild(row);
+      });
+      inputsPanel.appendChild(fieldsWrap);
+
+      var results = document.createElement('div');
+      results.className = 'oa-results';
+      results.innerHTML =
+        '<div class="oa-result-box">' +
+          '<div class="oa-result-label">Open Area</div>' +
+          '<div class="oa-result-value" id="oa-oa-' + key + '">\u2014</div>' +
+        '</div>' +
+        '<div class="oa-result-box">' +
+          '<div class="oa-result-label">Holes / m\u00b2</div>' +
+          '<div class="oa-result-value" id="oa-holes-' + key + '">\u2014</div>' +
+        '</div>';
+      inputsPanel.appendChild(results);
+
+      var fn = document.createElement('div');
+      fn.className = 'oa-formula-note';
+      fn.innerHTML = '<code>' + p.formula + '</code><br><code>' + p.holesFormula + '</code>';
+      inputsPanel.appendChild(fn);
+
+      var btnRow = document.createElement('div');
+      btnRow.className = 'oa-btn-row';
+
+      var inquiryBtn = document.createElement('button');
+      inquiryBtn.type = 'button';
+      inquiryBtn.className = 'oa-btn oa-btn-inquiry';
+      inquiryBtn.textContent = 'Send Inquiry';
+      (function (k) {
+        inquiryBtn.addEventListener('click', function () { openModal(k); });
+      }(key));
+      btnRow.appendChild(inquiryBtn);
+
+      var resetBtn = document.createElement('button');
+      resetBtn.type = 'button';
+      resetBtn.className = 'oa-btn oa-btn-reset';
+      resetBtn.textContent = 'Reset';
+      (function (k) {
+        resetBtn.addEventListener('click', function () { resetCalc(k); });
+      }(key));
+      btnRow.appendChild(resetBtn);
+
+      inputsPanel.appendChild(btnRow);
+      card.appendChild(inputsPanel);
+      sec.appendChild(card);
+
+      var back = document.createElement('a');
+      back.className = 'oa-back-link';
+      back.href = '#';
+      back.textContent = '\u2191 Back to patterns';
+      back.addEventListener('click', function (e) {
+        e.preventDefault();
+        var top = document.getElementById('oa-top');
+        if (top) top.scrollIntoView({ behavior: 'smooth' });
+      });
+      sec.appendChild(back);
+      wrap.appendChild(sec);
+    });
+
+    keys.forEach(function (key) {
+      PATTERNS[key].fields.forEach(function (f) {
+        var el = document.getElementById('oa-' + key + '-' + f.id);
+        if (el) el.addEventListener('input', function () { calculate(key); });
+      });
+    });
+  }
+
+  /* ============================================================
+     CALCULATE
+  ============================================================ */
+  function calculate(key) {
+    var p = PATTERNS[key];
+    var v = {}, allFilled = true;
+    p.fields.forEach(function (f) {
+      var el = document.getElementById('oa-' + key + '-' + f.id);
+      var val = parseFloat(el ? el.value : '');
+      if (!el || !el.value || isNaN(val) || val <= 0) allFilled = false;
+      v[f.id] = val;
+    });
+    var oaEl    = document.getElementById('oa-oa-' + key);
+    var holesEl = document.getElementById('oa-holes-' + key);
+    if (!allFilled || !p.valid(v)) {
+      if (oaEl)    { oaEl.textContent = '\u2014'; oaEl.className = 'oa-result-value'; }
+      if (holesEl) { holesEl.textContent = '\u2014'; }
+      return;
+    }
+    var oa = p.openArea(v), holes = p.holesPerM2(v);
+    if (oa < 0 || oa > 100) {
+      if (oaEl)    { oaEl.textContent = '\u2014'; oaEl.className = 'oa-result-value'; }
+      if (holesEl) { holesEl.textContent = '\u2014'; }
+      return;
+    }
+    if (oaEl) {
+      oaEl.innerHTML = oa.toFixed(1) + '<span class="oa-result-unit">%</span>';
+      oaEl.className = 'oa-result-value ' +
+        (oa < 20 ? 'oa-low' : oa < 40 ? 'oa-medium' : oa < 60 ? 'oa-good' : 'oa-high');
+    }
+    if (holesEl) {
+      holesEl.innerHTML = Math.round(holes).toLocaleString() + '<span class="oa-holes-unit">/m\u00b2</span>';
+    }
+  }
+
+  /* ============================================================
+     RESET
+  ============================================================ */
+  function resetCalc(key) {
+    PATTERNS[key].fields.forEach(function (f) {
+      var el = document.getElementById('oa-' + key + '-' + f.id);
+      if (el) el.value = '';
+    });
+    var oaEl    = document.getElementById('oa-oa-' + key);
+    var holesEl = document.getElementById('oa-holes-' + key);
+    if (oaEl)    { oaEl.textContent = '\u2014'; oaEl.className = 'oa-result-value'; }
+    if (holesEl) { holesEl.textContent = '\u2014'; }
+  }
+
+  /* ============================================================
+     MODAL — open with pattern context
+  ============================================================ */
+  function openModal(key) {
+    var p       = PATTERNS[key];
+    var oaEl    = document.getElementById('oa-oa-' + key);
+    var holesEl = document.getElementById('oa-holes-' + key);
+
+    var lines = [];
+    p.fields.forEach(function (f) {
+      var el  = document.getElementById('oa-' + key + '-' + f.id);
+      var val = el ? el.value.trim() : '';
+      if (val) lines.push('<strong>' + f.label + ':</strong> ' + val + ' mm');
+    });
+    var oaText    = oaEl    ? oaEl.textContent    : '\u2014';
+    var holesText = holesEl ? holesEl.textContent : '\u2014';
+
+    var subtitle = document.getElementById('oa-modal-subtitle');
+    var summary  = document.getElementById('oa-modal-summary');
+    if (subtitle) subtitle.textContent = p.name + ' \u2014 ' + p.desc;
+    if (summary) {
+      summary.innerHTML =
+        (lines.length ? lines.join('<br>') + '<br>' : '<em>No dimensions entered</em><br>') +
+        '<strong>Open Area:</strong> ' + oaText + '<br>' +
+        '<strong>Holes / m\u00b2:</strong> ' + holesText;
+    }
+
+    /* Pre-fill ghost form fields with pattern data */
+    var ghostForm = document.querySelector('.oa-form-ghost form');
+    if (ghostForm) {
+      var gf = function (name) { return ghostForm.querySelector('[name="' + name + '"]'); };
+      var dimStr = lines.length
+        ? p.fields.map(function (f) {
+            var el = document.getElementById('oa-' + key + '-' + f.id);
+            return el && el.value ? f.label + ': ' + el.value + ' mm' : null;
+          }).filter(Boolean).join(', ')
+        : '(not entered)';
+      var fPattern    = gf('Pattern');
+      var fDimensions = gf('Dimensions');
+      var fOpenArea   = gf('Open-Area');
+      var fHoles      = gf('Holes-per-m2');
+      if (fPattern)    fPattern.value    = p.name + ' \u2014 ' + p.desc;
+      if (fDimensions) fDimensions.value = dimStr;
+      if (fOpenArea)   fOpenArea.value   = oaText;
+      if (fHoles)      fHoles.value      = holesText;
+    }
+
+    /* Clear visible modal fields and status */
+    ['oa-vis-name','oa-vis-email','oa-vis-phone','oa-vis-company','oa-vis-message'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('oa-field-error'); }
+    });
+    var statusEl = document.getElementById('oa-modal-status');
+    if (statusEl) { statusEl.className = 'oa-modal-status'; statusEl.textContent = ''; }
+
+    var submitBtn = document.getElementById('oa-modal-submit');
+    if (submitBtn) submitBtn.style.display = '';
+
+    var overlay = document.getElementById('oa-modal');
+    if (overlay) overlay.classList.add('oa-modal-open');
+  }
+
+  function closeModal() {
+    var overlay = document.getElementById('oa-modal');
+    if (overlay) overlay.classList.remove('oa-modal-open');
+  }
+
+  /* ============================================================
+     SUBMIT INQUIRY — copies visible fields to ghost form, submits
+  ============================================================ */
+  function submitInquiry() {
+    var modal     = document.getElementById('oa-modal');
+    var nameEl    = modal ? modal.querySelector('#oa-vis-name')    : null;
+    var emailEl   = modal ? modal.querySelector('#oa-vis-email')   : null;
+    var phoneEl   = modal ? modal.querySelector('#oa-vis-phone')   : null;
+    var companyEl = modal ? modal.querySelector('#oa-vis-company') : null;
+    var msgEl     = modal ? modal.querySelector('#oa-vis-message') : null;
+    var statusEl  = document.getElementById('oa-modal-status');
+
+    var valid = true;
+    [nameEl, emailEl].forEach(function (el) {
+      if (!el || !el.value.trim()) {
+        if (el) el.classList.add('oa-field-error');
+        valid = false;
+      }
+    });
+    if (!valid) {
+      if (statusEl) {
+        statusEl.className = 'oa-modal-status oa-status-error';
+        statusEl.textContent = 'Please fill in your name and email.';
+      }
+      return;
+    }
+
+    var ghostForm = document.querySelector('.oa-form-ghost form');
+    var gf = function (name) { return ghostForm ? ghostForm.querySelector('[name="' + name + '"]') : null; };
+    var fName    = gf('name');
+    var fEmail   = gf('Email-Address');
+    var fPhone   = gf('Phone-Number');
+    var fCompany = gf('Company');
+    var fMsg     = gf('Message');
+
+    if (fName)    fName.value    = nameEl.value.trim();
+    if (fEmail)   fEmail.value   = emailEl.value.trim();
+    if (fPhone)   fPhone.value   = phoneEl   ? phoneEl.value.trim()   : '';
+    if (fCompany) fCompany.value = companyEl ? companyEl.value.trim() : '';
+    if (fMsg)     fMsg.value     = msgEl     ? msgEl.value.trim()     : '';
+
+    var submitBtn = document.getElementById('oa-modal-submit');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending\u2026'; }
+
+    if (ghostForm) {
+      if (typeof jQuery !== 'undefined') {
+        jQuery(ghostForm).submit();
+      } else {
+        var ghostSubmitBtn = ghostForm.querySelector('[type="submit"]');
+        if (ghostSubmitBtn) ghostSubmitBtn.click();
+      }
+    } else {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Inquiry'; }
+      if (statusEl) {
+        statusEl.className = 'oa-modal-status oa-status-error';
+        statusEl.textContent = 'Form not found. Please contact us directly.';
+      }
+    }
+  }
+
+  /* ============================================================
+     BIND MODAL EVENTS
+  ============================================================ */
+  function bindModal() {
+    var closeBtn = document.getElementById('oa-modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    var cancelBtn = document.getElementById('oa-modal-cancel');
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    var overlay = document.getElementById('oa-modal');
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    var submitBtn = document.getElementById('oa-modal-submit');
+    if (submitBtn) submitBtn.addEventListener('click', submitInquiry);
+
+    ['oa-vis-name','oa-vis-email'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', function () { el.classList.remove('oa-field-error'); });
+    });
+
+    var ghostWrap = document.querySelector('.oa-form-ghost');
+    if (ghostWrap) {
+      var checkFormState = function () {
+        var done = ghostWrap.querySelector('.w-form-done');
+        var fail = ghostWrap.querySelector('.w-form-fail');
+        var statusEl  = document.getElementById('oa-modal-status');
+        var submitBtn = document.getElementById('oa-modal-submit');
+        if (done && (done.style.display === 'block' || (done.style.display !== 'none' && getComputedStyle(done).display !== 'none'))) {
+          if (statusEl) {
+            statusEl.className = 'oa-modal-status oa-status-success';
+            statusEl.textContent = 'Inquiry sent! We\u2019ll be in touch shortly.';
+          }
+          if (submitBtn) submitBtn.style.display = 'none';
+          setTimeout(closeModal, 2500);
+        } else if (fail && (fail.style.display === 'block' || (fail.style.display !== 'none' && getComputedStyle(fail).display !== 'none'))) {
+          if (statusEl) {
+            statusEl.className = 'oa-modal-status oa-status-error';
+            statusEl.textContent = 'Submission failed. Please contact us directly.';
+          }
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Inquiry'; }
+        }
+      };
+      var observer = new MutationObserver(checkFormState);
+      observer.observe(ghostWrap, { attributes: true, subtree: true, childList: true, attributeFilter: ['style', 'class'] });
+    }
+  }
+
+  /* ============================================================
+     WEBFLOW-SAFE INITIALISATION
+  ============================================================ */
+  var _inited = false;
+  function safeInit() { if (!_inited) { _inited = true; init(); } }
+  window.Webflow = window.Webflow || [];
+  window.Webflow.push(safeInit);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', safeInit);
+  } else {
+    safeInit();
+  }
+
+}());
+</script>

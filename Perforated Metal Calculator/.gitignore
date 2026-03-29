@@ -1,0 +1,23 @@
+# API credentials — never commit
+TOKEN.txt
+*.token
+.env
+.env.*
+
+# Deployment output (generated at runtime)
+oa_image_urls.json
+
+# Proprietary client documents
+\[Final\]*.pdf
+catalogue_text.txt
+catalogue_diagrams.txt
+catalogue_formulas.txt
+
+# Large base64 blobs (v1 only, not efficiently diffable)
+assets/b64/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.claude/settings.local.json

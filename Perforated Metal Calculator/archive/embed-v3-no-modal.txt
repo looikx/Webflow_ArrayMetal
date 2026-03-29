@@ -1,0 +1,349 @@
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#oa-top { max-width: 960px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+.oa-hero { margin-bottom: 2.5rem; }
+.oa-hero-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #888; margin-bottom: .5rem; }
+.oa-hero h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; margin-bottom: .5rem; }
+.oa-hero p { font-size: 14px; color: #555; }
+.oa-grid-header { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: #888; margin-bottom: .75rem; margin-top: 1.5rem; }
+.oa-grid-header:first-of-type { margin-top: 0; }
+.oa-thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .875rem; margin-bottom: .5rem; }
+.oa-thumb-card { background: #fff; border: 1.5px solid #e0e0e0; border-radius: 10px; padding: .75rem .75rem .7rem; cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .1s; text-align: center; text-decoration: none; display: block; }
+.oa-thumb-card:hover { border-color: #185FA5; box-shadow: 0 4px 14px rgba(24,95,165,.13); transform: translateY(-2px); }
+.oa-thumb-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; display: block; margin-bottom: .5rem; }
+.oa-thumb-name { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.oa-thumb-desc { font-size: 11px; color: #888; margin-top: 2px; line-height: 1.4; }
+.oa-sections-wrap { margin-top: 3rem; }
+.oa-pattern-section { margin-bottom: 2.5rem; }
+.oa-section-heading { display: flex; align-items: baseline; gap: .6rem; margin-bottom: 1rem; padding-bottom: .6rem; border-bottom: 1px solid #e8e8e8; }
+.oa-pat-name { font-size: 17px; font-weight: 700; color: #09318b; }
+.oa-pat-desc { font-size: 13px; color: #555; }
+.oa-calc-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; align-items: start; }
+.oa-diagram-panel { aspect-ratio: 1 / 1; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; overflow: hidden; }
+.oa-diagram-panel img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.oa-diagram-label { font-size: 11px; color: #aaa; text-align: center; margin-top: .5rem; letter-spacing: .04em; }
+.oa-inputs-panel { display: flex; flex-direction: column; gap: .75rem; }
+.oa-field-row { display: flex; flex-direction: column; gap: .25rem; }
+.oa-field-label { font-size: 12px; font-weight: 500; color: #444; }
+.oa-field-input-wrap { display: flex; align-items: center; gap: .5rem; }
+.oa-field-input { flex: 1; border: 1.5px solid #ddd; border-radius: 7px; padding: .4rem .7rem; font-size: 14px; color: #1a1a1a; outline: none; transition: border-color .15s; }
+.oa-field-input:focus { border-color: #185FA5; }
+.oa-field-unit { font-size: 12px; color: #aaa; white-space: nowrap; }
+.oa-results { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .25rem; }
+.oa-result-box { background: #f7f7f5; border-radius: 9px; padding: .7rem .9rem; display: flex; flex-direction: column; gap: .2rem; }
+.oa-result-label { font-size: 11px; color: #888; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+.oa-result-value { font-size: 22px; font-weight: 700; color: #1a1a1a; line-height: 1.1; }
+.oa-result-value.oa-low { color: #c0392b; }
+.oa-result-value.oa-medium { color: #e67e22; }
+.oa-result-value.oa-good { color: #27ae60; }
+.oa-result-value.oa-high { color: #185FA5; }
+.oa-result-unit { font-size: 13px; font-weight: 400; color: #888; }
+.oa-holes-unit { font-size: 12px; font-weight: 400; color: #888; }
+.oa-formula-note { font-size: 11px; color: #aaa; background: #f9f9f7; border-radius: 6px; padding: .4rem .7rem; line-height: 1.7; }
+.oa-formula-note code { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: #555; }
+.oa-btn-row { display: flex; gap: .6rem; margin-top: .75rem; align-items: center; }
+.oa-btn { font-size: 13px; font-weight: 600; border-radius: 7px; padding: .5rem 1rem; cursor: pointer; border: none; transition: background .15s, color .15s; line-height: 1.4; }
+.oa-btn-reset { background: #f0f0ee; color: #555; font-weight: 400; }
+.oa-btn-reset:hover { background: #e4e4e0; color: #333; }
+.oa-btn-inquiry { background: #09318b; color: #fff; }
+.oa-btn-inquiry:hover { background: #072670; }
+.oa-btn-inquiry:disabled { background: #aac4e0; cursor: not-allowed; }
+.oa-inquiry-msg { font-size: 12px; margin-top: .4rem; min-height: 1.2em; }
+.oa-inquiry-msg.oa-ok { color: #27ae60; }
+.oa-inquiry-msg.oa-err { color: #c0392b; }
+.oa-back-link { font-size: 12px; color: #185FA5; text-decoration: none; display: inline-block; margin-top: .75rem; }
+.oa-back-link:hover { text-decoration: underline; }
+.oa-section-divider { border: none; border-top: 1px solid #f0f0f0; margin: 2rem 0; }
+@media (max-width: 640px) {
+  .oa-thumb-grid { grid-template-columns: repeat(2, 1fr); }
+  .oa-calc-card { grid-template-columns: 1fr; }
+}
+</style>
+
+<div id="oa-top"></div>
+
+<script>
+(function() {
+  var IMGS = {
+    RT:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656b2e7349d087a9a02_R-T.png',
+    RM:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656810281570103c754_R-M.png',
+    RU:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656b66880abc837dc4c_R-U.png',
+    LRU: 'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c796566ec91a5df3233445_LR-U.png',
+    LRZ: 'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656ece6d0a65ad16b3f_LR-ZxZ.png',
+    CT:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656ed39203b224109b6_C-T.png',
+    CU:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656b84d191bc56d75cb_C-U.png',
+    CDM: 'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656036811a3aa3d261c_CD-M.png',
+    HT:  'https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/69c79656c36bad2a709937c8_H-T.png'
+  };
+
+  var PATTERNS = {
+    RT:  { name:'R-T',    desc:'Round holes, 60° triangular pitch',      fields:[{id:'R',label:'R — Hole Diameter'},{id:'T',label:'T — Pitch'}],                                                              openArea:function(v){return v.R*v.R/(v.T*v.T)*90.69;},    holesPerM2:function(v){return 1154700/(v.T*v.T);},          formula:'Open Area = (R² / T²) × 90.69%',                       holesFormula:'Holes/m² = 1,154,700 / T²',        valid:function(v){return v.R>0&&v.T>0&&v.R<v.T;} },
+    RM:  { name:'R-M',    desc:'Round holes, 45° diagonal pitch',        fields:[{id:'R',label:'R — Hole Diameter'},{id:'M',label:'M — Pitch'}],                                                              openArea:function(v){return v.R*v.R/(v.M*v.M)*78.54;},    holesPerM2:function(v){return 1000000/(v.M*v.M);},          formula:'Open Area = (R² / M²) × 78.54%',                       holesFormula:'Holes/m² = 1,000,000 / M²',        valid:function(v){return v.R>0&&v.M>0&&v.R<v.M;} },
+    RU:  { name:'R-U',    desc:'Round holes, 90° rectangular pitch',     fields:[{id:'R',label:'R — Hole Diameter'},{id:'U1',label:'U₁ — Pitch (row)'},{id:'U2',label:'U₂ — Pitch (column)'}],              openArea:function(v){return v.R*v.R/(v.U1*v.U2)*78.54;},  holesPerM2:function(v){return 1000000/(v.U1*v.U2);},        formula:'Open Area = (R² / (U₁ × U₂)) × 78.54%',               holesFormula:'Holes/m² = 1,000,000 / (U₁ × U₂)', valid:function(v){return v.R>0&&v.U1>0&&v.U2>0;} },
+    LRU: { name:'LR-U',   desc:'Oblong holes, rectangular pitch',        fields:[{id:'R',label:'R — Slot Width'},{id:'L',label:'L — Slot Length'},{id:'U1',label:'U₁ — Pitch (row)'},{id:'U2',label:'U₂ — Pitch (column)'}], openArea:function(v){return (v.R*v.L-0.215*v.R*v.R)*100/(v.U1*v.U2);}, holesPerM2:function(v){return 1000000/(v.U1*v.U2);}, formula:'Open Area = (R × L − 0.215 × R²) × 100 / (U₁ × U₂)', holesFormula:'Holes/m² = 1,000,000 / (U₁ × U₂)', valid:function(v){return v.R>0&&v.L>0&&v.U1>0&&v.U2>0&&v.L>=v.R;} },
+    LRZ: { name:'LR-Z×Z', desc:'Oblong holes, staggered pitch',          fields:[{id:'R',label:'R — Slot Width'},{id:'L',label:'L — Slot Length'},{id:'Z1',label:'Z₁ — Pitch 1'},{id:'Z2',label:'Z₂ — Pitch 2'}],          openArea:function(v){return (v.R*v.L-0.215*v.R*v.R)*100/(v.Z1*v.Z2);}, holesPerM2:function(v){return 1000000/(v.Z1*v.Z2);}, formula:'Open Area = (R × L − 0.215 × R²) × 100 / (Z₁ × Z₂)', holesFormula:'Holes/m² = 1,000,000 / (Z₁ × Z₂)', valid:function(v){return v.R>0&&v.L>0&&v.Z1>0&&v.Z2>0&&v.L>=v.R;} },
+    CT:  { name:'C-T',    desc:'Square holes, 60° triangular pitch',     fields:[{id:'C',label:'C — Hole Side Length'},{id:'T',label:'T — Pitch'}],                                                          openArea:function(v){return v.C*v.C/(v.T*v.T)*115.47;},   holesPerM2:function(v){return 1154700/(v.T*v.T);},          formula:'Open Area = (C² / T²) × 115.47%',                      holesFormula:'Holes/m² = 1,154,700 / T²',        valid:function(v){return v.C>0&&v.T>0&&v.C<v.T;} },
+    CU:  { name:'C-U',    desc:'Square holes, 90° rectangular pitch',    fields:[{id:'C',label:'C — Hole Side Length'},{id:'U1',label:'U₁ — Pitch (row)'},{id:'U2',label:'U₂ — Pitch (column)'}],          openArea:function(v){return v.C*v.C/(v.U1*v.U2)*100;},    holesPerM2:function(v){return 1000000/(v.U1*v.U2);},        formula:'Open Area = (C² / (U₁ × U₂)) × 100%',                 holesFormula:'Holes/m² = 1,000,000 / (U₁ × U₂)', valid:function(v){return v.C>0&&v.U1>0&&v.U2>0;} },
+    CDM: { name:'CD-M',   desc:'Square holes (diagonal), 45° pitch',     fields:[{id:'CD',label:'CD — Hole Side Length'},{id:'M',label:'M — Pitch'}],                                                        openArea:function(v){return v.CD*v.CD/(v.M*v.M)*100;},    holesPerM2:function(v){return 1000000/(v.M*v.M);},          formula:'Open Area = (CD² / M²) × 100%',                        holesFormula:'Holes/m² = 1,000,000 / M²',        valid:function(v){return v.CD>0&&v.M>0&&v.CD<v.M;} },
+    HT:  { name:'H-T',    desc:'Hexagon holes, 60° triangular pitch',    fields:[{id:'H',label:'H — Hole Across Flats'},{id:'T',label:'T — Pitch'}],                                                         openArea:function(v){return v.H*v.H/(v.T*v.T)*100;},      holesPerM2:function(v){return 1154700/(v.T*v.T);},          formula:'Open Area = (H² / T²) × 100%',                         holesFormula:'Holes/m² = 1,154,700 / T²',        valid:function(v){return v.H>0&&v.T>0&&v.H<v.T;} }
+  };
+
+  var GROUPS = [
+    { label:'Round Holes',   keys:['RT','RM','RU'] },
+    { label:'Oblong Holes',  keys:['LRU','LRZ'] },
+    { label:'Square Holes',  keys:['CT','CU','CDM'] },
+    { label:'Hexagon Holes', keys:['HT'] }
+  ];
+
+  function init() {
+    var root = document.getElementById('oa-top');
+    if (!root) return;
+
+    // Build hero
+    var hero = document.createElement('div');
+    hero.className = 'oa-hero';
+    hero.innerHTML = '<div class="oa-hero-label">Array Metal (M) Sdn. Bhd.</div>' +
+      '<h1>Open Area Calculator</h1>' +
+      '<p>Select a perforation pattern to calculate open area percentage and hole density for your perforated metal sheet.</p>';
+    root.appendChild(hero);
+
+    // Build thumb section
+    var thumbSection = document.createElement('div');
+    thumbSection.id = 'oa-thumb-section';
+    root.appendChild(thumbSection);
+
+    // Build sections wrap
+    var sectionsWrap = document.createElement('div');
+    sectionsWrap.className = 'oa-sections-wrap';
+    sectionsWrap.id = 'oa-sections';
+    root.appendChild(sectionsWrap);
+
+    buildThumbs(thumbSection);
+    buildSections(sectionsWrap);
+  }
+
+  function buildThumbs(wrap) {
+    GROUPS.forEach(function(g) {
+      var hdr = document.createElement('div');
+      hdr.className = 'oa-grid-header';
+      hdr.textContent = g.label;
+      wrap.appendChild(hdr);
+      var grid = document.createElement('div');
+      grid.className = 'oa-thumb-grid';
+      g.keys.forEach(function(key) {
+        var p = PATTERNS[key];
+        var card = document.createElement('a');
+        card.className = 'oa-thumb-card';
+        card.href = '#';
+        card.setAttribute('data-target', 'oa-section-' + key);
+        var img = document.createElement('img');
+        img.src = IMGS[key];
+        img.alt = p.name;
+        card.appendChild(img);
+        var name = document.createElement('div');
+        name.className = 'oa-thumb-name';
+        name.textContent = p.name;
+        card.appendChild(name);
+        var desc = document.createElement('div');
+        desc.className = 'oa-thumb-desc';
+        desc.textContent = p.desc;
+        card.appendChild(desc);
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          var sec = document.getElementById(this.getAttribute('data-target'));
+          if (!sec) return;
+          var navEl = document.querySelector('.navbar.w-nav') || document.querySelector('.w-nav');
+          var navH = navEl ? navEl.offsetHeight : 81;
+          var top = sec.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        });
+        grid.appendChild(card);
+      });
+      wrap.appendChild(grid);
+    });
+  }
+
+  function buildSections(wrap) {
+    var keys = [];
+    GROUPS.forEach(function(g) { g.keys.forEach(function(k) { keys.push(k); }); });
+    keys.forEach(function(key, idx) {
+      var p = PATTERNS[key];
+      if (idx > 0) { var hr = document.createElement('hr'); hr.className = 'oa-section-divider'; wrap.appendChild(hr); }
+      var sec = document.createElement('div');
+      sec.className = 'oa-pattern-section';
+      sec.id = 'oa-section-' + key;
+      var hdr = document.createElement('div');
+      hdr.className = 'oa-section-heading';
+      hdr.innerHTML = '<span class="oa-pat-name">' + p.name + '</span><span class="oa-pat-desc">' + p.desc + '</span>';
+      sec.appendChild(hdr);
+      var card = document.createElement('div');
+      card.className = 'oa-calc-card';
+      var diagPanel = document.createElement('div');
+      diagPanel.className = 'oa-diagram-panel';
+      var dImg = document.createElement('img');
+      dImg.src = IMGS[key];
+      dImg.alt = p.name + ' diagram';
+      diagPanel.appendChild(dImg);
+      var dLabel = document.createElement('div');
+      dLabel.className = 'oa-diagram-label';
+      dLabel.textContent = p.name + ' — ' + p.desc;
+      diagPanel.appendChild(dLabel);
+      card.appendChild(diagPanel);
+      var inputsPanel = document.createElement('div');
+      inputsPanel.className = 'oa-inputs-panel';
+      var fc = document.createElement('div');
+      fc.style.cssText = 'display:flex;flex-direction:column;gap:.75rem;';
+      p.fields.forEach(function(f) {
+        var row = document.createElement('div');
+        row.className = 'oa-field-row';
+        row.innerHTML = '<label class="oa-field-label" for="oa-' + key + '-' + f.id + '">' + f.label + '</label>' +
+          '<div class="oa-field-input-wrap"><input class="oa-field-input" id="oa-' + key + '-' + f.id + '" type="number" min="0.01" step="any" placeholder="0.00" autocomplete="off"><span class="oa-field-unit">mm</span></div>';
+        fc.appendChild(row);
+      });
+      inputsPanel.appendChild(fc);
+      var results = document.createElement('div');
+      results.className = 'oa-results';
+      results.innerHTML = '<div class="oa-result-box"><div class="oa-result-label">Open Area</div><div class="oa-result-value" id="oa-oa-' + key + '">—</div></div>' +
+        '<div class="oa-result-box"><div class="oa-result-label">Holes / m²</div><div class="oa-result-value" id="oa-holes-' + key + '">—</div></div>';
+      inputsPanel.appendChild(results);
+      var fn = document.createElement('div');
+      fn.className = 'oa-formula-note';
+      fn.innerHTML = '<code>' + p.formula + '</code><br><code>' + p.holesFormula + '</code>';
+      inputsPanel.appendChild(fn);
+
+      // Button row: Reset + Send Inquiry
+      var btnRow = document.createElement('div');
+      btnRow.className = 'oa-btn-row';
+
+      var msgEl = document.createElement('div');
+      msgEl.className = 'oa-inquiry-msg';
+
+      var inquiryBtn = document.createElement('button');
+      inquiryBtn.type = 'button';
+      inquiryBtn.className = 'oa-btn oa-btn-inquiry';
+      inquiryBtn.textContent = 'Send Inquiry';
+      (function(k, btn, msg) {
+        btn.addEventListener('click', function() { sendInquiry(k, btn, msg); });
+      })(key, inquiryBtn, msgEl);
+      btnRow.appendChild(inquiryBtn);
+
+      var resetBtn = document.createElement('button');
+      resetBtn.type = 'button';
+      resetBtn.className = 'oa-btn oa-btn-reset';
+      resetBtn.textContent = 'Reset';
+      (function(k) {
+        resetBtn.addEventListener('click', function() { resetCalc(k); });
+      })(key);
+      btnRow.appendChild(resetBtn);
+
+      inputsPanel.appendChild(btnRow);
+      inputsPanel.appendChild(msgEl);
+      card.appendChild(inputsPanel);
+      sec.appendChild(card);
+      var back = document.createElement('a');
+      back.className = 'oa-back-link';
+      back.href = '#oa-top';
+      back.textContent = '↑ Back to patterns';
+      back.addEventListener('click', function(e) { e.preventDefault(); document.getElementById('oa-top').scrollIntoView({ behavior:'smooth' }); });
+      sec.appendChild(back);
+      wrap.appendChild(sec);
+    });
+    keys.forEach(function(key) {
+      PATTERNS[key].fields.forEach(function(f) {
+        var el = document.getElementById('oa-' + key + '-' + f.id);
+        if (el) el.addEventListener('input', function() { calculate(key); });
+      });
+    });
+  }
+
+  function calculate(key) {
+    var p = PATTERNS[key];
+    var v = {}, allFilled = true;
+    p.fields.forEach(function(f) {
+      var el = document.getElementById('oa-' + key + '-' + f.id);
+      var val = parseFloat(el.value);
+      if (!el.value || isNaN(val) || val <= 0) allFiled = false;
+      v[f.id] = val;
+    });
+    var oaEl = document.getElementById('oa-oa-' + key);
+    var holesEl = document.getElementById('oa-holes-' + key);
+    if (!allFilled || !p.valid(v)) {
+      oaEl.textContent = '—'; oaEl.className = 'oa-result-value';
+      holesEl.textContent = '—'; return;
+    }
+    var oa = p.openArea(v), holes = p.holesPerM2(v);
+    if (oa < 0 || oa > 100) { oaEl.textContent = '—'; oaEl.className = 'oa-result-value'; holesEl.textContent = '—'; return; }
+    oaEl.innerHTML = oa.toFixed(1) + '<span class="oa-result-unit">%</span>';
+    oaEl.className = 'oa-result-value ' + (oa < 20 ? 'oa-low' : oa < 40 ? 'oa-medium' : oa < 60 ? 'oa-good' : 'oa-high');
+    holesEl.innerHTML = Math.round(holes).toLocaleString() + '<span class="oa-holes-unit">/m²</span>';
+  }
+
+  function resetCalc(key) {
+    var p = PATTERNS[key];
+    p.fields.forEach(function(f) {
+      var el = document.getElementById('oa-' + key + '-' + f.id);
+      if (el) el.value = '';
+    });
+    var oaEl = document.getElementById('oa-oa-' + key);
+    if (oaEl) { oaEl.textContent = '—'; oaEl.className = 'oa-result-value'; }
+    var holesEl = document.getElementById('oa-holes-' + key);
+    if (holesEl) holesEl.textContent = '—';
+  }
+
+  function sendInquiry(key, btn, msgEl) {
+    var p = PATTERNS[key];
+    var lines = [];
+    p.fields.forEach(function(f) {
+      var el = document.getElementById('oa-' + key + '-' + f.id);
+      var val = el ? el.value.trim() : '';
+      if (val) lines.push(f.label + ': ' + val + ' mm');
+    });
+    var oaEl = document.getElementById('oa-oa-' + key);
+    var oaText = oaEl ? oaEl.textContent.replace(/<[^>]+>/g, '').trim() : '—';
+    var holesEl = document.getElementById('oa-holes-' + key);
+    var holesText = holesEl ? holesEl.textContent.replace(/<[^>]+>/g, '').trim() : '—';
+
+    btn.disabled = true;
+    msgEl.textContent = 'Sending…';
+    msgEl.className = 'oa-inquiry-msg';
+
+    var payload = {
+      name: 'Perforated Metal Open Area Inquiry',
+      source: window.location.href,
+      'test': false,
+      dolphin: false,
+      fields: {
+        'Pattern': p.name + ' \u2014 ' + p.desc,
+        'Dimensions': lines.length ? lines.join(', ') : '(not entered)',
+        'Open Area': oaText,
+        'Holes per m2': holesText
+      }
+    };
+
+    fetch('https://webflow.com/api/v1/form/6082b34dc5995b3e8dc8c73b', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(r) {
+      btn.disabled = false;
+      if (r.ok) {
+        msgEl.textContent = 'Inquiry sent! We\u2019ll be in touch.';
+        msgEl.className = 'oa-inquiry-msg oa-ok';
+      } else {
+        msgEl.textContent = 'Submission failed (error ' + r.status + '). Please contact us directly.';
+        msgEl.className = 'oa-inquiry-msg oa-err';
+      }
+    }).catch(function() {
+      btn.disabled = false;
+      msgEl.textContent = 'Could not send. Please contact us directly.';
+      msgEl.className = 'oa-inquiry-msg oa-err';
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
