@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Array Metal — Inquiry Cart Demo (Option A)</title>
+  <style>
+    :root {
+      --ink: #0f1419;
+      --slate: #1c2430;
+      --steel: #2a3544;
+      --muted: #6b7785;
+      --line: #e2e6eb;
+      --paper: #f6f7f9;
+      --white: #ffffff;
+      --accent: #e85d04;
+      --accent-hover: #d04f00;
+      --accent-soft: #fff1e8;
+      --ok: #0d7a4f;
+      --ok-soft: #e6f5ee;
+      --radius: 10px;
+      --shadow: 0 8px 28px rgba(15, 20, 25, 0.08);
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.45;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+
+    /* Demo banner */
+    .demo-banner {
+      background: linear-gradient(90deg, #1c2430, #2a3544);
+      color: #c9d2dc;
+      font-size: 13px;
+      padding: 8px 16px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+    }
+    .demo-banner strong { color: #fff; }
+    .demo-banner code {
+      background: rgba(255,255,255,0.1);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    }
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-size: 18px;
+    }
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--slate), var(--steel));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--ink);
+      background: var(--paper);
+    }
+    .inquiry-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--slate);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+    .inquiry-btn:hover { background: var(--ink); }
+    .badge {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-grid;
+      place-items: center;
+    }
+    .badge.empty { background: #5a6674; }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    /* Views */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .page-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .crumb {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .crumb span { color: var(--ink); font-weight: 600; }
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 32px);
+      letter-spacing: -0.03em;
+    }
+    .lede {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 560px;
+      font-size: 15px;
+    }
+
+    /* Product group hero */
+    .group-hero {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 760px) {
+      .group-hero { grid-template-columns: 1fr; }
+    }
+    .group-hero h2 { margin: 0 0 8px; font-size: 20px; }
+    .group-hero p { margin: 0; color: var(--muted); font-size: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chip {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--steel);
+      border: 1px solid var(--line);
+    }
+    .hero-visual {
+      border-radius: 12px;
+      background:
+        linear-gradient(145deg, #dfe5ec 0%, #f4f6f8 40%, #c8d0da 100%);
+      min-height: 140px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: 20% 15%;
+      border: 2px solid rgba(28, 36, 48, 0.18);
+      border-radius: 4px;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 18px,
+          rgba(28, 36, 48, 0.12) 18px,
+          rgba(28, 36, 48, 0.12) 20px
+        );
+    }
+    .hero-visual span {
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--steel);
+      background: rgba(255,255,255,0.85);
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+
+    /* Product grid */
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .card:hover {
+      border-color: #c5ccd6;
+      box-shadow: var(--shadow);
+    }
+    .card-media {
+      height: 140px;
+      background: linear-gradient(160deg, #eceff3, #d5dbe3);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .card-media .sku {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--steel);
+    }
+    .glyph {
+      width: 72%;
+      height: 54%;
+      border: 2px solid rgba(28, 36, 48, 0.2);
+      border-radius: 3px;
+      background: rgba(255,255,255,0.35);
+    }
+    .glyph.ladder {
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.5),
+          rgba(255,255,255,0.5) 10px,
+          transparent 10px,
+          transparent 22px
+        ),
+        rgba(255,255,255,0.2);
+    }
+    .glyph.strut {
+      height: 28%;
+      border-radius: 2px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    }
+    .glyph.clip {
+      width: 36%;
+      height: 36%;
+      border-radius: 50% 50% 40% 40%;
+    }
+    .card-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .card-body h3 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+    .meta {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--steel);
+    }
+    .tag.accent {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .card-actions {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      border: none;
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.05s;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      flex: 1;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-ghost {
+      background: var(--paper);
+      color: var(--slate);
+      border: 1px solid var(--line);
+    }
+    .btn-ghost:hover { background: #eceff3; }
+    .btn-dark {
+      background: var(--slate);
+      color: #fff;
+    }
+    .btn-dark:hover { background: var(--ink); }
+    .btn-block { width: 100%; }
+    .btn-danger {
+      background: #fff;
+      color: #b42318;
+      border: 1px solid #f3c0bc;
+    }
+    .btn-danger:hover { background: #fff5f4; }
+
+    /* Modal */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 20, 25, 0.45);
+      z-index: 50;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+    }
+    .overlay.open { display: flex; }
+    @media (min-width: 640px) {
+      .overlay { align-items: center; }
+    }
+    .modal {
+      background: var(--white);
+      width: min(460px, 100%);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      max-height: min(90vh, 720px);
+      overflow: auto;
+      animation: rise 0.2s ease;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    .modal-head {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .modal-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .modal-head .sub {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .icon-btn {
+      border: none;
+      background: var(--paper);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--muted);
+    }
+    .modal-body { padding: 16px 20px 8px; display: grid; gap: 14px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: 2px solid rgba(232, 93, 4, 0.25);
+      border-color: var(--accent);
+    }
+    .field .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+    .field .error {
+      font-size: 12px;
+      color: #b42318;
+      margin-top: 5px;
+      display: none;
+    }
+    .field.invalid input { border-color: #b42318; }
+    .field.invalid .error { display: block; }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .quick-picks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .pick {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--steel);
+    }
+    .pick:hover, .pick.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .modal-foot {
+      padding: 12px 20px 20px;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Inquiry list */
+    .list-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .list-layout { grid-template-columns: 1fr; }
+    }
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .line-item {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 12px;
+      align-items: start;
+    }
+    .line-item:last-child { border-bottom: none; }
+    .line-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      background: linear-gradient(160deg, #eceff3, #d5dbe3);
+      display: grid;
+      place-items: center;
+    }
+    .line-thumb .mini {
+      width: 60%;
+      height: 40%;
+      border: 1.5px solid rgba(28,36,48,0.25);
+      border-radius: 2px;
+    }
+    .line-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .line-code {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .line-config {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .line-config span {
+      font-size: 12px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--steel);
+    }
+    .line-notes {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .line-side {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .qty-control button {
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: var(--paper);
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--steel);
+    }
+    .qty-control input {
+      width: 44px;
+      border: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .empty-state strong {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .form-body { padding: 16px 18px 18px; display: grid; gap: 12px; }
+    .preview-box {
+      background: var(--paper);
+      border: 1px dashed #c5ccd6;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12px;
+      white-space: pre-wrap;
+      font-family: ui-monospace, Consolas, monospace;
+      color: var(--steel);
+      max-height: 180px;
+      overflow: auto;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 80;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.ok { background: var(--ok); }
+
+    .success-card {
+      max-width: 520px;
+      margin: 40px auto;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--ok-soft);
+      color: var(--ok);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+    .home-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .home-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      transition: 0.15s;
+      text-align: left;
+    }
+    .home-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow);
+    }
+    .home-card h3 { margin: 0 0 6px; font-size: 16px; }
+    .home-card p { margin: 0; font-size: 13px; color: var(--muted); }
+    .home-card .arrow {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner">
+    <strong>Rough demo — Option A (Inquiry Cart)</strong>
+    · Not live Webflow · Sample data · Feel the flow:
+    browse → configure → list → send inquiry
+    · Open file: <code>demo/inquiry-cart-demo.html</code>
+  </div>
+
+  <header>
+    <div class="nav">
+      <a href="#" class="logo" data-nav="home">
+        <span class="logo-mark">AM</span>
+        Array Metal
+      </a>
+      <nav class="nav-links">
+        <a href="#" data-nav="home" class="active">Products</a>
+        <a href="#" data-nav="group">Cable Ladder</a>
+        <a href="#" data-nav="list">My Inquiry</a>
+      </nav>
+      <button type="button" class="inquiry-btn" data-nav="list" aria-label="Open my inquiry list">
+        My list
+        <span class="badge empty" id="cartBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="view-home" class="view active">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Catalogue · <span>Product groups</span></div>
+          <h1>Request a quote like a BOM</h1>
+          <p class="lede">
+            Oglaend-style inquiry: pick base products, set length / finish / qty,
+            build a project list, send one RFQ. No payment checkout.
+          </p>
+        </div>
+      </div>
+      <p class="section-label">Product groups (demo)</p>
+      <div class="home-groups">
+        <button type="button" class="home-card" data-nav="group">
+          <h3>Cable Ladder</h3>
+          <p>AML series, covers, splice plates — configure width &amp; length</p>
+          <div class="arrow">Browse items →</div>
+        </button>
+        <button type="button" class="home-card" data-nav="group" data-focus="strut">
+          <h3>Support channels</h3>
+          <p>Strut 41×41 — length 100–6000 mm (the key demo)</p>
+          <div class="arrow">Browse items →</div>
+        </button>
+        <button type="button" class="home-card" data-nav="list">
+          <h3>My Inquiry</h3>
+          <p>Review configured lines and submit to sales</p>
+          <div class="arrow">Open list →</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- PRODUCT GROUP -->
+    <section id="view-group" class="view">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Products · <span>Cable support systems</span></div>
+          <h1>Cable Ladder &amp; supports</h1>
+          <p class="lede">
+            Each card is one <strong>base product</strong>. Length and finish are
+            chosen when you add to the inquiry — not separate CMS items.
+          </p>
+        </div>
+        <button type="button" class="btn btn-ghost" data-nav="list">View my list →</button>
+      </div>
+
+      <div class="group-hero">
+        <div>
+          <h2>How “Add to inquiry” works</h2>
+          <p>
+            Click a product → set length (validated min/max/step), material, qty,
+            optional note → line lands in <strong>My list</strong> in the header.
+            Sales receives a readable BOM when you submit.
+          </p>
+          <div class="chips">
+            <span class="chip">No $0 checkout</span>
+            <span class="chip">localStorage cart</span>
+            <span class="chip">CMS base items + rules</span>
+            <span class="chip">RFQ email payload</span>
+          </div>
+        </div>
+        <div class="hero-visual"><span>Industrial catalogue UX</span></div>
+      </div>
+
+      <p class="section-label">Base products (sample)</p>
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <!-- MY LIST -->
+    <section id="view-list" class="view">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Inquiry · <span>My list</span></div>
+          <h1>My Inquiry</h1>
+          <p class="lede">
+            Edit quantities, remove lines, then send one structured request.
+            This is the Oglaend “selection list” pattern — not a shopping cart checkout.
+          </p>
+        </div>
+        <button type="button" class="btn btn-ghost" data-nav="group">← Continue browsing</button>
+      </div>
+
+      <div class="list-layout">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Selected items <span id="listCountLabel">(0)</span></h2>
+            <button type="button" class="btn btn-danger" id="clearCartBtn" style="padding: 7px 12px;">Clear all</button>
+          </div>
+          <div id="cartLines"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Send inquiry</h2>
+          </div>
+          <form class="form-body" id="inquiryForm">
+            <div class="row-2">
+              <div class="field">
+                <label for="fName">Name *</label>
+                <input id="fName" name="name" required placeholder="Alex Chen" />
+              </div>
+              <div class="field">
+                <label for="fCompany">Company *</label>
+                <input id="fCompany" name="company" required placeholder="ACME Engineering" />
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="fEmail">Email *</label>
+                <input id="fEmail" type="email" name="email" required placeholder="alex@acme.com" />
+              </div>
+              <div class="field">
+                <label for="fPhone">Phone</label>
+                <input id="fPhone" name="phone" placeholder="+60 …" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="fProject">Project / location</label>
+              <input id="fProject" name="project" placeholder="KLIA Phase 2 — Substation B" />
+            </div>
+            <div class="field">
+              <label for="fMessage">Message</label>
+              <textarea id="fMessage" name="message" rows="3" placeholder="Target delivery, drawings, special finish…"></textarea>
+            </div>
+            <div class="field">
+              <label>Selected items (auto-filled for sales)</label>
+              <div class="preview-box" id="payloadPreview">— add items to see payload —</div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Send inquiry</button>
+            <p class="meta" style="margin:0;text-align:center;">
+              Demo only — nothing is emailed. Real site uses Webflow form + optional Sheet/CRM.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section id="view-success" class="view">
+      <div class="success-card">
+        <div class="success-icon">✓</div>
+        <h1 style="font-size:24px;">Inquiry sent (demo)</h1>
+        <p class="lede" style="margin:10px auto 0;max-width:360px;">
+          In production, sales gets the contact fields + BOM list by email.
+          Cart would clear after a real submit.
+        </p>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:22px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-primary" data-nav="group">Browse more products</button>
+          <button type="button" class="btn btn-ghost" data-nav="home">Back to overview</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Configure modal -->
+  <div class="overlay" id="configOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="modalTitle">Configure item</h2>
+          <p class="sub" id="modalSub">Set options, then add to your inquiry list</p>
+        </div>
+        <button type="button" class="icon-btn" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field" id="fieldLength">
+          <label for="cfgLength">Length (mm)</label>
+          <input id="cfgLength" type="number" />
+          <div class="hint" id="lengthHint"></div>
+          <div class="quick-picks" id="lengthPicks"></div>
+          <div class="error" id="lengthError">Length must be within range and match step.</div>
+        </div>
+        <div class="row-2">
+          <div class="field" id="fieldWidth" style="display:none;">
+            <label for="cfgWidth">Width (mm)</label>
+            <select id="cfgWidth"></select>
+          </div>
+          <div class="field" id="fieldMaterial">
+            <label for="cfgMaterial">Material / finish</label>
+            <select id="cfgMaterial"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cfgQty">Quantity</label>
+          <input id="cfgQty" type="number" min="1" step="1" value="1" />
+          <div class="hint" id="unitHint">Unit: pc</div>
+        </div>
+        <div class="field">
+          <label for="cfgNotes">Note (optional)</label>
+          <input id="cfgNotes" placeholder="e.g. cut ends, special packing…" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" id="cancelModal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmAdd" style="flex:1;">Add to inquiry</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = "arraymetal_inquiry_cart_demo_v1";
+
+    /** Sample base products — mirrors recommended CMS model */
+    const PRODUCTS = [
+      {
+        id: "aml-str",
+        name: "AML Cable Ladder (straight)",
+        baseCode: "AML-STR",
+        group: "Cable Ladder",
+        unit: "m",
+        glyph: "ladder",
+        lengthConfigurable: true,
+        lengthMin: 1000,
+        lengthMax: 6000,
+        lengthStep: 500,
+        standardLengths: [3000, 6000],
+        widthOptions: [100, 150, 200, 300, 400, 600],
+        materials: ["HDG", "SS304", "SS316", "Powder coat"],
+        blurb: "NEMA-style ladder series · width + length on RFQ"
+      },
+      {
+        id: "aml-splice",
+        name: "Straight splice plate",
+        baseCode: "AML-SP",
+        group: "Cable Ladder",
+        unit: "pc",
+        glyph: "clip",
+        lengthConfigurable: false,
+        materials: ["HDG", "SS316"],
+        blurb: "Fixed fitting · material only"
+      },
+      {
+        id: "aml-cover",
+        name: "Ladder cover",
+        baseCode: "AML-COV",
+        group: "Cable Ladder",
+        unit: "m",
+        glyph: "ladder",
+        lengthConfigurable: true,
+        lengthMin: 1000,
+        lengthMax: 3000,
+        lengthStep: 1000,
+        standardLengths: [1000, 2000, 3000],
+        widthOptions: [100, 150, 200, 300, 400, 600],
+        materials: ["HDG", "SS304", "SS316"],
+        blurb: "Match width to ladder run"
+      },
+      {
+        id: "sc-4141",
+        name: "Strut Channel 41×41",
+        baseCode: "SC-4141",
+        group: "Support channels",
+        unit: "pc",
+        glyph: "strut",
+        lengthConfigurable: true,
+        lengthMin: 100,
+        lengthMax: 6000,
+        lengthStep: 50,
+        standardLengths: [1000, 2000, 3000, 6000],
+        materials: ["HDG", "SS304", "SS316"],
+        blurb: "Key demo: 100–6000 mm step 50 — one CMS row"
+      },
+      {
+        id: "cca",
+        name: "Cover clip",
+        baseCode: "CCA",
+        group: "Cable Ladder",
+        unit: "pc",
+        glyph: "clip",
+        lengthConfigurable: false,
+        materials: ["HDG"],
+        blurb: "Accessory · qty only"
+      },
+      {
+        id: "apo-tray",
+        name: "APO Perforated tray",
+        baseCode: "APO-PT",
+        group: "Cable Tray",
+        unit: "m",
+        glyph: "ladder",
+        lengthConfigurable: true,
+        lengthMin: 2000,
+        lengthMax: 3000,
+        lengthStep: 1000,
+        standardLengths: [2400, 3000],
+        widthOptions: [50, 100, 150, 200, 300],
+        materials: ["HDG", "SS304", "SS316", "Powder coat"],
+        blurb: "Tray family sample"
+      }
+    ];
+
+    let cart = loadCart();
+    let activeProduct = null;
+
+    function loadCart() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+    function saveCart() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      renderBadge();
+      renderCart();
+      updatePayloadPreview();
+    }
+
+    function $(sel) { return document.querySelector(sel); }
+    function $all(sel) { return [...document.querySelectorAll(sel)]; }
+
+    function showView(name) {
+      $all(".view").forEach((v) => v.classList.remove("active"));
+      const el = document.getElementById("view-" + name);
+      if (el) el.classList.add("active");
+      $all(".nav-links a").forEach((a) => {
+        a.classList.toggle("active", a.dataset.nav === name || (name === "group" && a.dataset.nav === "group") || (name === "home" && a.dataset.nav === "home") || (name === "list" && a.dataset.nav === "list") || (name === "success" && a.dataset.nav === "list"));
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toast(msg, ok) {
+      const t = $("#toast");
+      t.textContent = msg;
+      t.classList.toggle("ok", !!ok);
+      t.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    function renderProducts() {
+      const grid = $("#productGrid");
+      grid.innerHTML = PRODUCTS.map((p) => {
+        const tags = [];
+        if (p.lengthConfigurable) {
+          tags.push(`<span class="tag accent">${p.lengthMin}–${p.lengthMax} mm</span>`);
+        } else {
+          tags.push(`<span class="tag">Fixed length</span>`);
+        }
+        if (p.widthOptions) tags.push(`<span class="tag">Width options</span>`);
+        tags.push(`<span class="tag">${p.materials.length} finishes</span>`);
+
+        return `
+          <article class="card" id="card-${p.id}" data-product="${p.id}">
+            <div class="card-media">
+              <span class="sku">${p.baseCode}</span>
+              <div class="glyph ${p.glyph}"></div>
+            </div>
+            <div class="card-body">
+              <h3>${p.name}</h3>
+              <div class="meta">${p.group} · unit: ${p.unit}</div>
+              <div class="meta">${p.blurb}</div>
+              <div class="tags">${tags.join("")}</div>
+              <div class="card-actions">
+                <button type="button" class="btn btn-primary" data-add="${p.id}">Add to inquiry</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      grid.querySelectorAll("[data-add]").forEach((btn) => {
+        btn.addEventListener("click", () => openConfig(btn.dataset.add));
+      });
+    }
+
+    function openConfig(id) {
+      activeProduct = PRODUCTS.find((p) => p.id === id);
+      if (!activeProduct) return;
+      const p = activeProduct;
+
+      $("#modalTitle").textContent = p.name;
+      $("#modalSub").textContent = `${p.baseCode} · Configure then add to My list`;
+
+      // Length
+      const fieldLen = $("#fieldLength");
+      if (p.lengthConfigurable) {
+        fieldLen.style.display = "";
+        fieldLen.classList.remove("invalid");
+        const input = $("#cfgLength");
+        input.min = p.lengthMin;
+        input.max = p.lengthMax;
+        input.step = p.lengthStep;
+        input.value = (p.standardLengths && p.standardLengths[0]) || p.lengthMin;
+        $("#lengthHint").textContent = `Allowed: ${p.lengthMin}–${p.lengthMax} mm, step ${p.lengthStep}`;
+        const picks = $("#lengthPicks");
+        picks.innerHTML = (p.standardLengths || []).map((L) =>
+          `<button type="button" class="pick" data-len="${L}">${L} mm</button>`
+        ).join("");
+        picks.querySelectorAll(".pick").forEach((b) => {
+          b.addEventListener("click", () => {
+            input.value = b.dataset.len;
+            picks.querySelectorAll(".pick").forEach((x) => x.classList.remove("active"));
+            b.classList.add("active");
+            fieldLen.classList.remove("invalid");
+          });
+        });
+        const firstPick = picks.querySelector(".pick");
+        if (firstPick) firstPick.classList.add("active");
+      } else {
+        fieldLen.style.display = "none";
+      }
+
+      // Width
+      const fieldW = $("#fieldWidth");
+      if (p.widthOptions && p.widthOptions.length) {
+        fieldW.style.display = "";
+        $("#cfgWidth").innerHTML = p.widthOptions.map((w) =>
+          `<option value="${w}">${w} mm</option>`
+        ).join("");
+      } else {
+        fieldW.style.display = "none";
+      }
+
+      // Material
+      $("#cfgMaterial").innerHTML = p.materials.map((m) =>
+        `<option value="${m}">${m}</option>`
+      ).join("");
+
+      $("#cfgQty").value = 10;
+      $("#cfgNotes").value = "";
+      $("#unitHint").textContent = `Unit: ${p.unit}`;
+
+      $("#configOverlay").classList.add("open");
+    }
+
+    function closeConfig() {
+      $("#configOverlay").classList.remove("open");
+      activeProduct = null;
+    }
+
+    function validateLength(p, value) {
+      if (!p.lengthConfigurable) return true;
+      const n = Number(value);
+      if (!Number.isFinite(n)) return false;
+      if (n < p.lengthMin || n > p.lengthMax) return false;
+      if (p.lengthStep > 0 && (n - p.lengthMin) % p.lengthStep !== 0) return false;
+      return true;
+    }
+
+    function confirmAdd() {
+      const p = activeProduct;
+      if (!p) return;
+
+      if (p.lengthConfigurable && !validateLength(p, $("#cfgLength").value)) {
+        $("#fieldLength").classList.add("invalid");
+        return;
+      }
+      $("#fieldLength").classList.remove("invalid");
+
+      const qty = Math.max(1, parseInt($("#cfgQty").value, 10) || 1);
+      const line = {
+        lineId: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        productId: p.id,
+        name: p.name,
+        baseCode: p.baseCode,
+        group: p.group,
+        unit: p.unit,
+        qty,
+        config: {
+          lengthMm: p.lengthConfigurable ? Number($("#cfgLength").value) : null,
+          width: p.widthOptions ? Number($("#cfgWidth").value) : null,
+          material: $("#cfgMaterial").value
+        },
+        notes: ($("#cfgNotes").value || "").trim()
+      };
+
+      cart.push(line);
+      saveCart();
+      closeConfig();
+      toast(`Added ${p.name} to inquiry`, true);
+    }
+
+    function renderBadge() {
+      const n = cart.reduce((s, l) => s + l.qty, 0);
+      const b = $("#cartBadge");
+      b.textContent = String(n);
+      b.classList.toggle("empty", n === 0);
+    }
+
+    function renderCart() {
+      const root = $("#cartLines");
+      $("#listCountLabel").textContent = `(${cart.length} line${cart.length === 1 ? "" : "s"})`;
+
+      if (!cart.length) {
+        root.innerHTML = `
+          <div class="empty-state">
+            <strong>Your inquiry list is empty</strong>
+            Browse products and use “Add to inquiry” to build a BOM-style request.
+            <div style="margin-top:16px;">
+              <button type="button" class="btn btn-primary" data-nav="group">Browse products</button>
+            </div>
+          </div>`;
+        root.querySelector("[data-nav]")?.addEventListener("click", () => showView("group"));
+        return;
+      }
+
+      root.innerHTML = cart.map((line) => {
+        const chips = [];
+        if (line.config.lengthMm != null) chips.push(`Length: ${line.config.lengthMm} mm`);
+        if (line.config.width != null) chips.push(`Width: ${line.config.width} mm`);
+        if (line.config.material) chips.push(line.config.material);
+        chips.push(`Unit: ${line.unit}`);
+
+        return `
+          <div class="line-item" data-line="${line.lineId}">
+            <div class="line-thumb"><div class="mini"></div></div>
+            <div>
+              <p class="line-title">${line.name}</p>
+              <div class="line-code">${line.baseCode} · ${line.group}</div>
+              <div class="line-config">${chips.map((c) => `<span>${c}</span>`).join("")}</div>
+              ${line.notes ? `<div class="line-notes">“${escapeHtml(line.notes)}”</div>` : ""}
+            </div>
+            <div class="line-side">
+              <div class="qty-control">
+                <button type="button" data-dec="${line.lineId}" aria-label="Decrease">−</button>
+                <input type="number" min="1" value="${line.qty}" data-qty="${line.lineId}" />
+                <button type="button" data-inc="${line.lineId}" aria-label="Increase">+</button>
+              </div>
+              <button type="button" class="btn btn-danger" style="padding:6px 10px;font-size:12px;" data-remove="${line.lineId}">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      root.querySelectorAll("[data-remove]").forEach((b) => {
+        b.addEventListener("click", () => {
+          cart = cart.filter((l) => l.lineId !== b.dataset.remove);
+          saveCart();
+          toast("Line removed");
+        });
+      });
+      root.querySelectorAll("[data-inc]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const line = cart.find((l) => l.lineId === b.dataset.inc);
+          if (line) { line.qty += 1; saveCart(); }
+        });
+      });
+      root.querySelectorAll("[data-dec]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const line = cart.find((l) => l.lineId === b.dataset.dec);
+          if (line) { line.qty = Math.max(1, line.qty - 1); saveCart(); }
+        });
+      });
+      root.querySelectorAll("[data-qty]").forEach((inp) => {
+        inp.addEventListener("change", () => {
+          const line = cart.find((l) => l.lineId === inp.dataset.qty);
+          if (line) {
+            line.qty = Math.max(1, parseInt(inp.value, 10) || 1);
+            saveCart();
+          }
+        });
+      });
+    }
+
+    function formatPayload() {
+      if (!cart.length) return "— no items —";
+      return cart.map((l, i) => {
+        const parts = [
+          `${i + 1}. ${l.name}`,
+          l.baseCode,
+          l.config.lengthMm != null ? `Length: ${l.config.lengthMm} mm` : null,
+          l.config.width != null ? `Width: ${l.config.width} mm` : null,
+          l.config.material ? `Material: ${l.config.material}` : null,
+          `Qty: ${l.qty} ${l.unit}`,
+          l.notes ? `Note: ${l.notes}` : null
+        ].filter(Boolean);
+        return parts.join(" | ");
+      }).join("\n");
+    }
+
+    function updatePayloadPreview() {
+      $("#payloadPreview").textContent = formatPayload();
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Nav
+    document.addEventListener("click", (e) => {
+      const nav = e.target.closest("[data-nav]");
+      if (!nav) return;
+      e.preventDefault();
+      const view = nav.dataset.nav;
+      if (view === "group" || view === "home" || view === "list" || view === "success") {
+        showView(view);
+        if (view === "group" && nav.dataset.focus === "strut") {
+          setTimeout(() => {
+            document.getElementById("card-sc-4141")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 100);
+        }
+      }
+    });
+
+    $("#closeModal").addEventListener("click", closeConfig);
+    $("#cancelModal").addEventListener("click", closeConfig);
+    $("#configOverlay").addEventListener("click", (e) => {
+      if (e.target === $("#configOverlay")) closeConfig();
+    });
+    $("#confirmAdd").addEventListener("click", confirmAdd);
+    $("#cfgLength")?.addEventListener("input", () => {
+      $("#fieldLength").classList.remove("invalid");
+    });
+
+    $("#clearCartBtn").addEventListener("click", () => {
+      if (!cart.length) return;
+      if (confirm("Clear the entire inquiry list?")) {
+        cart = [];
+        saveCart();
+        toast("List cleared");
+      }
+    });
+
+    $("#inquiryForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!cart.length) {
+        toast("Add at least one item first");
+        return;
+      }
+      // Demo: show success and clear cart (as real form would after submit)
+      cart = [];
+      saveCart();
+      e.target.reset();
+      updatePayloadPreview();
+      showView("success");
+    });
+
+    // Init
+    renderProducts();
+    renderBadge();
+    renderCart();
+    updatePayloadPreview();
+  </script>
+</body>
+</html>

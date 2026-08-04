@@ -1,0 +1,38 @@
+name,slug,base_code,family,series,product_type,height,loading_depth,thickness,width_options,standard,nema_class,safety_factor,unit,materials,standard_lengths,length_min_mm,length_max_mm,length_step_mm,catalogue_visible,sort_order,sub_description,characteristics,load_ratings_link
+AML Cable Ladder,aml-cable-ladder,AML,Cable Ladder,AML,Straight ladder,100 / 125 / 150 mm,75–125 mm by model,1.5 / 2 mm,"150,300,450,600,750,900",NEMA VE1-2009,20AA–20B by model,x1.5,m,"HDG;SS304;SS316","3000,6000",3000,6000,3000,TRUE,10,NEMA cable ladder series — medium to heavy duty,"Test standard|NEMA VE1-2009
+Safety factor|×1.5
+Span lengths|3 m / 4.5 m / 6 m
+Models|AML100 AML125 AML150",https://www.arraymetal.com/load-ratings
+APO Cable Ladder,apo-cable-ladder,APO,Cable Ladder,APO,Straight ladder,100 / 125 / 150 mm,75–125 mm by model,1.5 / 2 mm,"150,300,450,600,750,900",SIRIM / NEMA VE1-2009,20AA–20B by model,x1.5,m,"HDG;SS304;SS316","3000,6000",3000,6000,3000,TRUE,15,SIRIM / NEMA cable ladder series,"Test standard|SIRIM / NEMA VE1-2009
+Safety factor|×1.5
+Models|APO100 APO125 APO150",https://www.arraymetal.com/load-ratings
+ACD Cable Ladder,acd-cable-ladder,ACD,Cable Ladder,ACD,Straight ladder,100 / 125 / 150 mm,75–125 mm by model,1.5 / 2 mm,"150,300,450,600,750,900",IEC 61537:2006,20AA–20B (ref),x1.7,m,"HDG;SS304;SS316","3000,6000",3000,6000,3000,TRUE,20,IEC 61537 cable ladder series,"Test standard|IEC 61537:2006
+Certificate|2018MA0594-ACD-IEC61537
+Safety factor|×1.7
+Models|ACD100 ACD125 ACD150",https://www.arraymetal.com/load-ratings
+ART50 Cable Tray,art50-cabletray,ART50,Cable Tray,ART,Straight tray,50 mm,50 mm,1.5 / 2 mm,"100,150,200,300,450,600",NEMA VE1-2009,NEMA 20AA,x1.5,m,"HDG;SS304;SS316","1500,2000,3000",1500,3000,500,TRUE,30,Light cable tray — ART50,"SWL @ 1.5 m|484 kg/m
+SWL @ 2 m|272 kg/m
+SWL @ 3 m|121 kg/m",https://www.arraymetal.com/load-ratings
+AML100 Cable Ladder,aml100-cable-ladder,AML100,Cable Ladder,AML,Straight ladder,100 mm,75 mm,1.5 / 2 mm,"150,300,450,600,750,900",NEMA VE1-2009,NEMA 20AA,x1.5,m,"HDG;SS304;SS316","3000,6000",3000,6000,3000,TRUE,11,NEMA 20AA · published SWL,"Model|AML100
+SWL @ 3 m|192 kg/m
+SWL @ 4.5 m|85 kg/m
+SWL @ 6 m|48 kg/m",https://www.arraymetal.com/load-ratings
+AML125 Cable Ladder,aml125-cable-ladder,AML125,Cable Ladder,AML,Straight ladder,125 mm,100 mm,1.5 / 2 mm,"150,300,450,600,750,900",NEMA VE1-2009,NEMA 20B,x1.5,m,"HDG;SS304;SS316","3000,6000",3000,6000,3000,TRUE,12,NEMA 20B · published SWL,"Model|AML125
+SWL @ 3 m|480 kg/m
+SWL @ 4.5 m|213 kg/m
+SWL @ 6 m|120 kg/m",https://www.arraymetal.com/load-ratings
+AML150 Cable Ladder,aml150-cable-ladder,AML150,Cable Ladder,AML,Straight ladder,150 mm,125 mm,1.5 / 2 mm,"150,300,450,600,750,900",NEMA VE1-2009,NEMA 20B,x1.5,m,"HDG;SS304;SS316","3000,6000",3000,6000,3000,TRUE,13,NEMA 20B · published SWL,"Model|AML150
+SWL @ 3 m|468 kg/m
+SWL @ 4.5 m|208 kg/m
+SWL @ 6 m|117 kg/m",https://www.arraymetal.com/load-ratings
+AMT100 Cable Tray,amt100-cable-tray,AMT100,Cable Tray,AMT,Straight tray,100 mm,100 mm,1.5 / 2 mm,"100,150,200,300,450,600",NEMA VE1-2009,NEMA 20B,x1.5,m,"HDG;SS304;SS316","1500,2000,3000",1500,3000,500,TRUE,32,NEMA 20B tray · published SWL,"Model|AMT100
+SWL @ 1.5 m|716 kg/m
+SWL @ 2 m|403 kg/m
+SWL @ 3 m|179 kg/m",https://www.arraymetal.com/load-ratings
+90° Horizontal Elbow,90-horizontal-elbow,EL90,Cable Ladder,Other,Elbow,,,,,"150,300,450,600",,,,pc,"HDG;SS304;SS316",,, , ,TRUE,45,90° horizontal bend,"Type|Elbow
+Angle|90° horizontal
+Unit|pc",
+Straight Splice Plate,straight-splice-plate,SP,Cable Ladder,Other,Splice,,,,,,,pc,"HDG;SS304",,, , ,TRUE,50,Ladder straight splice,"Type|Splice plate
+Unit|pc",
+Cover for Straight Ladder,cover-straight-ladder,LC,Cable Ladder,Other,Cover,,,,,"150,300,450,600,750,900",,,,m,"HDG;SS304;SS316","1500,3000",1000,3000,500,TRUE,55,Protective cover for straight ladder,"Type|Cover
+Unit|m",

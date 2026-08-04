@@ -1,0 +1,394 @@
+<!--
+  Array Metal — Inquiry Cart Demo embed (Option A)
+  Brand-aligned with site: #09318b / #185FA5
+  Paste into HtmlEmbed on draft page /demo-inquiry-cart
+  Do NOT publish until approved.
+-->
+<style>
+#am-inq { --am-navy:#09318b; --am-blue:#185FA5; --am-ink:#1a1a1a; --am-muted:#555; --am-soft:#888; --am-line:#e0e0e0; --am-bg:#f7f7f5; --am-white:#fff; font-family:inherit; color:var(--am-ink); max-width:1100px; margin:0 auto; padding:2rem 1.25rem 4rem; box-sizing:border-box; }
+#am-inq *, #am-inq *::before, #am-inq *::after { box-sizing:border-box; }
+#am-inq button, #am-inq input, #am-inq select, #am-inq textarea { font:inherit; }
+#am-inq .am-banner { background:var(--am-bg); border:1px solid var(--am-line); border-left:4px solid var(--am-navy); border-radius:8px; padding:.75rem 1rem; font-size:13px; color:var(--am-muted); margin-bottom:1.5rem; }
+#am-inq .am-banner strong { color:var(--am-navy); }
+#am-inq .am-top { display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1.75rem; }
+#am-inq .am-kicker { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--am-soft); margin-bottom:.4rem; }
+#am-inq h1.am-h1 { font-size:clamp(22px,3vw,28px); font-weight:600; color:var(--am-ink); margin:0 0 .4rem; line-height:1.2; }
+#am-inq .am-lede { font-size:14px; color:var(--am-muted); max-width:520px; margin:0; line-height:1.5; }
+#am-inq .am-list-btn { display:inline-flex; align-items:center; gap:.5rem; background:var(--am-navy); color:#fff; border:none; border-radius:7px; padding:.55rem 1rem; font-size:13px; font-weight:600; cursor:pointer; }
+#am-inq .am-list-btn:hover { background:#072670; }
+#am-inq .am-badge { min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:#fff; color:var(--am-navy); font-size:12px; font-weight:700; display:inline-grid; place-items:center; }
+#am-inq .am-tabs { display:flex; gap:.5rem; margin-bottom:1.25rem; border-bottom:1px solid var(--am-line); padding-bottom:.75rem; flex-wrap:wrap; }
+#am-inq .am-tab { background:transparent; border:1.5px solid var(--am-line); border-radius:999px; padding:.4rem .9rem; font-size:13px; font-weight:600; color:var(--am-muted); cursor:pointer; }
+#am-inq .am-tab:hover { border-color:var(--am-blue); color:var(--am-blue); }
+#am-inq .am-tab.active { background:var(--am-navy); border-color:var(--am-navy); color:#fff; }
+#am-inq .am-view { display:none; }
+#am-inq .am-view.active { display:block; }
+#am-inq .am-section-label { font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--am-soft); margin:0 0 .75rem; }
+#am-inq .am-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.875rem; }
+#am-inq .am-card { background:var(--am-white); border:1.5px solid var(--am-line); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .15s, box-shadow .15s, transform .1s; }
+#am-inq .am-card:hover { border-color:var(--am-blue); box-shadow:0 4px 14px rgba(24,95,165,.13); transform:translateY(-2px); }
+#am-inq .am-card-media { height:150px; background:var(--am-bg); display:grid; place-items:center; position:relative; border-bottom:1px solid #eee; }
+#am-inq .am-card-media img { width:100%; height:100%; object-fit:cover; display:block; }
+#am-inq .am-sku { position:absolute; top:8px; left:8px; font-size:11px; font-weight:700; background:rgba(255,255,255,.95); border:1px solid var(--am-line); padding:2px 8px; border-radius:6px; color:var(--am-navy); z-index:1; }
+#am-inq .am-card-body { padding:.85rem .9rem 1rem; display:flex; flex-direction:column; gap:.35rem; flex:1; }
+#am-inq .am-card-body h3 { margin:0; font-size:15px; font-weight:600; color:var(--am-ink); }
+#am-inq .am-meta { font-size:12px; color:var(--am-soft); line-height:1.4; }
+#am-inq .am-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:2px; }
+#am-inq .am-tag { font-size:11px; font-weight:600; padding:2px 8px; border-radius:999px; background:var(--am-bg); color:var(--am-muted); border:1px solid #eee; }
+#am-inq .am-tag.accent { background:#eef4fb; color:var(--am-blue); border-color:#d0e0f5; }
+#am-inq .am-btn { font-size:13px; font-weight:600; border-radius:7px; padding:.5rem 1rem; cursor:pointer; border:none; line-height:1.4; transition:background .15s; }
+#am-inq .am-btn-primary { background:var(--am-navy); color:#fff; width:100%; margin-top:auto; }
+#am-inq .am-btn-primary:hover { background:#072670; }
+#am-inq .am-btn-ghost { background:#f0f0ee; color:#555; border:1px solid var(--am-line); }
+#am-inq .am-btn-ghost:hover { background:#e4e4e0; color:#333; }
+#am-inq .am-btn-danger { background:#fff; color:#b42318; border:1px solid #f3c0bc; font-size:12px; padding:.35rem .7rem; }
+#am-inq .am-btn-danger:hover { background:#fff5f4; }
+#am-inq .am-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; align-items:center; justify-content:center; padding:1rem; }
+#am-inq .am-overlay.open { display:flex; }
+#am-inq .am-modal { background:#fff; width:min(440px,100%); border-radius:12px; max-height:min(90vh,700px); overflow:auto; box-shadow:0 20px 50px rgba(0,0,0,.2); }
+#am-inq .am-modal-head { padding:1.1rem 1.25rem .85rem; border-bottom:1px solid var(--am-line); display:flex; justify-content:space-between; gap:.75rem; align-items:flex-start; }
+#am-inq .am-modal-head h2 { margin:0; font-size:17px; font-weight:700; color:var(--am-navy); }
+#am-inq .am-modal-head .sub { margin:.25rem 0 0; font-size:12px; color:var(--am-soft); }
+#am-inq .am-x { border:none; background:var(--am-bg); width:32px; height:32px; border-radius:7px; cursor:pointer; font-size:18px; color:var(--am-soft); line-height:1; }
+#am-inq .am-modal-body { padding:1rem 1.25rem; display:grid; gap:.85rem; }
+#am-inq .am-field label { display:block; font-size:12px; font-weight:600; color:#444; margin-bottom:.3rem; }
+#am-inq .am-field input, #am-inq .am-field select, #am-inq .am-field textarea { width:100%; border:1.5px solid #ddd; border-radius:7px; padding:.45rem .7rem; font-size:14px; color:var(--am-ink); outline:none; }
+#am-inq .am-field input:focus, #am-inq .am-field select:focus, #am-inq .am-field textarea:focus { border-color:var(--am-blue); }
+#am-inq .am-hint { font-size:11px; color:var(--am-soft); margin-top:4px; }
+#am-inq .am-err { font-size:12px; color:#c0392b; margin-top:4px; display:none; }
+#am-inq .am-field.invalid input { border-color:#c0392b; }
+#am-inq .am-field.invalid .am-err { display:block; }
+#am-inq .am-row2 { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+#am-inq .am-picks { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+#am-inq .am-pick { border:1px solid var(--am-line); background:var(--am-bg); border-radius:999px; padding:4px 10px; font-size:12px; font-weight:600; cursor:pointer; color:var(--am-muted); }
+#am-inq .am-pick:hover, #am-inq .am-pick.active { border-color:var(--am-blue); background:#eef4fb; color:var(--am-blue); }
+#am-inq .am-modal-foot { padding:.75rem 1.25rem 1.25rem; display:flex; gap:.5rem; }
+#am-inq .am-list-layout { display:grid; grid-template-columns:1.35fr 1fr; gap:1rem; align-items:start; }
+@media (max-width:820px){ #am-inq .am-list-layout { grid-template-columns:1fr; } #am-inq .am-row2 { grid-template-columns:1fr; } }
+#am-inq .am-panel { background:#fff; border:1px solid var(--am-line); border-radius:12px; overflow:hidden; }
+#am-inq .am-panel-head { padding:.85rem 1.1rem; border-bottom:1px solid var(--am-line); display:flex; justify-content:space-between; align-items:center; gap:.5rem; }
+#am-inq .am-panel-head h2 { margin:0; font-size:15px; font-weight:700; color:var(--am-navy); }
+#am-inq .am-line { padding:1rem 1.1rem; border-bottom:1px solid var(--am-line); display:grid; grid-template-columns:52px 1fr auto; gap:.75rem; align-items:start; }
+#am-inq .am-line:last-child { border-bottom:none; }
+#am-inq .am-thumb { width:52px; height:52px; border-radius:7px; background:var(--am-bg); border:1px solid #eee; overflow:hidden; }
+#am-inq .am-thumb img { width:100%; height:100%; object-fit:cover; }
+#am-inq .am-line-title { margin:0; font-size:14px; font-weight:700; }
+#am-inq .am-line-code { font-size:12px; color:var(--am-soft); margin-top:2px; }
+#am-inq .am-chips { margin-top:6px; display:flex; flex-wrap:wrap; gap:5px; }
+#am-inq .am-chips span { font-size:11px; background:var(--am-bg); border:1px solid #eee; padding:2px 7px; border-radius:5px; color:var(--am-muted); }
+#am-inq .am-notes { margin-top:6px; font-size:12px; color:var(--am-soft); font-style:italic; }
+#am-inq .am-qty { display:flex; align-items:center; border:1px solid var(--am-line); border-radius:7px; overflow:hidden; }
+#am-inq .am-qty button { width:28px; height:28px; border:none; background:var(--am-bg); cursor:pointer; font-weight:700; color:var(--am-muted); }
+#am-inq .am-qty input { width:40px; border:none; text-align:center; font-weight:600; font-size:13px; }
+#am-inq .am-side { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+#am-inq .am-empty { padding:2.5rem 1.25rem; text-align:center; color:var(--am-soft); font-size:14px; }
+#am-inq .am-empty strong { display:block; color:var(--am-ink); font-size:15px; margin-bottom:.35rem; }
+#am-inq .am-form { padding:1rem 1.1rem 1.15rem; display:grid; gap:.7rem; }
+#am-inq .am-payload { background:var(--am-bg); border:1px dashed #ccc; border-radius:8px; padding:.7rem .8rem; font-size:11px; white-space:pre-wrap; font-family:ui-monospace,Consolas,monospace; color:#444; max-height:160px; overflow:auto; }
+#am-inq .am-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(12px); background:var(--am-ink); color:#fff; padding:10px 16px; border-radius:999px; font-size:13px; font-weight:600; opacity:0; pointer-events:none; transition:.2s; z-index:1100; }
+#am-inq .am-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+#am-inq .am-toast.ok { background:#0d7a4f; }
+#am-inq .am-success { text-align:center; padding:2.5rem 1rem; max-width:420px; margin:0 auto; }
+#am-inq .am-success-icon { width:52px; height:52px; border-radius:50%; background:#e6f5ee; color:#0d7a4f; display:grid; place-items:center; font-size:24px; margin:0 auto .75rem; font-weight:700; }
+</style>
+
+<div id="am-inq">
+  <div class="am-banner"><strong>DRAFT DEMO — Inquiry cart (Option A)</strong> · Matches Array Metal brand · Sample products with real site images · Not published · Configure length/finish → My list → Send inquiry</div>
+
+  <div class="am-top">
+    <div>
+      <div class="am-kicker">Products · Request a quote</div>
+      <h1 class="am-h1">Build your inquiry list</h1>
+      <p class="am-lede">Browse base products, set length / material / qty, then send one structured RFQ. No online payment — same pattern as industrial “My list” catalogues.</p>
+    </div>
+    <button type="button" class="am-list-btn" data-go="list">My list <span class="am-badge" id="amBadge">0</span></button>
+  </div>
+
+  <div class="am-tabs">
+    <button type="button" class="am-tab active" data-go="shop">Products</button>
+    <button type="button" class="am-tab" data-go="list">My inquiry</button>
+  </div>
+
+  <div id="amViewShop" class="am-view active">
+    <p class="am-section-label">Sample base products (demo data)</p>
+    <div class="am-grid" id="amGrid"></div>
+  </div>
+
+  <div id="amViewList" class="am-view">
+    <div class="am-list-layout">
+      <div class="am-panel">
+        <div class="am-panel-head">
+          <h2>Selected items <span id="amCount">(0)</span></h2>
+          <button type="button" class="am-btn am-btn-danger" id="amClear">Clear all</button>
+        </div>
+        <div id="amLines"></div>
+      </div>
+      <div class="am-panel">
+        <div class="am-panel-head"><h2>Send inquiry</h2></div>
+        <form class="am-form" id="amForm">
+          <div class="am-row2">
+            <div class="am-field"><label>Name *</label><input name="name" required placeholder="Your name" /></div>
+            <div class="am-field"><label>Company *</label><input name="company" required placeholder="Company" /></div>
+          </div>
+          <div class="am-row2">
+            <div class="am-field"><label>Email *</label><input name="email" type="email" required placeholder="you@company.com" /></div>
+            <div class="am-field"><label>Phone</label><input name="phone" placeholder="+60 …" /></div>
+          </div>
+          <div class="am-field"><label>Project / location</label><input name="project" placeholder="Project name" /></div>
+          <div class="am-field"><label>Message</label><textarea name="message" rows="3" placeholder="Delivery notes, drawings…"></textarea></div>
+          <div class="am-field"><label>Selected items (auto for sales)</label><div class="am-payload" id="amPayload">— add items —</div></div>
+          <button type="submit" class="am-btn am-btn-primary">Send inquiry</button>
+          <p class="am-meta" style="margin:0;text-align:center;">Demo only — nothing is emailed from this page.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="amViewSuccess" class="am-view">
+    <div class="am-success">
+      <div class="am-success-icon">✓</div>
+      <h1 class="am-h1">Inquiry recorded (demo)</h1>
+      <p class="am-lede" style="margin:.5rem auto 0;">In production this becomes a Webflow form submission to sales with the BOM payload.</p>
+      <div style="margin-top:1.25rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;">
+        <button type="button" class="am-btn am-btn-primary" style="width:auto;" data-go="shop">Browse more</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="am-overlay" id="amOverlay">
+    <div class="am-modal">
+      <div class="am-modal-head">
+        <div>
+          <h2 id="amModalTitle">Configure</h2>
+          <p class="sub" id="amModalSub">Set options, then add to My list</p>
+        </div>
+        <button type="button" class="am-x" id="amClose" aria-label="Close">×</button>
+      </div>
+      <div class="am-modal-body">
+        <div class="am-field" id="amFieldLen">
+          <label for="amLen">Length (mm)</label>
+          <input id="amLen" type="number" />
+          <div class="am-hint" id="amLenHint"></div>
+          <div class="am-picks" id="amLenPicks"></div>
+          <div class="am-err">Length must be within range and match step.</div>
+        </div>
+        <div class="am-row2">
+          <div class="am-field" id="amFieldW" style="display:none;">
+            <label for="amW">Width (mm)</label>
+            <select id="amW"></select>
+          </div>
+          <div class="am-field">
+            <label for="amMat">Material / finish</label>
+            <select id="amMat"></select>
+          </div>
+        </div>
+        <div class="am-field">
+          <label for="amQty">Quantity</label>
+          <input id="amQty" type="number" min="1" value="10" />
+          <div class="am-hint" id="amUnitHint">Unit: pc</div>
+        </div>
+        <div class="am-field">
+          <label for="amNotes">Note (optional)</label>
+          <input id="amNotes" placeholder="Special packing, project ref…" />
+        </div>
+      </div>
+      <div class="am-modal-foot">
+        <button type="button" class="am-btn am-btn-ghost" id="amCancel">Cancel</button>
+        <button type="button" class="am-btn am-btn-primary" id="amAdd" style="flex:1;">Add to inquiry</button>
+      </div>
+    </div>
+  </div>
+  <div class="am-toast" id="amToast"></div>
+</div>
+
+<script>
+(function(){
+  var ROOT = document.getElementById('am-inq');
+  if (!ROOT) return;
+  var KEY = 'arraymetal_inquiry_demo_v2';
+  var CDN = 'https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/';
+  var PRODUCTS = [
+    { id:'aml-str', name:'AML Cable Ladder (straight)', baseCode:'AML-STR', group:'Cable Ladder', unit:'m',
+      img: CDN + '69c49a5cd41c8600f8100647_AML150%20(2).png',
+      lengthConfigurable:true, lengthMin:1000, lengthMax:6000, lengthStep:500, standardLengths:[3000,6000],
+      widthOptions:[100,150,200,300,400,600], materials:['HDG','SS304','SS316','Powder coat'],
+      blurb:'Width + length configured on RFQ' },
+    { id:'acd-str', name:'ACD Cable Ladder', baseCode:'ACD-STR', group:'Cable Ladder', unit:'m',
+      img: CDN + '69c49a642e48de9de6432097_ACD150%20(2).png',
+      lengthConfigurable:true, lengthMin:1000, lengthMax:6000, lengthStep:500, standardLengths:[3000,6000],
+      widthOptions:[150,200,300,400,600], materials:['HDG','SS304','SS316'],
+      blurb:'Heavy-duty series sample' },
+    { id:'aml-splice', name:'Straight splice plate', baseCode:'AML-SP', group:'Cable Ladder', unit:'pc',
+      img: CDN + '60c2f9a9ef063ee6848184d6_Cable%20Ladder%20Body.jpg.png',
+      lengthConfigurable:false, materials:['HDG','SS316'], blurb:'Fixed fitting · material only' },
+    { id:'sc-4141', name:'Strut Channel 41×41', baseCode:'SC-4141', group:'Support channels', unit:'pc',
+      img: CDN + '60c2fa4aef13dc0f0c635ffa_Cable-Ladder-Body.jpg.jpg',
+      lengthConfigurable:true, lengthMin:100, lengthMax:6000, lengthStep:50, standardLengths:[1000,2000,3000,6000],
+      materials:['HDG','SS304','SS316'], blurb:'Key demo: 100–6000 mm step 50 · one base item' },
+    { id:'cover', name:'Ladder cover', baseCode:'AML-COV', group:'Cable Ladder', unit:'m',
+      img: CDN + '60c2f9a9de926fd429ae8bfe_Horizontal%20Equal%20Cross.jpg',
+      lengthConfigurable:true, lengthMin:1000, lengthMax:3000, lengthStep:1000, standardLengths:[1000,2000,3000],
+      widthOptions:[100,150,200,300,400,600], materials:['HDG','SS304','SS316'], blurb:'Match width to ladder run' },
+    { id:'cca', name:'Cover clip', baseCode:'CCA', group:'Cable Ladder', unit:'pc',
+      img: CDN + '60c2f9a9b353232c73aacf10_Unequal%20Tee.jpg',
+      lengthConfigurable:false, materials:['HDG'], blurb:'Accessory · qty only' }
+  ];
+  var cart = load();
+  var active = null;
+
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ return []; } }
+  function save(){ localStorage.setItem(KEY, JSON.stringify(cart)); badge(); lines(); payload(); }
+  function $(id){ return ROOT.querySelector(id); }
+  function toast(msg, ok){
+    var t = $('#amToast'); t.textContent = msg; t.classList.toggle('ok', !!ok); t.classList.add('show');
+    clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+  }
+  function show(name){
+    ['shop','list','success'].forEach(function(v){
+      var el = ROOT.querySelector('#amView' + v.charAt(0).toUpperCase() + v.slice(1));
+      if (el) el.classList.toggle('active', v === name);
+    });
+    ROOT.querySelectorAll('.am-tab').forEach(function(t){
+      t.classList.toggle('active', t.getAttribute('data-go') === name || (name==='success' && t.getAttribute('data-go')==='list'));
+    });
+  }
+  function badge(){
+    var n = cart.reduce(function(s,l){ return s + l.qty; }, 0);
+    $('#amBadge').textContent = String(n);
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function renderProducts(){
+    $('#amGrid').innerHTML = PRODUCTS.map(function(p){
+      var tags = [];
+      if (p.lengthConfigurable) tags.push('<span class="am-tag accent">'+p.lengthMin+'–'+p.lengthMax+' mm</span>');
+      else tags.push('<span class="am-tag">Fixed</span>');
+      if (p.widthOptions) tags.push('<span class="am-tag">Width options</span>');
+      tags.push('<span class="am-tag">'+p.materials.length+' finishes</span>');
+      return '<article class="am-card">'+
+        '<div class="am-card-media"><span class="am-sku">'+esc(p.baseCode)+'</span><img src="'+p.img+'" alt="'+esc(p.name)+'" loading="lazy" /></div>'+
+        '<div class="am-card-body"><h3>'+esc(p.name)+'</h3><div class="am-meta">'+esc(p.group)+' · unit: '+esc(p.unit)+'</div>'+
+        '<div class="am-meta">'+esc(p.blurb)+'</div><div class="am-tags">'+tags.join('')+'</div>'+
+        '<button type="button" class="am-btn am-btn-primary" data-add="'+p.id+'" style="margin-top:10px;">Add to inquiry</button></div></article>';
+    }).join('');
+    ROOT.querySelectorAll('[data-add]').forEach(function(b){
+      b.addEventListener('click', function(){ openConfig(b.getAttribute('data-add')); });
+    });
+  }
+
+  function openConfig(id){
+    active = PRODUCTS.filter(function(p){ return p.id===id; })[0];
+    if (!active) return;
+    var p = active;
+    $('#amModalTitle').textContent = p.name;
+    $('#amModalSub').textContent = p.baseCode + ' · Configure then add to My list';
+    var fieldLen = $('#amFieldLen');
+    if (p.lengthConfigurable){
+      fieldLen.style.display = ''; fieldLen.classList.remove('invalid');
+      var input = $('#amLen');
+      input.min = p.lengthMin; input.max = p.lengthMax; input.step = p.lengthStep;
+      input.value = (p.standardLengths && p.standardLengths[0]) || p.lengthMin;
+      $('#amLenHint').textContent = 'Allowed: '+p.lengthMin+'–'+p.lengthMax+' mm, step '+p.lengthStep;
+      var picks = $('#amLenPicks');
+      picks.innerHTML = (p.standardLengths||[]).map(function(L){
+        return '<button type="button" class="am-pick" data-len="'+L+'">'+L+' mm</button>';
+      }).join('');
+      picks.querySelectorAll('.am-pick').forEach(function(b){
+        b.addEventListener('click', function(){
+          input.value = b.getAttribute('data-len');
+          picks.querySelectorAll('.am-pick').forEach(function(x){ x.classList.remove('active'); });
+          b.classList.add('active'); fieldLen.classList.remove('invalid');
+        });
+      });
+      var first = picks.querySelector('.am-pick'); if (first) first.classList.add('active');
+    } else { fieldLen.style.display = 'none'; }
+    var fieldW = $('#amFieldW');
+    if (p.widthOptions && p.widthOptions.length){
+      fieldW.style.display = '';
+      $('#amW').innerHTML = p.widthOptions.map(function(w){ return '<option value="'+w+'">'+w+' mm</option>'; }).join('');
+    } else fieldW.style.display = 'none';
+    $('#amMat').innerHTML = p.materials.map(function(m){ return '<option value="'+m+'">'+m+'</option>'; }).join('');
+    $('#amQty').value = 10; $('#amNotes').value = ''; $('#amUnitHint').textContent = 'Unit: '+p.unit;
+    $('#amOverlay').classList.add('open');
+  }
+  function closeConfig(){ $('#amOverlay').classList.remove('open'); active = null; }
+  function validLen(p, v){
+    if (!p.lengthConfigurable) return true;
+    var n = Number(v); if (!isFinite(n)) return false;
+    if (n < p.lengthMin || n > p.lengthMax) return false;
+    if (p.lengthStep > 0 && ((n - p.lengthMin) % p.lengthStep) !== 0) return false;
+    return true;
+  }
+  function confirmAdd(){
+    var p = active; if (!p) return;
+    if (p.lengthConfigurable && !validLen(p, $('#amLen').value)){ $('#amFieldLen').classList.add('invalid'); return; }
+    $('#amFieldLen').classList.remove('invalid');
+    var qty = Math.max(1, parseInt($('#amQty').value,10)||1);
+    cart.push({
+      lineId: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()+Math.random()),
+      productId:p.id, name:p.name, baseCode:p.baseCode, group:p.group, unit:p.unit, qty:qty, img:p.img,
+      config:{ lengthMm: p.lengthConfigurable ? Number($('#amLen').value) : null, width: p.widthOptions ? Number($('#amW').value) : null, material: $('#amMat').value },
+      notes: ($('#amNotes').value||'').trim()
+    });
+    save(); closeConfig(); toast('Added '+p.name+' to inquiry', true);
+  }
+  function lines(){
+    var root = $('#amLines');
+    $('#amCount').textContent = '('+cart.length+')';
+    if (!cart.length){
+      root.innerHTML = '<div class="am-empty"><strong>Your inquiry list is empty</strong>Use Add to inquiry on products to build a BOM-style request.<div style="margin-top:12px;"><button type="button" class="am-btn am-btn-primary" style="width:auto;" data-go="shop">Browse products</button></div></div>';
+      return;
+    }
+    root.innerHTML = cart.map(function(l){
+      var chips = [];
+      if (l.config.lengthMm != null) chips.push('Length: '+l.config.lengthMm+' mm');
+      if (l.config.width != null) chips.push('Width: '+l.config.width+' mm');
+      if (l.config.material) chips.push(l.config.material);
+      chips.push('Unit: '+l.unit);
+      return '<div class="am-line">'+
+        '<div class="am-thumb"><img src="'+l.img+'" alt="" /></div>'+
+        '<div><p class="am-line-title">'+esc(l.name)+'</p><div class="am-line-code">'+esc(l.baseCode)+' · '+esc(l.group)+'</div>'+
+        '<div class="am-chips">'+chips.map(function(c){ return '<span>'+esc(c)+'</span>'; }).join('')+'</div>'+
+        (l.notes ? '<div class="am-notes">“'+esc(l.notes)+'”</div>' : '')+'</div>'+
+        '<div class="am-side"><div class="am-qty"><button type="button" data-dec="'+l.lineId+'">−</button>'+
+        '<input type="number" min="1" value="'+l.qty+'" data-qty="'+l.lineId+'" />'+
+        '<button type="button" data-inc="'+l.lineId+'">+</button></div>'+
+        '<button type="button" class="am-btn am-btn-danger" data-rm="'+l.lineId+'">Remove</button></div></div>';
+    }).join('');
+    root.querySelectorAll('[data-rm]').forEach(function(b){ b.addEventListener('click', function(){ cart = cart.filter(function(l){ return l.lineId !== b.getAttribute('data-rm'); }); save(); toast('Line removed'); }); });
+    root.querySelectorAll('[data-inc]').forEach(function(b){ b.addEventListener('click', function(){ var l=cart.filter(function(x){return x.lineId===b.getAttribute('data-inc');})[0]; if(l){l.qty++;save();} }); });
+    root.querySelectorAll('[data-dec]').forEach(function(b){ b.addEventListener('click', function(){ var l=cart.filter(function(x){return x.lineId===b.getAttribute('data-dec');})[0]; if(l){l.qty=Math.max(1,l.qty-1);save();} }); });
+    root.querySelectorAll('[data-qty]').forEach(function(inp){ inp.addEventListener('change', function(){ var l=cart.filter(function(x){return x.lineId===inp.getAttribute('data-qty');})[0]; if(l){l.qty=Math.max(1,parseInt(inp.value,10)||1);save();} }); });
+  }
+  function payload(){
+    if (!cart.length){ $('#amPayload').textContent = '— no items —'; return; }
+    $('#amPayload').textContent = cart.map(function(l,i){
+      return [ (i+1)+'. '+l.name, l.baseCode,
+        l.config.lengthMm!=null?'Length: '+l.config.lengthMm+' mm':null,
+        l.config.width!=null?'Width: '+l.config.width+' mm':null,
+        l.config.material?'Material: '+l.config.material:null,
+        'Qty: '+l.qty+' '+l.unit,
+        l.notes?'Note: '+l.notes:null
+      ].filter(Boolean).join(' | ');
+    }).join('\n');
+  }
+
+  ROOT.addEventListener('click', function(e){
+    var go = e.target.closest('[data-go]');
+    if (go){ e.preventDefault(); show(go.getAttribute('data-go')); }
+  });
+  $('#amClose').addEventListener('click', closeConfig);
+  $('#amCancel').addEventListener('click', closeConfig);
+  $('#amOverlay').addEventListener('click', function(e){ if (e.target === $('#amOverlay')) closeConfig(); });
+  $('#amAdd').addEventListener('click', confirmAdd);
+  $('#amLen').addEventListener('input', function(){ $('#amFieldLen').classList.remove('invalid'); });
+  $('#amClear').addEventListener('click', function(){ if (!cart.length) return; if (confirm('Clear the entire inquiry list?')){ cart=[]; save(); toast('List cleared'); } });
+  $('#amForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!cart.length){ toast('Add at least one item first'); return; }
+    cart=[]; save(); e.target.reset(); payload(); show('success');
+  });
+
+  renderProducts(); badge(); lines(); payload();
+})();
+</script>

@@ -12,6 +12,20 @@ Each project lives in its own subfolder. All embeds are self-contained HTML/CSS/
 |--------|------|-------------|
 | [Cable Ladder Load Ratings](./Cable%20Ladder%20Load%20Ratings/) | `/load-ratings` | SWL tables for AML, APO, ACD, ART/AMT series (NEMA VE1-2009, IEC 61537) |
 | [Perforated Metal Calculator](./Perforated%20Metal%20Calculator/) | `/open-area-calculator` | Interactive open area % calculator for 9 perforation patterns |
+| [catalogue](./catalogue/) | *(in progress)* | Oglaend-style product hierarchy — **[PLAN.md](./catalogue/PLAN.md)** · demo · CMS seed |
+
+---
+
+## Product catalogue plan
+
+Full roadmap (overall + current phase, checklist, safety):
+
+**[catalogue/PLAN.md](./catalogue/PLAN.md)**
+
+- **Phase 1 (now):** Products → group → system (filters) → article specs  
+- **Phase 2:** Multi-item inquiry list (RFQ, no payment)  
+- **UX approved:** local demo `catalogue/demo/catalogue-demo.html`  
+- **Live product pages:** not redesigned until draft Webflow prototype is signed off
 
 ---
 
