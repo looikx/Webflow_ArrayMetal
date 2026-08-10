@@ -1,0 +1,137 @@
+<!-- Phase 1 draft: /demo-product-catalogue -->
+<div id="am-cat">
+<div class="demo-note">
+    DRAFT · Oglaend-style hierarchy · Webflow draft page · not live products
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/" data-route="home">
+        <span class="brand-mark">AM</span>
+        Array Metal
+      </a>
+      <nav class="top-nav">
+        <a href="#/" data-route="home" class="is-active">Products</a>
+        <a href="#/cable-ladders" data-route="cable-ladders">Cable Ladders</a>
+        <a href="#/cable-trays" data-route="cable-trays">Cable Trays</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+</div>
+<script>
+(function () {
+const IMG = {
+ladder: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2fa4aef13dc0f0c635ffa_Cable-Ladder-Body.jpg.jpg",
+tray: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60b70ba32a3003184411aa0d_1.jpg",
+trunking: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60b724218a42db518a5b7ad6_1.jpg",
+wire: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60b72513039fa486cd623908_1.jpg",
+cleats: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69bb945774c2eb60d272d775_2.png",
+perforated: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c70cecbaea9cab1930042b_R15T20.jpg",
+aml: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c49a5cd41c8600f8100647_AML150%20(2).png",
+acd: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c49a642e48de9de6432097_ACD150%20(2).png",
+apo: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c64ff30f7d41049d65c516_Array%20Products%20.png",
+art: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c4b1607c4274729029111a_ART50.png",
+body: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9ef063ee6848184d6_Cable%20Ladder%20Body.jpg.png",
+cross: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9de926fd429ae8bfe_Horizontal%20Equal%20Cross.jpg",
+riser: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a97cf1c2bd0557aca0_Inside%20Riser%2090.jpg",
+reducer: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a95177cbb157b44265_Left%20Reducer.jpg",
+tee: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9b353232c73aacf10_Unequal%20Tee.jpg",
+outside: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9b3f5501e2835789e_Outside%20Riser%2090.jpg",
+cert: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60939dca6be20a7f9c6d444e_SIRIM%20Test%20Report%20Cable%20Ladder.png"
+};
+const GROUPS = [
+{ id: "cable-ladders", name: "Cable Ladders", category: "Cable Support System", blurb: "Medium to heavy duty cable ladder systems tested to NEMA and IEC standards, with full fittings ranges.", image: IMG.ladder, systems: ["aml", "apo", "acd"] },
+{ id: "cable-trays", name: "Cable Trays", category: "Cable Support System", blurb: "Light to medium cable tray systems for efficient support where ladder depth is not required.", image: IMG.tray, systems: ["art", "amt"] },
+{ id: "cable-trunking", name: "Cable Trunking", category: "Cable Support System", blurb: "Rectangular trunking for enclosed cable routes.", image: IMG.trunking, systems: [] },
+{ id: "wire-trays", name: "Wire Trays", category: "Cable Support System", blurb: "Open wire mesh trays for ventilation and flexible routing.", image: IMG.wire, systems: [] },
+{ id: "cable-cleats", name: "Cable Cleats", category: "Cable Support System", blurb: "Cable retention and short-circuit protection.", image: IMG.cleats, systems: [] },
+{ id: "perforated", name: "Perforated Metal", category: "Industrial & Architectural", blurb: "Perforated panels for industrial and architectural applications.", image: IMG.perforated, systems: [] }
+];
+const SYSTEMS = {
+aml: {
+id: "aml", group: "cable-ladders", name: "AML Cable Ladder System",
+short: "NEMA VE1 heavy-duty ladder series for industrial and infrastructure cabling.",
+image: IMG.aml, standard: "NEMA VE1-2009", safety: "×1.5",
+materials: ["HDG", "SS304", "SS316", "Aluminium"],
+heights: "100 / 125 / 150 mm", widths: "150–900 mm",
+overview: "AML is Array Metal’s NEMA VE1 cable ladder system for medium to heavy cable support. Models cover NEMA load classes with published safe working loads by span (3 m, 4.5 m, 6 m).",
+design: [
+{ t: "Heights", d: "AML100, AML125 and AML150 side-rail heights for load depth and future expansion." },
+{ t: "Widths", d: "Typical widths 150, 300, 450, 600, 750 and 900 mm." },
+{ t: "Standards", d: "Tested to NEMA VE1-2009 with safety factor ×1.5." },
+{ t: "Finishes", d: "Hot-dip galvanized (BS EN ISO 1461), stainless steel and aluminium options." }
+]
+},
+apo: {
+id: "apo", group: "cable-ladders", name: "APO Cable Ladder System",
+short: "SIRIM / NEMA ladder series with verified span load performance.",
+image: IMG.apo, standard: "SIRIM / NEMA VE1-2009", safety: "×1.5",
+materials: ["HDG", "SS304", "SS316"],
+heights: "100 / 125 / 150 mm", widths: "150–900 mm",
+overview: "APO cable ladders combine SIRIM and NEMA VE1 testing for projects requiring documented load performance across standard support spans.",
+design: [
+{ t: "Heights", d: "APO100, APO125 and APO150 models." },
+{ t: "Testing", d: "SIRIM / NEMA VE1-2009, safety factor ×1.5." },
+{ t: "Spans", d: "Published SWL at 3 m, 4.5 m and 6 m." },
+{ t: "Finishes", d: "HDG, stainless and coated options." }
+]
+},
+acd: {
+id: "acd", group: "cable-ladders", name: "ACD Cable Ladder System",
+short: "IEC 61537 ladder series with ×1.7 safety factor.",
+image: IMG.acd, standard: "IEC 61537:2006", safety: "×1.7",
+materials: ["HDG", "SS304", "SS316"],
+heights: "100 / 125 / 150 mm", widths: "150–900 mm",
+overview: "ACD ladders are tested to IEC 61537 (certificate 2018MA0594-ACD-IEC61537) for projects specifying IEC compliance.",
+design: [
+{ t: "Standard", d: "IEC 61537:2006, safety factor ×1.7." },
+{ t: "Models", d: "ACD100, ACD125, ACD150." },
+{ t: "Certificate", d: "2018MA0594-ACD-IEC61537." },
+{ t: "Spans", d: "SWL published for 3 m, 4.5 m and 6 m." }
+]
+},
+art: {
+id: "art", group: "cable-trays", name: "ART Cable Tray System",
+short: "Light cable tray (ART50) with NEMA load ratings.",
+image: IMG.art, standard: "NEMA VE1-2009", safety: "×1.5",
+materials: ["HDG", "SS304", "SS316"],
+heights: "50 mm", widths: "100–600 mm",
+overview: "ART50 is a light cable tray series designed for lighter cable runs with published NEMA SWL at 1.5 m, 2 m and 3 m spans.",
+design: [
+{ t: "Height", d: "50 mm loading depth." },
+{ t: "Class", d: "NEMA 20AA (ART50)." },
+{ t: "Spans", d: "SWL at 1.5 m / 2 m / 3 m." },
+{ t: "Use", d: "Light electrical and instrumentation routes." }
+]
+},
+amt: {
+id: "amt", group: "cable-trays", name: "AMT Cable Tray System",
+short: "Medium-duty cable tray with NEMA 20B performance.",
+image: IMG.tray, standard: "NEMA VE1-2009", safety: "×1.5",
+materials: ["HDG", "SS304", "SS316"],
+heights: "100 mm", widths: "100–600 mm",
+overview: "AMT100 provides higher tray capacity where light ART systems are not sufficient, with published NEMA load data.",
+design: [
+{ t: "Height", d: "100 mm loading depth." },
+{ t: "Class", d: "NEMA 20B (AMT100)." },
+{ t: "Spans", d: "SWL at 1.5 m / 2 m / 3 m." },
+{ t: "Finishes", d: "HDG, stainless, aluminium options." }
+]
+}
+};
+const ARTICLES = [
+{ id: "aml-str", system: "aml", name: "Cable ladder straight section", type: "Cable ladder", sys: "AML", image: IMG.body, code: "AML-STR",
+chars: [["Type", "Cable ladder"], ["Series", "AML"], ["Heights", "100 / 125 / 150 mm"], ["Widths", "150–900 mm"], ["Lengths", "3 m, 6 m"], ["Standard", "NEMA VE1-2009"], ["Safety factor", "×1.5"], ["Materials", "HDG, SS304, SS316"]] },
+{ id: "aml100", system: "aml", name: "Cable ladder AML100", type: "Cable ladder", sys: "AML100", image: IMG.aml, code: "AML100",
+chars: [["Model", "AML100"], ["Height", "100 mm"], ["Loading depth", "75 mm"], ["Thickness", "1.5 / 2 mm"], ["SWL @ 3 m", "192 kg/m"], ["SWL @ 4.5 m", "85 kg/m"], ["SWL @ 6 m", "48 kg/m"], ["NEMA class", "20AA"], ["Standard", "NEMA VE1-2009"]] },
+{ id: "aml125", system: "aml", name: "Cable ladder AML125", type: "Cable ladder", sys: "AML125", image: IMG.aml, code: "AML125",
+chars: [["Model", "AML125"], ["Height", "125 mm"], ["Loading depth", "100 mm"], ["SWL @ 3 m", "480 kg/m"], ["SWL @ 4.5 m", "213 kg/m"], ["SWL @ 6 m", "120 kg/m"], ["NEMA class", "20B"], ["Standard", "NEMA VE1-2009"]] },
+{ id: "aml150", system: "aml", name: "Cable ladder AML150", type: "Cable ladder", sys: "AML150", image: IMG.aml, code: "AML150",
+chars: [["Model", "AML150"], ["Height", "150 mm"], ["Loading depth", "125 mm"], ["SWL @ 3 m", "468 kg/m"], ["SWL @ 4.5 m", "208 kg/m"], ["SWL @ 6 m", "117 kg/m"], ["NEMA class", "20B"], ["Standard", "NEMA VE1-2009"]] },
+{ id: "aml-el90", system: "aml", name: "90° horizontal elbow", type: "Flat elbow", sys: "AML common", image: IMG.tee, code: "AML-EL90",
+chars: [["Type", "Flat elbow"], ["Angle", "90° horizontal"], ["Unit", "pc"], ["Materials", "HDG, SS304, SS316"]] },
+{ id: "aml-tee", system: "aml", name: "Tee piece", type: "T-piece", sys: "AML common", image: IMG.tee, code: "AML-T",
+chars: [["Type", "T-piece"], ["Unit", "pc"]] },
+{ id: "aml-cross", system: "aml", name: "Equ

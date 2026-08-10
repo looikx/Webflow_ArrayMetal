@@ -1,0 +1,61 @@
+System(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+const q = document.getElementById("filter-q");
+if (q) {
+q.addEventListener("input", () => {
+state.filters.q = q.value;
+const pos = q.selectionStart;
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+const nq = document.getElementById("filter-q");
+if (nq) { nq.focus(); nq.setSelectionRange(pos, pos); }
+});
+}
+document.getElementById("clear-filters")?.addEventListener("click", () => {
+state.filters = { systems: new Set(), types: new Set(), q: "" };
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+app.querySelectorAll("[data-remove-sys]").forEach((btn) => {
+btn.addEventListener("click", () => {
+state.filters.systems.delete(btn.getAttribute("data-remove-sys"));
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+app.querySelectorAll("[data-remove-type]").forEach((btn) => {
+btn.addEventListener("click", () => {
+state.filters.types.delete(btn.getAttribute("data-remove-type"));
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+app.querySelectorAll("[data-remove-q]").forEach((btn) => {
+btn.addEventListener("click", () => {
+state.filters.q = "";
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+}
+window.addEventListener("hashchange", render);
+document.querySelectorAll(".top-nav a, .brand").forEach((a) => {
+a.addEventListener("click", (e) => {
+const route = a.getAttribute("data-route");
+if (!route) return;
+e.preventDefault();
+if (route === "home") go("");
+else go(route);
+});
+});
+render();
+})();
+</script>

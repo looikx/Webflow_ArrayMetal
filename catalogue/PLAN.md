@@ -1,15 +1,21 @@
 # Array Metal — Product Catalogue Plan
 
-**Last updated:** 2026-08-04  
+**Last updated:** 2026-08-05  
 **Site:** [arraymetal.com](https://www.arraymetal.com) · Webflow ID `6082b34dc5995b3e8dc8c73b`  
 **Staging subdomain:** [array-metal.webflow.io](https://array-metal.webflow.io)  
-**Status:** Phase 1 in progress — hierarchy approved; live product pages not redesigned yet
+**Deploy path:** **Path A — Native Webflow only** (CMS + Designer templates + Collection Lists)  
+**Status:** Hierarchy UX approved · CMS schema + Phase 1 draft content done · **templates in progress** (Systems / ProductArrays / Sub Products)
+
+| Doc | Role |
+|-----|------|
+| **[CMS_ARCHITECTURE.md](./CMS_ARCHITECTURE.md)** | **Next session:** Systems + components CMS reorg (source of truth) |
+| [NATIVE_WEBFLOW.md](./NATIVE_WEBFLOW.md) | Earlier native notes; partially superseded by CMS reorg |
 
 ---
 
 ## 1. Overall goal
 
-Build a **professional industrial product catalogue** (like Øglænd System / Atkore category depth), where customers:
+Build a **professional industrial product catalogue** (Øglænd-style), where customers:
 
 1. **Browse** product groups  
 2. **Open** a system and **filter** components  
@@ -31,35 +37,38 @@ Discover (hierarchy) → Evaluate (specs) → Select (inquiry list) → Request 
 | Source | What we take |
 |--------|----------------|
 | **[Øglænd products](https://www.oglaend-system.com/products/)** | Primary IA — overview → group → system → article |
-| **[Øglænd LOE system](https://www.oglaend-system.com/products/cableladders/loe/)** | Filters on **system page** (System, Product type, counts) + overview + design + materials + downloads |
-| **[Atkore products](https://www.atkore.com/products)** | Clean category cards / professional industrial presentation |
-| **Array Metal today** | Already closest to Oglaend — deepen it, don’t replace with a flat shop |
+| **[Øglænd LOE system](https://www.oglaend-system.com/products/cableladders/loe/)** | Filters on **system page** + overview + design + materials + downloads |
+| **[Atkore products](https://www.atkore.com/products)** | Clean category cards |
+| **Array Metal today** | Deepen existing product CMS structure |
 
 ### Hierarchy (source of truth)
 
 ```text
-Level 1  Products overview     →  /productscms
-Level 2  Product group         →  /products/cable-ladder , /products/cable-tray-system , …
-Level 3  System page           →  AML / APO / ACD (ladder) · ART / AMT (tray)
-           ├── Filtered article grid  (System + Product type + search)
-           ├── System overview
-           ├── Design details
-           ├── Materials / certifications
-           └── Downloads + load ratings link
-Level 4  Article / component   →  straight, elbow, splice, AML150, …
-           └── Characteristics table + related items
+Level 1  Products overview     →  /productscms              ProductArrays list
+Level 2  Product group         →  /products/cable-ladder    ProductArrays template
+Level 3  System / series       →  /systems/aml              Systems (NEW collection)
+           ├── Filtered component grid (product type + search)
+           ├── System overview · design · materials · load ratings
+Level 4  Component / article   →  /sub-products/…           Sub Products (components only)
+           └── Specs · characteristics · related (same system)
 ```
 
+**Each series (AML, ACD, AZL…) owns its own elbows, covers, splices** — not a global mixed pile.
+
 **Filters live on the system page** — not a global “all SKUs” marketplace.
+
+Full reorg plan: **[CMS_ARCHITECTURE.md](./CMS_ARCHITECTURE.md)**
 
 ### Explicitly rejected
 
 | Rejected | Why |
 |----------|-----|
-| Flat “all products + filters” storefront as main UX | Unprofessional for Array Metal; wrong IA |
-| Cart-first / retail checkout | Business is RFQ, not online payment |
-| One CMS row per length (100…6000 mm) | Unmaintainable — use base product + config rules later |
-| Editing live product templates before draft approval | Risk to production |
+| Series hubs + components mixed in Sub Products + `is-system` | Wrong CMS model; superseded by Systems collection |
+| Full-catalogue HtmlEmbed / SPA as production | Not maintainable in Webflow; not CMS-editable |
+| Draft page `/demo-product-catalogue` as deliverable | Same as local HTML — abandoned for deploy |
+| Flat “all products + filters” storefront as main UX | Wrong IA for Array Metal |
+| Cart-first / retail checkout | Business is RFQ |
+| One CMS row per length (100…6000 mm) | Use base product + length rules in Phase 2 |
 
 ---
 
@@ -67,56 +76,41 @@ Level 4  Article / component   →  straight, elbow, splice, AML150, …
 
 ### Phase 0 — Align *(done)*
 
-- [x] Confirm inquiry-only (no payment)  
-- [x] Confirm hierarchy = Oglaend-style (not flat marketplace)  
-- [x] Prefer draft / staging over live product edits  
+- [x] Inquiry-only (no payment)  
+- [x] Hierarchy = Oglaend-style  
+- [x] Prefer staging over reckless live edits  
 - [x] First families: **Cable Ladder + Cable Tray**  
+- [x] UX hierarchy approved (local demo)  
+- [x] **Decision: Path A native Webflow** (not embed)
 
-### Phase 1 — Spec-rich catalogue hierarchy *(current)*
-
-**Goal:** Professional browse → system → filter → specs. No inquiry list yet.
+### Phase 1 — Native catalogue
 
 | # | Work | Status |
 |---|------|--------|
-| 1.1 | CMS fields on Sub Products (series, type, family, specs, characteristics, load link, length rules, catalogue-visible) | **Done** |
-| 1.2 | CMS fields on ProductArrays (design details, standards, heights/widths, load link, family-code) | **Done** |
-| 1.3 | Seed Cable Ladder / Tray families + AML / APO / ACD / ART50 series (published) | **Done** |
-| 1.4 | Draft model/fitting items (AML100/125/150, AMT100, elbow, splice, cover) | **Done** (still drafts) |
-| 1.5 | Field map + seed CSV in repo | **Done** |
-| 1.6 | Local Oglaend-style hierarchy demo | **Done** — approved UX |
-| 1.7 | Draft Webflow page for catalogue prototype (does **not** edit live products) | **Todo** |
-| 1.8 | Wire system pages in Designer (AML/APO/ACD filtered grid + overview blocks) | **Todo** |
-| 1.9 | Article / characteristics template | **Todo** |
-| 1.10 | Enrich Level 1–2 templates (overview + system cards) without breaking live | **Todo** |
-| 1.11 | QA on staging subdomain; publish only when approved | **Todo** |
+| 1.1–1.5 | CMS fields, seed, local UX demo | **Done** (reference / foundation) |
+| 1.6 | ~~Draft embed page~~ | **Cancelled** |
+| 1.7 | Experimental `is-system` dual layout on Sub Products | **Superseded** — do not continue as final model |
+| **1.8** | **CMS reorg: Systems collection + components only** | **Schema + AML/ART drafts done** |
+| 1.9 | ProductArrays template → Systems list | **In progress** (section + cards; needs family=current filter in Designer) |
+| 1.10 | Systems template + Sub Products component template | **In progress** (Systems built; Sub Products article-only + related list) |
+| 1.11 | QA on `array-metal.webflow.io` | After 1.9–1.10 + publish drafts |
+| 1.12 | Publish production after sign-off | Last |
 
-**Phase 1 outcome:** Engineers can drill down Cable Ladder/Tray like Oglaend and see real specs + load ratings links.
+**Phase 1 outcome:** Engineers drill Cable Ladder/Tray on **real Webflow URLs** with clean CMS (Family → System → Component).
 
 ### Phase 2 — Inquiry list *(after Phase 1)*
 
 | # | Work | Status |
 |---|------|--------|
-| 2.1 | Configure-and-add (length / material / qty from CMS rules) | Pending |
-| 2.2 | Header “My inquiry” badge + `/my-inquiry` page | Pending |
-| 2.3 | Multi-line RFQ form payload to sales | Pending |
-| 2.4 | Optional Sheet / notification automation | Pending |
-
-**Labeling:** “Add to inquiry” / “My inquiry” — not cart / checkout.
+| 2.1 | Configure-and-add (length / material / qty) | Pending |
+| 2.2 | Header “My inquiry” + `/my-inquiry` | Pending |
+| 2.3 | Multi-line RFQ to sales | Pending |
 
 ### Phase 3 — Scale & polish *(later)*
 
-- Remaining product groups (trunking, cleats, perforated, …)  
+- Remaining product groups  
 - More models via CSV  
-- Project groups in inquiry list  
-- Optional PDF of inquiry  
-- Optional load-class helpers from Load Ratings data  
-
-### Deferred indefinitely
-
-- Webflow Ecommerce payment checkout  
-- Customer accounts / multi-device saved lists  
-- Full ERP sync  
-- One CMS item per length variant  
+- Optional PDF inquiry  
 
 ---
 
@@ -124,78 +118,89 @@ Level 4  Article / component   →  straight, elbow, splice, AML150, …
 
 | Environment | Role | Edits live products? |
 |-------------|------|----------------------|
-| Local demo `catalogue/demo/catalogue-demo.html` | UX review | No |
-| **Draft Webflow page** (e.g. `/demo-product-catalogue`) | Webflow prototype | **No** — separate page |
-| CMS drafts (unpublished items) | Content prep | No until publish |
-| Staging subdomain `array-metal.webflow.io` | Optional preview publish | Shared site; be careful with CMS publish |
-| Live `arraymetal.com` product pages/templates | Production | **Only after approval** |
+| Local `catalogue/demo/*.html` | UX reference only | No |
+| Designer templates (ProductArrays / Sub Products) | **Real build** | Yes — use staging publish first |
+| CMS drafts | Content prep | No until publish |
+| Staging `array-metal.webflow.io` | QA | Shared site |
+| Live `arraymetal.com` | Production | **Only after approval** |
 
-**Important:** A draft page does **not** change `/productscms` or `/products/cable-ladder`. Only editing those pages/templates (or publishing bound CMS/styles) affects them.
-
-**No separate demo Webflow site exists** — only one site (Array Metal). Full site duplicate is optional isolation, not required if we use drafts.
+**One Webflow site.** Native templates affect all items in that collection — stage carefully.
 
 ---
 
 ## 5. Technical foundations
 
-### CMS collections
+### CMS collections (target)
 
 | Collection | Role |
 |------------|------|
-| ProductArrays | Level 1–2 groups |
-| Sub Products | Systems + articles (series, type, specs) |
-| Materials | Finishes (filter + display) |
+| ProductArrays | Level 1–2 families (Cable Ladder, Tray…) |
+| **Systems** *(new)* | Level 3 series (AML, ACD, AZL, ART…) |
+| Sub Products | Level 4 **components only** (ref → System) |
+| Materials | Finishes |
 | Catalogues | PDF downloads |
-| Load Ratings | SWL data (also embed on `/load-ratings`) |
-| Ecommerce Products/SKUs | **Unused** for RFQ path |
+| Load Ratings | SWL data (`/load-ratings`) |
+| Ecommerce | **Unused** for RFQ path |
 
-### Key Sub Products fields (added)
+See [CMS_ARCHITECTURE.md](./CMS_ARCHITECTURE.md) for fields and migration.
 
-`base-code`, `series`, `product-type`, `product-family`, `materials`, `width-options`, `height`, `loading-depth`, `thickness`, `standard`, `nema-class`, `safety-factor`, `unit`, `sort-order`, `catalogue-visible`, `characteristics` (Name\|Value lines), `long-description`, `load-ratings-link`, length config fields for Phase 2.
+### Filters
+
+- **Server/static:** Collection List filters (`series`, `is-system`, `catalogue-visible`, family ref)  
+- **Interactive UI:** [Finsweet Attributes List Filter](https://finsweet.com/attributes/list-filter) on system pages  
 
 ### Configurable products rule
 
-Store **base products + rules** (length min/max/step, materials). Customer configures on inquiry — do **not** create one CMS row per mm length.
+Store **base products + rules** (length min/max/step, materials). Customer configures on inquiry — **not** one CMS row per mm length.
 
 ### Repo map
 
 | Path | Purpose |
 |------|---------|
-| `catalogue/PLAN.md` | **This plan** (overall + current) |
-| `catalogue/README.md` | Phase 1 short status |
-| `catalogue/demo/catalogue-demo.html` | **Approved** hierarchy UX demo |
-| `catalogue/data/cms-field-map.md` | Field slugs + option IDs |
-| `catalogue/data/products-seed.csv` | Content seed spreadsheet |
-| `demo/inquiry-cart-demo.html` | Older RFQ cart prototype (Phase 2 reference only) |
-| `Cable Ladder Load Ratings/` | Live load ratings embed |
-| `Perforated Metal Calculator/` | Live OA calculator embed |
+| [PLAN.md](./PLAN.md) | This plan |
+| [NATIVE_WEBFLOW.md](./NATIVE_WEBFLOW.md) | **Designer + CMS build guide** |
+| [README.md](./README.md) | Short status |
+| [data/cms-field-map.md](./data/cms-field-map.md) | Field slugs + option IDs |
+| [data/products-seed.csv](./data/products-seed.csv) | Content seed |
+| `demo/*.html` | UX reference only — **not production** |
 
 ---
 
-## 6. Current next actions (checklist)
+## 6. Current next actions
 
-Do these in order:
+**Stop:** further work on mixed Sub Products + `is-system` as the long-term model.
 
-1. [ ] **Create draft Webflow page** for catalogue prototype (e.g. `/demo-product-catalogue`) — no live product edits  
-2. [ ] Embed or rebuild Oglaend-style hierarchy on that draft (match approved local demo)  
-3. [ ] Review on draft / optional staging publish — get sign-off  
-4. [ ] Design system pages for **AML → APO → ACD** (filters + overview + design + materials + load ratings)  
-5. [ ] Article characteristics layout  
-6. [ ] Promote approved structure to live Cable Ladder / Tray templates carefully  
-7. [ ] Publish remaining draft CMS models when images/content ready  
-8. [ ] Only then start **Phase 2** inquiry list  
+**Execute [CMS_ARCHITECTURE.md](./CMS_ARCHITECTURE.md) with locked scope:**
+
+1. [x] Confirm decisions: per-system fittings · AML + ART minimal · `/systems/{short-slug}`  
+2. [x] Create **Systems** collection + fields (`6a72d851ab5b05191add4ce9`)  
+3. [x] Add Sub Products → **System** reference; draft AML/ART Systems + wire AML components  
+4. [~] Templates: ProductArrays / Systems / Sub Products — **structure + CMS binds built**; finish Designer filters (current item)  
+5. [ ] Publish Phase 1 drafts (AML, ART + AML components) → staging subdomain only  
+6. [ ] Unpublish old hub Sub Products after Systems templates work; deprecate `is-system`  
+7. [ ] Production only after sign-off  
+
+**Designer manual (MCP cannot bind “equals current item” on Reference filters):**
+
+| Template | Collection List | Set filter in Designer |
+|----------|-----------------|------------------------|
+| Systems | Sub Products | `System` **equals** current System |
+| ProductArrays | Systems | `Family` **equals** current ProductArray |
+| Sub Products (related) | Sub Products | `System` **equals** current item’s System |
+
+**Out of first ship:** APO, ACD, AZL, AMT (unless ART swapped), other families.
 
 ---
 
-## 7. Open decisions (still free)
+## 7. Decisions (locked 2026-08-05)
 
-| Decision | Notes |
+| Decision | Choice |
 |----------|--------|
-| Draft page slug name | Suggested: `demo-product-catalogue` |
-| Publish draft models (AML100…) now or after images | Currently drafts without images |
-| When to touch live Cable Ladder template | After draft demo sign-off |
-| Inquiry form recipients | Confirm email/inbox for Phase 2 |
-| Full site duplicate vs draft-only | Draft-only recommended unless isolation required |
+| Systems URL | `/systems/aml`, `/systems/art` (short slugs) |
+| Phase 1 series | **AML** + **ART** only |
+| Fittings | Per-system CMS items |
+| Finsweet | After static System→component grid works |
+| Live custom domain | After staging sign-off only |
 
 ---
 
@@ -203,18 +208,15 @@ Do these in order:
 
 **Phase 1 done when:**
 
-- Hierarchy matches Oglaend (overview → group → system with filters → article specs)  
-- Cable Ladder + Cable Tray feel professional (real images, specs, load links)  
-- Live site only updated after explicit approval  
-- No payment / no cart as primary UX  
-
-**Phase 2 done when:**
-
-- Multi-line inquiry from configured products reaches sales cleanly  
+- Hierarchy is real Webflow pages (not embed SPA)  
+- Group → system → filter → article works on staging  
+- Specs + characteristics come from CMS  
+- Editors can add products in CMS and Publish  
+- Live custom domain updated only after explicit approval  
 
 ---
 
-## 9. Contacts / IDs (quick ref)
+## 9. Contacts / IDs
 
 | Resource | ID / URL |
 |----------|----------|
@@ -222,7 +224,5 @@ Do these in order:
 | ProductArrays | `6082b9dcc5995bc2adc8f181` |
 | Sub Products | `60add788ed4fb37a6e6a4798` |
 | Materials | `60939ab96b35f30e93874050` |
-| Cable Ladder item | `6082ba262c6616db16c2952b` |
-| Cable Tray item | `6082ba2076a98ddf2a8fbf76` |
 | Production | https://www.arraymetal.com |
-| Staging subdomain | https://array-metal.webflow.io |
+| Staging | https://array-metal.webflow.io |

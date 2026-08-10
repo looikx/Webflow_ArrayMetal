@@ -1,0 +1,24 @@
+<script>
+(function(){
+  var parts = window.__AM_CAT || [];
+  if (parts.length < 3) { console.error("AM cat incomplete", parts.length); return; }
+  var html = parts.join("");
+  var mount = document.createElement("div");
+  mount.id = "am-cat-root";
+  var anchor = document.currentScript;
+  if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(mount, anchor);
+  else document.body.appendChild(mount);
+  var tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  var scripts = [];
+  Array.from(tmp.childNodes).forEach(function(n){
+    if (n.nodeType === 1 && n.tagName === "SCRIPT") scripts.push(n.textContent);
+    else mount.appendChild(n);
+  });
+  scripts.forEach(function(code){
+    var s = document.createElement("script");
+    s.textContent = code;
+    document.body.appendChild(s);
+  });
+})();
+</script>

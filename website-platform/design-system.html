@@ -1,0 +1,517 @@
+<title>Array Metal — Design System, extracted from the live site</title>
+
+<style>
+/* ── the real Array Metal webfonts, straight off the live CDN ────────────── */
+@font-face{font-family:Maisonneue;src:url(https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/60a62a2da719788ac88ba8e6_MaisonNeue-Book.woff)format("woff");font-weight:400;font-display:swap}
+@font-face{font-family:Maisonneue;src:url(https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/60a62a2dde9dde80cf3e83bf_MaisonNeue-Demi.woff)format("woff");font-weight:600;font-display:swap}
+@font-face{font-family:Halyard;src:url(https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/6082b3afc18fc783518e94cc_604ae83bfe9d2491e1da693a_halyarddisbook-webfont.ttf)format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:Halyard;src:url(https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/6082b37890140a6aafe4126d_HalyardRegular.ttf)format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:Halyard;src:url(https://cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/6082b3d0a40b3b6dc20f8fd7_604ae83bfe9d24293ada6935_halyarddissembd-webfont.ttf)format("truetype");font-weight:600;font-display:swap}
+
+:root{
+  /* ── BRAND — verbatim from the live stylesheet's :root ── */
+  --black:#0c1b2b; --alice-blue:#dae5eb; --white:#fff; --midnight-blue:#09318b; --slate-grey:#5f6e7e;
+
+  /* ── PROPOSED extension — derived, not invented (see §4) ── */
+  --mb-hover:#072761; --mb-active:#061f4d; --mb-wash:#eaf0f9;
+  --n-50:#f6f8f9;  --n-100:#eceff2; --n-200:#dde2e7; --n-300:#c3ccd4; --n-400:#98a4b0;
+  --n-500:#5f6e7e; --n-600:#4a5765; --n-700:#36414d; --n-800:#212b36; --n-900:#0c1b2b;
+  --success:#1a7f4b; --warning:#9a5b00; --danger:#b3261e;
+
+  --sans:Maisonneue,"Helvetica Neue",Arial,sans-serif;
+  --disp:Halyard,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+
+  --container:1300px; --gutter:15px;
+  --r-btn:6px; --r-card:20px;
+  --doc-bg:#f4f6f8; --doc-line:#dde2e7;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--doc-bg);color:var(--n-700);
+  font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{margin:0;font-family:var(--sans);font-weight:600;color:var(--black);text-wrap:balance}
+code,.mono{font-family:var(--mono);font-size:.88em}
+:focus-visible{outline:3px solid var(--midnight-blue);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* masthead */
+.mast{background:var(--white);border-bottom:1px solid var(--doc-line)}
+.mast .wrap{padding:52px 24px 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--slate-grey);margin:0 0 16px}
+.mast h1{font-size:clamp(30px,4.2vw,46px);line-height:1.06;letter-spacing:-.015em;max-width:22ch}
+.stand{margin:18px 0 0;font-size:17px;color:var(--slate-grey);max-width:64ch}
+
+/* provenance banner */
+.prov{margin-top:26px;background:var(--mb-wash);border:1px solid #b9cbe6;border-left:4px solid var(--midnight-blue);
+  border-radius:8px;padding:16px 18px;font-size:13.5px;color:var(--n-700)}
+.prov b{color:var(--midnight-blue)}
+.prov .mono{font-size:12px;word-break:break-all;color:var(--n-600)}
+
+/* sections */
+section{padding:56px 0;border-bottom:1px solid var(--doc-line)}
+.sec-num{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--midnight-blue);
+  background:var(--mb-wash);border:1px solid #b9cbe6;border-radius:4px;padding:3px 9px;display:inline-block;margin-bottom:14px}
+section > .wrap > h2{font-size:clamp(22px,2.6vw,29px);letter-spacing:-.01em}
+.lede{color:var(--slate-grey);max-width:70ch;margin:10px 0 0}
+h3{font-size:16px;margin:34px 0 12px;letter-spacing:.01em}
+
+/* cards */
+.card{background:var(--white);border:1px solid var(--doc-line);border-radius:var(--r-card);padding:26px 28px}
+.grid{display:grid;gap:16px}
+
+/* ── palette ── */
+.swatches{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.sw{border-radius:14px;overflow:hidden;border:1px solid var(--doc-line);background:var(--white)}
+.sw .chip{height:104px;display:flex;align-items:flex-end;padding:12px 14px;font-size:12px;font-family:var(--mono)}
+.sw .meta{padding:12px 14px 14px}
+.sw .name{font-weight:600;color:var(--black);font-size:14px}
+.sw .hex{font-family:var(--mono);font-size:12.5px;color:var(--slate-grey);margin-top:2px}
+.sw .use{font-size:12.5px;color:var(--slate-grey);margin-top:8px;line-height:1.45}
+
+/* ramp */
+.ramp{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--doc-line)}
+.ramp div{flex:1;height:70px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;
+  font-family:var(--mono);font-size:10.5px}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+th{text-align:left;font-weight:600;color:var(--black);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;
+  padding:9px 12px;border-bottom:2px solid var(--n-300);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--doc-line);vertical-align:top}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+.tw{overflow-x:auto}
+.pass{color:var(--success);font-weight:600}
+.fail{color:var(--danger);font-weight:600}
+
+/* type specimens */
+.spec{border-left:3px solid var(--n-200);padding:2px 0 2px 20px;margin:20px 0}
+.spec .tag{font-family:var(--mono);font-size:11px;color:var(--slate-grey);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:7px}
+.s-h1{font-family:var(--sans);font-weight:600;font-size:38px;line-height:44px;color:var(--black)}
+.s-h2{font-family:var(--sans);font-weight:600;font-size:32px;line-height:36px;color:var(--black)}
+.s-h3{font-family:var(--disp);font-weight:500;font-size:24px;line-height:30px;color:var(--black)}
+.s-h4{font-family:var(--disp);font-weight:500;font-size:18px;line-height:24px;color:var(--black)}
+.s-p {font-family:var(--sans);font-weight:400;font-size:16px;line-height:25px;color:var(--slate-grey)}
+
+/* ── banding demo ── */
+.demo{border:1px solid var(--n-300);border-radius:14px;overflow:hidden;margin-top:20px;background:var(--white)}
+.band{padding:34px 26px}
+.band.light{background:var(--white)}
+.band.tint{background:var(--alice-blue)}
+.band.dark{background:var(--black)}
+.band.photo{background:linear-gradient(rgba(12,27,43,.94),rgba(12,27,43,.94)),
+  repeating-linear-gradient(115deg,#3d4b5a 0 22px,#33404e 22px 44px)}
+.band .inner{max-width:760px;margin:0 auto}
+.band h4{font-family:var(--sans);font-weight:600;font-size:22px;margin:0 0 8px}
+.band p{margin:0;font-size:14.5px;line-height:1.55}
+.band.light h4,.band.tint h4{color:var(--black)} .band.light p,.band.tint p{color:var(--slate-grey)}
+.band.dark h4,.band.photo h4{color:#fff} .band.dark p,.band.photo p{color:#c2ccd6}
+.band-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  opacity:.62;margin-bottom:9px}
+
+/* ── buttons ── */
+.btnrow{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:8px}
+.btn{font-family:var(--sans);font-size:14px;font-weight:400;border:0;border-radius:var(--r-btn);
+  padding:11px 18px;cursor:pointer;text-decoration:none;display:inline-block;transition:background-color .18s ease}
+.btn.primary{background:var(--midnight-blue);color:#f5f5f5}
+.btn.primary:hover{background:var(--mb-hover)}
+.btn.dark{background:var(--black);color:#f5f5f5}
+.btn.secondary{background:var(--alice-blue);color:var(--black);border-radius:5px;padding:10px 15px}
+.btn.ghost{background:#f5f5f5;color:var(--slate-grey)}
+.btn.lg{padding:16px 22px;font-family:var(--disp);font-size:16px}
+
+/* header specimen */
+.hdr{background:var(--white);border:1px solid var(--doc-line);border-radius:12px;
+  display:flex;align-items:center;justify-content:space-between;padding:12px 18px;margin-top:8px;gap:18px;flex-wrap:wrap}
+.hdr .logo{font-family:var(--sans);font-weight:600;font-size:17px;color:var(--black);letter-spacing:-.01em}
+.hdr nav{display:flex;gap:22px;flex-wrap:wrap}
+.hdr nav a{font-family:var(--sans);font-size:16px;font-weight:600;color:var(--midnight-blue);text-decoration:none}
+.hdr nav a.cur{border-bottom:2px solid var(--midnight-blue);padding-bottom:2px}
+
+/* section-header specimen */
+.sh{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  border-bottom:1px solid rgba(12,27,43,.09);padding-bottom:18px;margin-top:8px}
+.sh h4{font-family:var(--sans);font-weight:600;font-size:26px;color:var(--black);margin:0}
+
+/* ── divergences ── */
+.div-item{background:var(--white);border:1px solid var(--doc-line);border-left:4px solid var(--danger);
+  border-radius:12px;padding:20px 22px;margin-top:14px}
+.div-item h4{font-family:var(--sans);font-size:15.5px;margin:0 0 7px;color:var(--black)}
+.div-item p{margin:0;font-size:13.5px;color:var(--n-600);line-height:1.55}
+.div-item .fixnote{margin-top:11px;font-size:13px;color:var(--success);font-weight:600}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.ba > div{border:1px solid var(--doc-line);border-radius:10px;padding:15px 16px;background:var(--n-50)}
+.ba .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--slate-grey);margin-bottom:10px}
+.lr-before{background:#f5f5f0;border-left:4px solid #c8a951;border-radius:4px;padding:12px 14px}
+.lr-before .t{color:#1a1a2e;font-weight:700;font-size:15px;font-family:Arial,sans-serif}
+.lr-after{background:var(--mb-wash);border-left:4px solid var(--midnight-blue);border-radius:4px;padding:12px 14px}
+.lr-after .t{color:var(--black);font-weight:600;font-size:15px;font-family:var(--sans)}
+.arial{font-family:Arial,sans-serif}
+
+/* blocker */
+.blocker{background:#fdf3f2;border:1px solid #eec9c5;border-left:4px solid var(--danger);
+  border-radius:12px;padding:22px 24px}
+.blocker h3{margin-top:0;color:var(--danger)}
+
+/* checklist */
+.check{list-style:none;padding:0;margin:8px 0 0}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--doc-line);font-size:14px}
+.check li:before{content:"";position:absolute;left:2px;top:12px;width:14px;height:14px;
+  border:2px solid var(--n-300);border-radius:3px}
+
+footer{padding:40px 0 64px;color:var(--slate-grey);font-size:13px}
+
+@media(max-width:720px){
+  .ba{grid-template-columns:1fr}
+  .ramp{flex-wrap:wrap}.ramp div{min-width:20%}
+}
+</style>
+
+<div class="mast"><div class="wrap">
+  <p class="eyebrow">Website platform · design continuity</p>
+  <h1>The new site has to look like Array Metal</h1>
+  <p class="stand">Every token on this page was read out of the live production stylesheet on 10 August 2026 — not
+     sampled from a screenshot, not invented. This is what the brand <em>is</em> today, what carries forward
+     unchanged, and the short list of things we deliberately fix on the way across.</p>
+
+  <div class="prov">
+    <b>Provenance.</b> Source of every value below:<br>
+    <span class="mono">cdn.prod.website-files.com/6082b34dc5995b3e8dc8c73b/css/array-metal.webflow.shared.5f802104d.min.css</span><br>
+    125,092 bytes · sampled against <span class="mono">https://www.arraymetal.com/</span> (HTTP 200, 38,837 bytes) · 2026-08-10.
+    The palette in §1 is not inferred — Webflow emits a real <code>:root</code> block, reproduced verbatim.
+    <b>The typefaces on this page are the actual Array Metal webfonts</b>, loaded live from that same CDN.
+  </div>
+</div></div>
+
+<!-- ─────────────────────────── 1. PALETTE ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">01</span>
+  <h2>The palette, verbatim</h2>
+  <p class="lede">Five tokens. This is the designer's own <code>:root</code> block, copied without alteration —
+     it is the definition of the brand, and all five values survive the replatform byte-identical.</p>
+
+  <div class="grid swatches" style="margin-top:24px">
+    <div class="sw">
+      <div class="chip" style="background:#09318b;color:#dae5eb">--midnight-blue</div>
+      <div class="meta"><div class="name">Midnight Blue</div><div class="hex">#09318b</div>
+      <div class="use">The primary. Buttons, nav links, active states, rules. 11.5:1 on white — AAA.</div></div>
+    </div>
+    <div class="sw">
+      <div class="chip" style="background:#0c1b2b;color:#dae5eb">--black</div>
+      <div class="meta"><div class="name">Black</div><div class="hex">#0c1b2b</div>
+      <div class="use">Navy-black. Headings, dark section bands, photo overlays at 99%.</div></div>
+    </div>
+    <div class="sw">
+      <div class="chip" style="background:#5f6e7e;color:#fff">--slate-grey</div>
+      <div class="meta"><div class="name">Slate Grey</div><div class="hex">#5f6e7e</div>
+      <div class="use">All body copy. 5.2:1 on white — passes AA for normal text.</div></div>
+    </div>
+    <div class="sw">
+      <div class="chip" style="background:#dae5eb;color:#0c1b2b">--alice-blue</div>
+      <div class="meta"><div class="name">Alice Blue</div><div class="hex">#dae5eb</div>
+      <div class="use">The tint band. Alternating sections, hero backgrounds, secondary buttons.</div></div>
+    </div>
+    <div class="sw">
+      <div class="chip" style="background:#fff;color:#5f6e7e;border-bottom:1px solid #dde2e7">--white</div>
+      <div class="meta"><div class="name">White</div><div class="hex">#ffffff</div>
+      <div class="use">The default surface. Half of the alternating rhythm.</div></div>
+    </div>
+  </div>
+
+  <h3>Contrast, measured on the pairs actually used together</h3>
+  <div class="tw"><table>
+    <tr><th>Foreground</th><th>On</th><th class="num">Ratio</th><th>WCAG</th><th>Where</th></tr>
+    <tr><td>--midnight-blue</td><td>--white</td><td class="num">11.5&nbsp;:&nbsp;1</td><td class="pass">AAA</td><td>Nav links, headings</td></tr>
+    <tr><td>--white</td><td>--midnight-blue</td><td class="num">11.5&nbsp;:&nbsp;1</td><td class="pass">AAA</td><td>Primary button</td></tr>
+    <tr><td>--black</td><td>--alice-blue</td><td class="num">13.6&nbsp;:&nbsp;1</td><td class="pass">AAA</td><td>Tint bands, secondary button</td></tr>
+    <tr><td>--slate-grey</td><td>--white</td><td class="num">5.2&nbsp;:&nbsp;1</td><td class="pass">AA</td><td>All body copy</td></tr>
+    <tr><td>--alice-blue</td><td>--white</td><td class="num">1.3&nbsp;:&nbsp;1</td><td class="fail">FAIL</td><td>The live <code>h5</code> rule — see §5</td></tr>
+  </table></div>
+
+  <h3>Found in the stylesheet, not part of the brand</h3>
+  <div class="tw"><table>
+    <tr><th>Value</th><th class="num">Uses</th><th>What it really is</th><th>Action</th></tr>
+    <tr><td class="mono">#3898ec</td><td class="num">24</td><td>Webflow's factory default — <code>.w-button</code>, form focus rings</td><td>Drop</td></tr>
+    <tr><td class="mono">#1a1a2e · #c8a951 · #f5f5f0</td><td class="num">~10</td><td>The Load Ratings embed's private palette (<code>.lr-*</code>)</td><td>Re-skin to brand</td></tr>
+    <tr><td class="mono">#17a651</td><td class="num">4</td><td>A green border with no <code>border-style</code> — renders nothing</td><td>Drop</td></tr>
+    <tr><td class="mono">#333 · #999 · #666 · #ddd · #f5f5f5</td><td class="num">~90</td><td>Normalize leftovers and ad-hoc greys</td><td>Replace with one ramp</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ─────────────────────────── 2. TYPE ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">02</span>
+  <h2>Two typefaces, split by role</h2>
+  <p class="lede">Maison Neue carries the loud voice — <code>h1</code>, <code>h2</code>, nav, buttons (71 rules).
+     Halyard Display carries the quiet one — <code>h3</code>–<code>h6</code>, forms (34 rules). Both are
+     self-hosted commercial faces. <b>The specimens below are rendering in the real fonts.</b></p>
+
+  <div class="card" style="margin-top:22px">
+    <div class="spec"><div class="tag">h1 · Maison Neue Demi 600 · 38 / 44 px</div>
+      <div class="s-h1">Cable support systems, engineered in Malaysia</div></div>
+    <div class="spec"><div class="tag">h2 · Maison Neue Demi 600 · 32 / 36 px · → 25 px below 767</div>
+      <div class="s-h2">AML roll-formed cable ladder</div></div>
+    <div class="spec"><div class="tag">h3 · Halyard Regular 500 · 24 / 30 px</div>
+      <div class="s-h3">Safe working load and support spans</div></div>
+    <div class="spec"><div class="tag">h4 · Halyard Regular 500 · 18 / 24 px</div>
+      <div class="s-h4">Hot-dip galvanized to ISO 1461</div></div>
+    <div class="spec"><div class="tag">body · Maison Neue Book 400 · 16 / 25 px · --slate-grey</div>
+      <div class="s-p">Array Metal manufactures cable ladder, cable tray, trunking and wire mesh systems
+        for industrial and infrastructure projects across South-East Asia. Every component is produced
+        against a published item code with a stated finish, thickness and load rating.</div></div>
+  </div>
+
+  <h3>The five font files to re-host</h3>
+  <div class="tw"><table>
+    <tr><th>Family</th><th>Weight</th><th>File</th><th>Format</th></tr>
+    <tr><td>Maison Neue</td><td class="num">400</td><td class="mono">MaisonNeue-Book.woff</td><td>woff</td></tr>
+    <tr><td>Maison Neue</td><td class="num">600</td><td class="mono">MaisonNeue-Demi.woff</td><td>woff</td></tr>
+    <tr><td>Halyard Display</td><td class="num">400</td><td class="mono">halyarddisbook-webfont.ttf</td><td>ttf</td></tr>
+    <tr><td>Halyard Display</td><td class="num">500</td><td class="mono">HalyardRegular.ttf</td><td>ttf</td></tr>
+    <tr><td>Halyard Display</td><td class="num">600</td><td class="mono">halyarddissembd-webfont.ttf</td><td>ttf</td></tr>
+  </table></div>
+  <p class="lede" style="margin-top:12px;font-size:13.5px">Note the <code>.ttf</code>s — Halyard ships uncompressed.
+     Converting to <code>woff2</code> on the new stack is a free ~60% payload cut with zero visual change.</p>
+</div></section>
+
+<!-- ─────────────────────────── 3. LAYOUT ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">03</span>
+  <h2>The banding rhythm — the thing to get right</h2>
+  <p class="lede">Full-bleed sections alternating white and Alice Blue, each with a 1300&nbsp;px centred container
+     and 60–65&nbsp;px of vertical padding. Dark sections put <code>--black</code> at 99% over a photograph.
+     This alternation <em>is</em> the site's visual signature — reproduce it and the new pages read as Array Metal
+     before a single word is written.</p>
+
+  <div class="demo">
+    <div class="band light"><div class="inner"><div class="band-tag">&lt;Section tone="light"&gt; · --white · 60px</div>
+      <h4>Products</h4><p>The default surface. Half of the alternation.</p></div></div>
+    <div class="band tint"><div class="inner"><div class="band-tag">&lt;Section tone="tint"&gt; · --alice-blue · 60px</div>
+      <h4>Systems comparison</h4><p>Every second band. Carries cards, logo strips and product grids.</p></div></div>
+    <div class="band light"><div class="inner"><div class="band-tag">&lt;Section tone="light"&gt;</div>
+      <h4>Applications</h4><p>Back to white. The rhythm is strict — never two of the same in a row.</p></div></div>
+    <div class="band photo"><div class="inner"><div class="band-tag">&lt;Section tone="photo"&gt; · --black @ 99% over image · 80px</div>
+      <h4>Built for the site, not the showroom</h4><p>The one place the site raises its voice.</p></div></div>
+    <div class="band dark"><div class="inner"><div class="band-tag">&lt;Section tone="dark"&gt; · --black</div>
+      <h4>Footer</h4><p>1280 px container, hairline top rule at 13% Alice Blue.</p></div></div>
+  </div>
+
+  <h3>Geometry</h3>
+  <div class="tw"><table>
+    <tr><th>Token</th><th>Live value</th><th>Carry forward as</th></tr>
+    <tr><td>Container</td><td class="mono">1300 px (nav, sections) · 1280 px (footer)</td><td class="mono">1300 px — standardise</td></tr>
+    <tr><td>Gutter</td><td class="mono">15 px</td><td class="mono">15 px</td></tr>
+    <tr><td>Section padding</td><td class="mono">59 · 60 · 65 · 80 · 110 px</td><td class="mono">3-step scale: 30 / 60 / 100</td></tr>
+    <tr><td>Breakpoints</td><td class="mono">991 / 767 / 479 px</td><td class="mono">unchanged — keeps the port comparable</td></tr>
+    <tr><td>Radius — button</td><td class="mono">5 px, 6 px</td><td class="mono">6 px</td></tr>
+    <tr><td>Radius — card</td><td class="mono">20 px (51 uses) · 10 · 8 · 3</td><td class="mono">20 px card / 8 px inset</td></tr>
+    <tr><td>Elevation</td><td class="mono">3 one-off shadows in 125 KB</td><td class="mono">stay flat — borders, not shadows</td></tr>
+    <tr><td>Motion</td><td class="mono">.2–.3s, mostly <code>all</code></td><td class="mono">.18s ease, named properties only</td></tr>
+  </table></div>
+</div></section>
+
+<!-- ─────────────────────────── 4. COMPONENTS ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">04</span>
+  <h2>Components — same look, real names</h2>
+  <p class="lede">The current markup has no design system; the classes are Webflow's auto-generated counters
+     (<code>button-9</code>, <code>div-block-4180</code>, <code>text-block-128</code>). We keep the appearance
+     exactly and throw the naming away. Four near-identical primary buttons collapse into one component with variants.</p>
+
+  <h3>Buttons — every live variant, rebuilt</h3>
+  <div class="card">
+    <div class="btnrow">
+      <a href="#" class="btn primary">Request a quotation</a>
+      <a href="#" class="btn dark">Contact us</a>
+      <a href="#" class="btn secondary">Download datasheet</a>
+      <a href="#" class="btn ghost">View all</a>
+      <a href="#" class="btn primary lg">Submit enquiry</a>
+    </div>
+    <div class="tw" style="margin-top:22px"><table>
+      <tr><th>Live class</th><th>Appearance</th><th>New component</th></tr>
+      <tr><td class="mono">.button-10 / .button-11</td><td>midnight-blue fill, #f5f5f5 text, r6, 14 px</td><td class="mono">&lt;Button variant="primary"&gt;</td></tr>
+      <tr><td class="mono">.button-11.contact</td><td>--black fill</td><td class="mono">&lt;Button variant="dark"&gt;</td></tr>
+      <tr><td class="mono">.button-9</td><td>--alice-blue fill, --black text, r5</td><td class="mono">&lt;Button variant="secondary"&gt;</td></tr>
+      <tr><td class="mono">.button-15 / .button-16</td><td>#f5f5f5 fill, --slate-grey text</td><td class="mono">&lt;Button variant="ghost"&gt;</td></tr>
+      <tr><td class="mono">.button-12</td><td>full-width, 16 px padding, Halyard</td><td class="mono">&lt;Button size="lg" block&gt;</td></tr>
+    </table></div>
+  </div>
+
+  <h3>Header — sticky, white, 1300 px</h3>
+  <div class="hdr">
+    <div class="logo">ARRAY METAL</div>
+    <nav><a href="#" class="cur">Products</a><a href="#">About</a><a href="#">Catalogues</a>
+         <a href="#">Projects</a><a href="#">Contact</a></nav>
+    <a href="#" class="btn primary" style="padding:9px 15px">Enquiry list</a>
+  </div>
+  <p class="lede" style="font-size:13px;margin-top:10px">Live nav is <span class="mono">About · Catalogues ·
+     Projects · Contact</span>. The new IA adds <span class="mono">Products</span> as the primary entry —
+     the five-level catalogue is the reason for the replatform.</p>
+
+  <h3>Section header — <span class="mono">.div-block-4180</span></h3>
+  <div class="sh">
+    <h4>Cable ladder systems</h4>
+    <a href="#" class="btn secondary">See all 9 systems</a>
+  </div>
+  <p class="lede" style="font-size:13px;margin-top:10px">Flex row, space-between, hairline rule at 9% <code>--black</code>,
+     60 px bottom margin. Used above every grid on the live site.</p>
+</div></section>
+
+<!-- ─────────────────────────── 5. DIVERGENCES ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">05</span>
+  <h2>What we deliberately change</h2>
+  <p class="lede">These are implementation defects, not brand decisions. Reproducing them faithfully would be the
+     wrong kind of fidelity. Each one is a change, so each needs sign-off.</p>
+
+  <div class="div-item">
+    <h4>1 · The Load Ratings embed is off-brand</h4>
+    <p><code>.lr-*</code> ships <code>#1a1a2e</code> navy, <code>#c8a951</code> gold and <code>#f5f5f0</code> cream —
+       none of them brand tokens — plus Arial. On <code>/load-ratings</code> it reads as a different company's page.</p>
+    <div class="ba">
+      <div><div class="lbl">Live today</div>
+        <div class="lr-before"><div class="t">AML100 — Safe working load</div></div></div>
+      <div><div class="lbl">On brand</div>
+        <div class="lr-after"><div class="t">AML100 — Safe working load</div></div></div>
+    </div>
+    <div class="fixnote">→ Fix when porting the calculators to React (Phase 4).</div>
+  </div>
+
+  <div class="div-item">
+    <h4>2 · Body text is Arial</h4>
+    <p><code>body</code> sets <code>font-family:Arial,sans-serif</code> and nothing overrides it. The brand faces are
+       applied class-by-class across 105 rules, so any element without a class — including CMS rich-text output —
+       silently falls back to Arial.</p>
+    <div class="ba">
+      <div><div class="lbl">Live — unclassed text</div>
+        <p class="arial" style="margin:0;font-size:15px;color:#5f6e7e">Hot-dip galvanized to ISO 1461, 3 m standard length.</p></div>
+      <div><div class="lbl">Brand face set on :root</div>
+        <p style="margin:0;font-size:15px;color:#5f6e7e;font-family:Maisonneue,sans-serif">Hot-dip galvanized to ISO 1461, 3 m standard length.</p></div>
+    </div>
+    <div class="fixnote">→ Set the brand face once on <code>:root</code>. Never per-class.</div>
+  </div>
+
+  <div class="div-item">
+    <h4>3 · <code>h5</code> is Alice Blue on white — 1.3 : 1</h4>
+    <p>Effectively invisible anywhere outside a dark band. It works only where it was first authored.</p>
+    <div class="ba">
+      <div><div class="lbl">Live</div>
+        <div style="font-family:Halyard,sans-serif;font-weight:500;font-size:14px;color:#dae5eb">Nominal width 300 mm</div></div>
+      <div><div class="lbl">Fixed</div>
+        <div style="font-family:Halyard,sans-serif;font-weight:500;font-size:14px;color:#5f6e7e">Nominal width 300 mm</div></div>
+    </div>
+    <div class="fixnote">→ Re-colour to <code>--slate-grey</code>, or scope Alice Blue to dark sections only.</div>
+  </div>
+
+  <div class="div-item">
+    <h4>4 · A border that never renders</h4>
+    <p><code>.button-10</code>, <code>.button-11</code> and <code>.nav-link.w--current</code> all carry
+       <code>border:1px #17a651</code> — no <code>border-style</code>, so nothing draws. Copy-paste drift replicated
+       across four rules.</p>
+    <div class="fixnote">→ Drop it. Green is not in the palette.</div>
+  </div>
+
+  <div class="div-item">
+    <h4>5 · No focus-visible styling anywhere</h4>
+    <p>Keyboard users get Webflow's default <code>#3898ec</code> ring or nothing at all. On a catalogue with
+       filter chips, configurators and enquiry forms this is a genuine usability failure, not a nicety.</p>
+    <div class="fixnote">→ 3 px <code>--midnight-blue</code> ring at 2 px offset on every interactive element.
+       <span style="color:#5f6e7e;font-weight:400">(Tab through this page to see it.)</span></div>
+  </div>
+
+  <div class="div-item">
+    <h4>6 · Section padding drift</h4>
+    <p><code>59px</code>, <code>60px</code>, <code>65px</code>, <code>80px</code>, <code>110px</code> for what is
+       visually the same band. The 59 is a drag-error.</p>
+    <div class="fixnote">→ Collapse to a 3-step scale: 30 / 60 / 100.</div>
+  </div>
+</div></section>
+
+<!-- ─────────────────────────── 6. EXTENSION ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">06</span>
+  <h2>The extension — five tokens can't build a catalogue</h2>
+  <p class="lede">The current site is a brochure. It has no hover, focus, disabled, error or success colour, and one
+     flat grey. A catalogue with filter chips, sortable SKU tables, validation and an enquiry list needs states.
+     Nothing here is invented: the neutral ramp is the straight line <em>between</em> the two brand neutrals,
+     extended in both directions.</p>
+
+  <h3>Neutral ramp — <span class="mono">--slate-grey</span> and <span class="mono">--black</span> are already on it</h3>
+  <div class="ramp">
+    <div style="background:#f6f8f9;color:#5f6e7e">50</div>
+    <div style="background:#eceff2;color:#5f6e7e">100</div>
+    <div style="background:#dde2e7;color:#5f6e7e">200</div>
+    <div style="background:#c3ccd4;color:#36414d">300</div>
+    <div style="background:#98a4b0;color:#fff">400</div>
+    <div style="background:#5f6e7e;color:#fff">500★</div>
+    <div style="background:#4a5765;color:#fff">600</div>
+    <div style="background:#36414d;color:#fff">700</div>
+    <div style="background:#212b36;color:#fff">800</div>
+    <div style="background:#0c1b2b;color:#fff">900★</div>
+  </div>
+  <p class="lede" style="font-size:13px;margin-top:10px">★ = an existing brand token, unchanged.
+     <span class="mono">--slate-grey</span> is step 500, <span class="mono">--black</span> is step 900.</p>
+
+  <h3>States</h3>
+  <div class="tw"><table>
+    <tr><th>Token</th><th>Value</th><th>Derivation</th><th>Use</th></tr>
+    <tr><td class="mono">--mb-hover</td><td class="mono">#072761</td><td>midnight-blue, −20% L</td><td>Primary button hover</td></tr>
+    <tr><td class="mono">--mb-active</td><td class="mono">#061f4d</td><td>midnight-blue, −32% L</td><td>Pressed</td></tr>
+    <tr><td class="mono">--mb-wash</td><td class="mono">#eaf0f9</td><td>midnight-blue @ 6% on white</td><td>Selected chip, active filter, callout</td></tr>
+    <tr><td class="mono">--success</td><td class="mono">#1a7f4b</td><td>new</td><td>"Added to enquiry list"</td></tr>
+    <tr><td class="mono">--warning</td><td class="mono">#9a5b00</td><td>new</td><td>"Made to order", non-stock</td></tr>
+    <tr><td class="mono">--danger</td><td class="mono">#b3261e</td><td>new</td><td>Validation, invalid configuration</td></tr>
+  </table></div>
+  <p class="lede" style="margin-top:14px"><b>Dark mode: not at launch.</b> The brand has no dark palette and
+     inventing one is a branding exercise, not an engineering one. But every value ships as a CSS custom property,
+     so it stays a one-file decision later.</p>
+</div></section>
+
+<!-- ─────────────────────────── 7. BLOCKER ─────────────────────────── -->
+<section><div class="wrap">
+  <span class="sec-num">07</span>
+  <h2>The one thing that could break this</h2>
+  <div class="blocker">
+    <h3>Font licensing</h3>
+    <p style="margin:0 0 14px;font-size:14.5px">Maison Neue (Milieu Grotesque) and Halyard Display (Darden Studio)
+       are <b>paid, licensed webfonts</b>. The current licence was bought for a Webflow-hosted site. Serving them from
+       Vercel is a different host and possibly a different pageview tier.</p>
+    <div class="tw"><table>
+      <tr><th>Outcome</th><th>Consequence</th></tr>
+      <tr><td>Licence already covers self-hosting at our traffic</td><td class="pass">Re-host five files. Zero visual change. Preferred</td></tr>
+      <tr><td>Licence needs upgrading</td><td>A budget line. Still zero visual change</td></tr>
+      <tr><td>Licence cannot be extended</td><td class="fail">Substitution — and the typographic identity changes</td></tr>
+    </table></div>
+    <p style="margin:14px 0 0;font-size:14px">Fallbacks if substitution is forced: Maison Neue → <b>Inter</b>;
+       Halyard Display → <b>Jost</b>. Any substitution gets a side-by-side review first — it is the single change
+       here a customer would actually notice.</p>
+    <p style="margin:12px 0 0;font-size:14px"><b>Owner: Kai. Blocks Phase 4.</b> Tracked as Open Item 8 in the build plan.</p>
+  </div>
+</div></section>
+
+<!-- ─────────────────────────── 8. GATE ─────────────────────────── -->
+<section style="border-bottom:0"><div class="wrap">
+  <span class="sec-num">08</span>
+  <h2>Acceptance gate</h2>
+  <p class="lede">The design system is done when all of these are true.</p>
+  <ul class="check">
+    <li><code>tokens.css</code> exists in <span class="mono">array-metal-web</span> with all five brand values byte-identical to §1</li>
+    <li>Both typefaces load self-hosted, licence confirmed (§7)</li>
+    <li><span class="mono">&lt;Section&gt; &lt;Container&gt; &lt;Button&gt; &lt;SiteHeader&gt; &lt;SectionHeader&gt;</span> implemented per §4</li>
+    <li>An existing arraymetal.com page, rebuilt on the new stack, sits beside the Webflow original and reads as the same site</li>
+    <li>Every §5 divergence either fixed or explicitly waived, in writing</li>
+    <li>Every interactive element has a visible <code>:focus-visible</code> state</li>
+    <li>No <span class="mono">#3898ec</span> and no <span class="mono">.lr-*</span> palette value anywhere in the new repo</li>
+    <li>Contrast checked at AA for every token pair actually used together</li>
+  </ul>
+</div></section>
+
+<footer><div class="wrap">
+  Array Metal (M) Sdn. Bhd. · design system extracted 2026-08-10 from
+  <span class="mono">array-metal.webflow.shared.5f802104d.min.css</span> ·
+  companion to <span class="mono">DESIGN_SYSTEM.md</span> and <span class="mono">BUILD_PLAN.md</span> §3 D-14.
+</div></footer>

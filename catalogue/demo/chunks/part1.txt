@@ -1,0 +1,151 @@
+al cross", type: "Crosspiece", sys: "AML common", image: IMG.cross, code: "AML-X",
+chars: [["Type", "Crosspiece"], ["Unit", "pc"]] },
+{ id: "aml-riser-in", system: "aml", name: "Inside riser 90°", type: "Riser", sys: "AML common", image: IMG.riser, code: "AML-IR",
+chars: [["Type", "Riser"], ["Angle", "90° inside"], ["Unit", "pc"]] },
+{ id: "aml-riser-out", system: "aml", name: "Outside riser 90°", type: "Riser", sys: "AML common", image: IMG.outside, code: "AML-OR",
+chars: [["Type", "Riser"], ["Angle", "90° outside"], ["Unit", "pc"]] },
+{ id: "aml-reducer", system: "aml", name: "Left / right reducer", type: "Reducer", sys: "AML common", image: IMG.reducer, code: "AML-R",
+chars: [["Type", "Reducer"], ["Unit", "pc"]] },
+{ id: "aml-splice", system: "aml", name: "Straight splice plate", type: "Splice connector", sys: "AML common", image: IMG.body, code: "SP",
+chars: [["Type", "Splice connector"], ["Use", "Join straight sections"], ["Unit", "pc"]] },
+{ id: "aml-cover", system: "aml", name: "Cover for straight ladder", type: "Cover", sys: "AML common", image: IMG.body, code: "LC",
+chars: [["Type", "Cover"], ["Lengths", "1.5 m, 3 m"], ["Unit", "m"]] },
+{ id: "aml-clip", system: "aml", name: "Cover clamp", type: "Cover clamp", sys: "AML common", image: IMG.body, code: "CCA",
+chars: [["Type", "Cover clamp"], ["Unit", "pc"]] },
+{ id: "apo-str", system: "apo", name: "Cable ladder straight section", type: "Cable ladder", sys: "APO", image: IMG.apo, code: "APO-STR",
+chars: [["Series", "APO"], ["Standard", "SIRIM / NEMA VE1-2009"], ["Safety factor", "×1.5"], ["Lengths", "3 m, 6 m"]] },
+{ id: "apo100", system: "apo", name: "Cable ladder APO100", type: "Cable ladder", sys: "APO100", image: IMG.apo, code: "APO100",
+chars: [["Model", "APO100"], ["Loading depth", "75 mm"], ["SWL @ 3 m", "192 kg/m"], ["SWL @ 4.5 m", "85 kg/m"], ["SWL @ 6 m", "48 kg/m"], ["NEMA class", "20AA"]] },
+{ id: "apo125", system: "apo", name: "Cable ladder APO125", type: "Cable ladder", sys: "APO125", image: IMG.apo, code: "APO125",
+chars: [["Model", "APO125"], ["Loading depth", "100 mm"], ["SWL @ 3 m", "416 kg/m"], ["SWL @ 4.5 m", "185 kg/m"], ["SWL @ 6 m", "104 kg/m"], ["NEMA class", "20A"]] },
+{ id: "apo150", system: "apo", name: "Cable ladder APO150", type: "Cable ladder", sys: "APO150", image: IMG.apo, code: "APO150",
+chars: [["Model", "APO150"], ["Loading depth", "125 mm"], ["SWL @ 3 m", "540 kg/m"], ["SWL @ 4.5 m", "240 kg/m"], ["SWL @ 6 m", "135 kg/m"], ["NEMA class", "20B"]] },
+{ id: "apo-el90", system: "apo", name: "90° horizontal elbow", type: "Flat elbow", sys: "APO common", image: IMG.tee, code: "APO-EL90",
+chars: [["Type", "Flat elbow"], ["Unit", "pc"]] },
+{ id: "apo-splice", system: "apo", name: "Straight splice plate", type: "Splice connector", sys: "APO common", image: IMG.body, code: "APO-SP",
+chars: [["Type", "Splice connector"], ["Unit", "pc"]] },
+{ id: "apo-cover", system: "apo", name: "Cover for straight ladder", type: "Cover", sys: "APO common", image: IMG.body, code: "APO-LC",
+chars: [["Type", "Cover"], ["Unit", "m"]] },
+{ id: "acd-str", system: "acd", name: "Cable ladder straight section", type: "Cable ladder", sys: "ACD", image: IMG.acd, code: "ACD-STR",
+chars: [["Series", "ACD"], ["Standard", "IEC 61537:2006"], ["Safety factor", "×1.7"], ["Certificate", "2018MA0594-ACD-IEC61537"]] },
+{ id: "acd100", system: "acd", name: "Cable ladder ACD100", type: "Cable ladder", sys: "ACD100", image: IMG.acd, code: "ACD100",
+chars: [["Model", "ACD100"], ["Loading depth", "75 mm"], ["SWL @ 3 m", "239 kg/m"], ["SWL @ 4.5 m", "106 kg/m"], ["SWL @ 6 m", "60 kg/m"], ["Standard", "IEC 61537"]] },
+{ id: "acd125", system: "acd", name: "Cable ladder ACD125", type: "Cable ladder", sys: "ACD125", image: IMG.acd, code: "ACD125",
+chars: [["Model", "ACD125"], ["Loading depth", "100 mm"], ["SWL @ 3 m", "560 kg/m"], ["SWL @ 4.5 m", "249 kg/m"], ["SWL @ 6 m", "140 kg/m"]] },
+{ id: "acd150", system: "acd", name: "Cable ladder ACD150", type: "Cable ladder", sys: "ACD150", image: IMG.acd, code: "ACD150",
+chars: [["Model", "ACD150"], ["Loading depth", "125 mm"], ["SWL @ 3 m", "579 kg/m"], ["SWL @ 4.5 m", "257 kg/m"], ["SWL @ 6 m", "145 kg/m"]] },
+{ id: "acd-el90", system: "acd", name: "90° horizontal elbow", type: "Flat elbow", sys: "ACD common", image: IMG.tee, code: "ACD-EL90",
+chars: [["Type", "Flat elbow"], ["Unit", "pc"]] },
+{ id: "acd-splice", system: "acd", name: "Straight splice plate", type: "Splice connector", sys: "ACD common", image: IMG.body, code: "ACD-SP",
+chars: [["Type", "Splice connector"], ["Unit", "pc"]] },
+{ id: "art50", system: "art", name: "Cable tray ART50", type: "Cable tray", sys: "ART50", image: IMG.art, code: "ART50",
+chars: [["Model", "ART50"], ["Height", "50 mm"], ["SWL @ 1.5 m", "484 kg/m"], ["SWL @ 2 m", "272 kg/m"], ["SWL @ 3 m", "121 kg/m"], ["NEMA class", "20AA"]] },
+{ id: "art-cover", system: "art", name: "Cover for cable tray", type: "Cover", sys: "ART common", image: IMG.tray, code: "ART-LC",
+chars: [["Type", "Cover"], ["Unit", "m"]] },
+{ id: "art-splice", system: "art", name: "Splice plate", type: "Splice connector", sys: "ART common", image: IMG.tray, code: "ART-SP",
+chars: [["Type", "Splice connector"], ["Unit", "pc"]] },
+{ id: "amt100", system: "amt", name: "Cable tray AMT100", type: "Cable tray", sys: "AMT100", image: IMG.tray, code: "AMT100",
+chars: [["Model", "AMT100"], ["Height", "100 mm"], ["SWL @ 1.5 m", "716 kg/m"], ["SWL @ 2 m", "403 kg/m"], ["SWL @ 3 m", "179 kg/m"], ["NEMA class", "20B"]] },
+{ id: "amt-cover", system: "amt", name: "Cover for cable tray", type: "Cover", sys: "AMT common", image: IMG.tray, code: "AMT-LC",
+chars: [["Type", "Cover"], ["Unit", "m"]] },
+{ id: "amt-elbow", system: "amt", name: "90° elbow tray", type: "Flat elbow", sys: "AMT common", image: IMG.tray, code: "AMT-EL90",
+chars: [["Type", "Flat elbow"], ["Unit", "pc"]] }
+];
+const state = {
+filters: { systems: new Set(), types: new Set(), q: "" }
+};
+function esc(s) {
+return String(s ?? "")
+.replace(/&/g, "&amp;").replace(/</g, "&lt;")
+.replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function groupById(id) { return GROUPS.find((g) => g.id === id); }
+function articlesForSystem(sysId) { return ARTICLES.filter((a) => a.system === sysId); }
+function articlesForGroup(groupId) {
+const sysIds = groupById(groupId)?.systems || [];
+return ARTICLES.filter((a) => sysIds.includes(a.system));
+}
+function parseHash() {
+const h = (location.hash || "#/").replace(/^#\/?/, "");
+const parts = h.split("/").filter(Boolean);
+if (!parts.length) return { page: "home" };
+if (parts[0] === "article" && parts[1]) return { page: "article", id: parts[1] };
+if (parts[0] === "system" && parts[1]) return { page: "system", id: parts[1] };
+if (groupById(parts[0])) return { page: "group", id: parts[0] };
+return { page: "home" };
+}
+function go(path) {
+location.hash = "#/" + path.replace(/^\//, "");
+}
+function setNav(active) {
+document.querySelectorAll(".top-nav a").forEach((a) => {
+const r = a.getAttribute("data-route");
+a.classList.toggle("is-active", r === active || (active === "group" && r === active));
+});
+}
+function renderHome() {
+setNav("home");
+return `
+<div class="breadcrumb"><span>Products</span></div>
+<h1 class="page-title">Products</h1>
+<p class="page-intro">Browse Array Metal cable support systems and engineered products. Select a product group to explore systems, components and technical data.</p>
+<div class="group-grid">
+${GROUPS.map((g) => `
+<button type="button" class="group-card" data-go="group/${g.id}">
+<div class="thumb"><img src="${esc(g.image)}" alt="" loading="lazy" /></div>
+<div class="body">
+<div class="meta">${esc(g.category)}</div>
+<h2>${esc(g.name)}</h2>
+<p>${esc(g.blurb)}</p>
+</div>
+</button>
+`).join("")}
+</div>
+`;
+}
+function renderGroup(groupId) {
+const g = groupById(groupId);
+if (!g) return renderHome();
+setNav(groupId === "cable-ladders" || groupId === "cable-trays" ? groupId : "home");
+if (!g.systems.length) {
+return `
+<div class="breadcrumb">
+<a href="#/" data-go="home">Products</a> / <span>${esc(g.name)}</span>
+</div>
+<h1 class="page-title">${esc(g.name)}</h1>
+<p class="page-intro">${esc(g.blurb)}</p>
+<div class="empty-state">System pages for this group will be expanded next — structure matches Cable Ladders / Cable Trays.</div>
+`;
+}
+const systems = g.systems.map((id) => SYSTEMS[id]).filter(Boolean);
+return `
+<div class="breadcrumb">
+<a href="#/" data-go="home">Products</a> / <span>${esc(g.name)}</span>
+</div>
+<h1 class="page-title">${esc(g.name)}</h1>
+<p class="page-intro">${esc(g.blurb)}</p>
+<div class="system-list">
+${systems.map((s) => `
+<button type="button" class="system-card" data-go="system/${s.id}">
+<div class="thumb"><img src="${esc(s.image)}" alt="" loading="lazy" /></div>
+<div class="body">
+<h2>${esc(s.name)}</h2>
+<p>${esc(s.short)}</p>
+<div class="tags">
+<span class="pill">${esc(s.standard)}</span>
+<span class="pill">SF ${esc(s.safety)}</span>
+</div>
+</div>
+</button>
+`).join("")}
+</div>
+`;
+}
+function filterArticles(list) {
+const { systems, types, q } = state.filters;
+return list.filter((a) => {
+if (systems.size && !systems.has(a.sys)) return false;
+if (types.size && !types.has(a.type)) return false;
+if (q) {
+const hay = (a.name + " " + a.code + " " + a.type + " " + a.sys).toLowerCase();
+if (!hay.includes(q.toLowerCase())) return 

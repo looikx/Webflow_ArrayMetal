@@ -1,0 +1,164 @@
+{
+  "scripts": [
+    {
+      "id": "amcat00",
+      "location": "footer",
+      "version": "1.0.0"
+    },
+    {
+      "id": "amcat01",
+      "location": "footer",
+      "version": "1.0.1"
+    },
+    {
+      "id": "amcat02",
+      "location": "footer",
+      "version": "1.0.2"
+    },
+    {
+      "id": "amcat03",
+      "location": "footer",
+      "version": "1.0.3"
+    },
+    {
+      "id": "amcat04",
+      "location": "footer",
+      "version": "1.0.4"
+    },
+    {
+      "id": "amcat05",
+      "location": "footer",
+      "version": "1.0.5"
+    },
+    {
+      "id": "amcat06",
+      "location": "footer",
+      "version": "1.0.6"
+    },
+    {
+      "id": "amcat07",
+      "location": "footer",
+      "version": "1.0.7"
+    },
+    {
+      "id": "amcat08",
+      "location": "footer",
+      "version": "1.0.8"
+    },
+    {
+      "id": "amcat09",
+      "location": "footer",
+      "version": "1.0.9"
+    },
+    {
+      "id": "amcat10",
+      "location": "footer",
+      "version": "1.0.10"
+    },
+    {
+      "id": "amcat11",
+      "location": "footer",
+      "version": "1.0.11"
+    },
+    {
+      "id": "amcat12",
+      "location": "footer",
+      "version": "1.0.12"
+    },
+    {
+      "id": "amcat13",
+      "location": "footer",
+      "version": "1.0.13"
+    },
+    {
+      "id": "amcat14",
+      "location": "footer",
+      "version": "1.0.14"
+    },
+    {
+      "id": "amcat15",
+      "location": "footer",
+      "version": "1.0.15"
+    },
+    {
+      "id": "amcat16",
+      "location": "footer",
+      "version": "1.0.16"
+    },
+    {
+      "id": "amcat17",
+      "location": "footer",
+      "version": "1.0.17"
+    },
+    {
+      "id": "amcat18",
+      "location": "footer",
+      "version": "1.0.18"
+    },
+    {
+      "id": "amcat19",
+      "location": "footer",
+      "version": "1.0.19"
+    },
+    {
+      "id": "amcat20",
+      "location": "footer",
+      "version": "1.0.20"
+    },
+    {
+      "id": "amcat21",
+      "location": "footer",
+      "version": "1.0.21"
+    },
+    {
+      "id": "amcat22",
+      "location": "footer",
+      "version": "1.0.22"
+    },
+    {
+      "id": "amcat23",
+      "location": "footer",
+      "version": "1.0.23"
+    },
+    {
+      "id": "amcat24",
+      "location": "footer",
+      "version": "1.0.24"
+    },
+    {
+      "id": "amcat25",
+      "location": "footer",
+      "version": "1.0.25"
+    },
+    {
+      "id": "amcat26",
+      "location": "footer",
+      "version": "1.0.26"
+    },
+    {
+      "id": "amcat27",
+      "location": "footer",
+      "version": "1.0.27"
+    },
+    {
+      "id": "amcat28",
+      "location": "footer",
+      "version": "1.0.28"
+    },
+    {
+      "id": "amcat29",
+      "location": "footer",
+      "version": "1.0.29"
+    },
+    {
+      "id": "amcat30",
+      "location": "footer",
+      "version": "1.0.30"
+    },
+    {
+      "id": "amcatrun",
+      "location": "footer",
+      "version": "1.0.0"
+    }
+  ]
+}

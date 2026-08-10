@@ -1,0 +1,630 @@
+<!-- Array Metal catalogue demo Phase 1 — draft /demo-product-catalogue only -->
+
+<div id="am-cat">
+<div class="demo-note">
+    DRAFT · Oglaend-style hierarchy prototype · not live products · do not publish until approved
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/" data-route="home">
+        <span class="brand-mark">AM</span>
+        Array Metal
+      </a>
+      <nav class="top-nav">
+        <a href="#/" data-route="home" class="is-active">Products</a>
+        <a href="#/cable-ladders" data-route="cable-ladders">Cable Ladders</a>
+        <a href="#/cable-trays" data-route="cable-trays">Cable Trays</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+</div>
+<script>
+(function () {
+  /* ========== DATA (mirrors Oglaend depth + Array Metal content) ========== */
+  const IMG = {
+    ladder: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2fa4aef13dc0f0c635ffa_Cable-Ladder-Body.jpg.jpg",
+    tray: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60b70ba32a3003184411aa0d_1.jpg",
+    trunking: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60b724218a42db518a5b7ad6_1.jpg",
+    wire: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60b72513039fa486cd623908_1.jpg",
+    cleats: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69bb945774c2eb60d272d775_2.png",
+    perforated: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c70cecbaea9cab1930042b_R15T20.jpg",
+    aml: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c49a5cd41c8600f8100647_AML150%20(2).png",
+    acd: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c49a642e48de9de6432097_ACD150%20(2).png",
+    apo: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c64ff30f7d41049d65c516_Array%20Products%20.png",
+    art: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/69c4b1607c4274729029111a_ART50.png",
+    body: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9ef063ee6848184d6_Cable%20Ladder%20Body.jpg.png",
+    cross: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9de926fd429ae8bfe_Horizontal%20Equal%20Cross.jpg",
+    riser: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a97cf1c2bd0557aca0_Inside%20Riser%2090.jpg",
+    reducer: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a95177cbb157b44265_Left%20Reducer.jpg",
+    tee: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9b353232c73aacf10_Unequal%20Tee.jpg",
+    outside: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60c2f9a9b3f5501e2835789e_Outside%20Riser%2090.jpg",
+    cert: "https://cdn.prod.website-files.com/6082b5dc0898b132f7e4fb7f/60939dca6be20a7f9c6d444e_SIRIM%20Test%20Report%20Cable%20Ladder.png"
+  };
+
+  const GROUPS = [
+    { id: "cable-ladders", name: "Cable Ladders", category: "Cable Support System", blurb: "Medium to heavy duty cable ladder systems tested to NEMA and IEC standards, with full fittings ranges.", image: IMG.ladder, systems: ["aml", "apo", "acd"] },
+    { id: "cable-trays", name: "Cable Trays", category: "Cable Support System", blurb: "Light to medium cable tray systems for efficient support where ladder depth is not required.", image: IMG.tray, systems: ["art", "amt"] },
+    { id: "cable-trunking", name: "Cable Trunking", category: "Cable Support System", blurb: "Rectangular trunking for enclosed cable routes.", image: IMG.trunking, systems: [] },
+    { id: "wire-trays", name: "Wire Trays", category: "Cable Support System", blurb: "Open wire mesh trays for ventilation and flexible routing.", image: IMG.wire, systems: [] },
+    { id: "cable-cleats", name: "Cable Cleats", category: "Cable Support System", blurb: "Cable retention and short-circuit protection.", image: IMG.cleats, systems: [] },
+    { id: "perforated", name: "Perforated Metal", category: "Industrial & Architectural", blurb: "Perforated panels for industrial and architectural applications.", image: IMG.perforated, systems: [] }
+  ];
+
+  const SYSTEMS = {
+    aml: {
+      id: "aml", group: "cable-ladders", name: "AML Cable Ladder System",
+      short: "NEMA VE1 heavy-duty ladder series for industrial and infrastructure cabling.",
+      image: IMG.aml, standard: "NEMA VE1-2009", safety: "×1.5",
+      materials: ["HDG", "SS304", "SS316", "Aluminium"],
+      heights: "100 / 125 / 150 mm", widths: "150–900 mm",
+      overview: "AML is Array Metal’s NEMA VE1 cable ladder system for medium to heavy cable support. Models cover NEMA load classes with published safe working loads by span (3 m, 4.5 m, 6 m).",
+      design: [
+        { t: "Heights", d: "AML100, AML125 and AML150 side-rail heights for load depth and future expansion." },
+        { t: "Widths", d: "Typical widths 150, 300, 450, 600, 750 and 900 mm." },
+        { t: "Standards", d: "Tested to NEMA VE1-2009 with safety factor ×1.5." },
+        { t: "Finishes", d: "Hot-dip galvanized (BS EN ISO 1461), stainless steel and aluminium options." }
+      ]
+    },
+    apo: {
+      id: "apo", group: "cable-ladders", name: "APO Cable Ladder System",
+      short: "SIRIM / NEMA ladder series with verified span load performance.",
+      image: IMG.apo, standard: "SIRIM / NEMA VE1-2009", safety: "×1.5",
+      materials: ["HDG", "SS304", "SS316"],
+      heights: "100 / 125 / 150 mm", widths: "150–900 mm",
+      overview: "APO cable ladders combine SIRIM and NEMA VE1 testing for projects requiring documented load performance across standard support spans.",
+      design: [
+        { t: "Heights", d: "APO100, APO125 and APO150 models." },
+        { t: "Testing", d: "SIRIM / NEMA VE1-2009, safety factor ×1.5." },
+        { t: "Spans", d: "Published SWL at 3 m, 4.5 m and 6 m." },
+        { t: "Finishes", d: "HDG, stainless and coated options." }
+      ]
+    },
+    acd: {
+      id: "acd", group: "cable-ladders", name: "ACD Cable Ladder System",
+      short: "IEC 61537 ladder series with ×1.7 safety factor.",
+      image: IMG.acd, standard: "IEC 61537:2006", safety: "×1.7",
+      materials: ["HDG", "SS304", "SS316"],
+      heights: "100 / 125 / 150 mm", widths: "150–900 mm",
+      overview: "ACD ladders are tested to IEC 61537 (certificate 2018MA0594-ACD-IEC61537) for projects specifying IEC compliance.",
+      design: [
+        { t: "Standard", d: "IEC 61537:2006, safety factor ×1.7." },
+        { t: "Models", d: "ACD100, ACD125, ACD150." },
+        { t: "Certificate", d: "2018MA0594-ACD-IEC61537." },
+        { t: "Spans", d: "SWL published for 3 m, 4.5 m and 6 m." }
+      ]
+    },
+    art: {
+      id: "art", group: "cable-trays", name: "ART Cable Tray System",
+      short: "Light cable tray (ART50) with NEMA load ratings.",
+      image: IMG.art, standard: "NEMA VE1-2009", safety: "×1.5",
+      materials: ["HDG", "SS304", "SS316"],
+      heights: "50 mm", widths: "100–600 mm",
+      overview: "ART50 is a light cable tray series designed for lighter cable runs with published NEMA SWL at 1.5 m, 2 m and 3 m spans.",
+      design: [
+        { t: "Height", d: "50 mm loading depth." },
+        { t: "Class", d: "NEMA 20AA (ART50)." },
+        { t: "Spans", d: "SWL at 1.5 m / 2 m / 3 m." },
+        { t: "Use", d: "Light electrical and instrumentation routes." }
+      ]
+    },
+    amt: {
+      id: "amt", group: "cable-trays", name: "AMT Cable Tray System",
+      short: "Medium-duty cable tray with NEMA 20B performance.",
+      image: IMG.tray, standard: "NEMA VE1-2009", safety: "×1.5",
+      materials: ["HDG", "SS304", "SS316"],
+      heights: "100 mm", widths: "100–600 mm",
+      overview: "AMT100 provides higher tray capacity where light ART systems are not sufficient, with published NEMA load data.",
+      design: [
+        { t: "Height", d: "100 mm loading depth." },
+        { t: "Class", d: "NEMA 20B (AMT100)." },
+        { t: "Spans", d: "SWL at 1.5 m / 2 m / 3 m." },
+        { t: "Finishes", d: "HDG, stainless, aluminium options." }
+      ]
+    }
+  };
+
+  /* Articles live under a system — filtered by system height + product type (Oglaend model) */
+  const ARTICLES = [
+    /* AML system parts */
+    { id: "aml-str", system: "aml", name: "Cable ladder straight section", type: "Cable ladder", sys: "AML", image: IMG.body, code: "AML-STR",
+      chars: [["Type", "Cable ladder"], ["Series", "AML"], ["Heights", "100 / 125 / 150 mm"], ["Widths", "150–900 mm"], ["Lengths", "3 m, 6 m"], ["Standard", "NEMA VE1-2009"], ["Safety factor", "×1.5"], ["Materials", "HDG, SS304, SS316"]] },
+    { id: "aml100", system: "aml", name: "Cable ladder AML100", type: "Cable ladder", sys: "AML100", image: IMG.aml, code: "AML100",
+      chars: [["Model", "AML100"], ["Height", "100 mm"], ["Loading depth", "75 mm"], ["Thickness", "1.5 / 2 mm"], ["SWL @ 3 m", "192 kg/m"], ["SWL @ 4.5 m", "85 kg/m"], ["SWL @ 6 m", "48 kg/m"], ["NEMA class", "20AA"], ["Standard", "NEMA VE1-2009"]] },
+    { id: "aml125", system: "aml", name: "Cable ladder AML125", type: "Cable ladder", sys: "AML125", image: IMG.aml, code: "AML125",
+      chars: [["Model", "AML125"], ["Height", "125 mm"], ["Loading depth", "100 mm"], ["SWL @ 3 m", "480 kg/m"], ["SWL @ 4.5 m", "213 kg/m"], ["SWL @ 6 m", "120 kg/m"], ["NEMA class", "20B"], ["Standard", "NEMA VE1-2009"]] },
+    { id: "aml150", system: "aml", name: "Cable ladder AML150", type: "Cable ladder", sys: "AML150", image: IMG.aml, code: "AML150",
+      chars: [["Model", "AML150"], ["Height", "150 mm"], ["Loading depth", "125 mm"], ["SWL @ 3 m", "468 kg/m"], ["SWL @ 4.5 m", "208 kg/m"], ["SWL @ 6 m", "117 kg/m"], ["NEMA class", "20B"], ["Standard", "NEMA VE1-2009"]] },
+    { id: "aml-el90", system: "aml", name: "90° horizontal elbow", type: "Flat elbow", sys: "AML common", image: IMG.tee, code: "AML-EL90",
+      chars: [["Type", "Flat elbow"], ["Angle", "90° horizontal"], ["Unit", "pc"], ["Materials", "HDG, SS304, SS316"]] },
+    { id: "aml-tee", system: "aml", name: "Tee piece", type: "T-piece", sys: "AML common", image: IMG.tee, code: "AML-T",
+      chars: [["Type", "T-piece"], ["Unit", "pc"]] },
+    { id: "aml-cross", system: "aml", name: "Equal cross", type: "Crosspiece", sys: "AML common", image: IMG.cross, code: "AML-X",
+      chars: [["Type", "Crosspiece"], ["Unit", "pc"]] },
+    { id: "aml-riser-in", system: "aml", name: "Inside riser 90°", type: "Riser", sys: "AML common", image: IMG.riser, code: "AML-IR",
+      chars: [["Type", "Riser"], ["Angle", "90° inside"], ["Unit", "pc"]] },
+    { id: "aml-riser-out", system: "aml", name: "Outside riser 90°", type: "Riser", sys: "AML common", image: IMG.outside, code: "AML-OR",
+      chars: [["Type", "Riser"], ["Angle", "90° outside"], ["Unit", "pc"]] },
+    { id: "aml-reducer", system: "aml", name: "Left / right reducer", type: "Reducer", sys: "AML common", image: IMG.reducer, code: "AML-R",
+      chars: [["Type", "Reducer"], ["Unit", "pc"]] },
+    { id: "aml-splice", system: "aml", name: "Straight splice plate", type: "Splice connector", sys: "AML common", image: IMG.body, code: "SP",
+      chars: [["Type", "Splice connector"], ["Use", "Join straight sections"], ["Unit", "pc"]] },
+    { id: "aml-cover", system: "aml", name: "Cover for straight ladder", type: "Cover", sys: "AML common", image: IMG.body, code: "LC",
+      chars: [["Type", "Cover"], ["Lengths", "1.5 m, 3 m"], ["Unit", "m"]] },
+    { id: "aml-clip", system: "aml", name: "Cover clamp", type: "Cover clamp", sys: "AML common", image: IMG.body, code: "CCA",
+      chars: [["Type", "Cover clamp"], ["Unit", "pc"]] },
+
+    /* APO */
+    { id: "apo-str", system: "apo", name: "Cable ladder straight section", type: "Cable ladder", sys: "APO", image: IMG.apo, code: "APO-STR",
+      chars: [["Series", "APO"], ["Standard", "SIRIM / NEMA VE1-2009"], ["Safety factor", "×1.5"], ["Lengths", "3 m, 6 m"]] },
+    { id: "apo100", system: "apo", name: "Cable ladder APO100", type: "Cable ladder", sys: "APO100", image: IMG.apo, code: "APO100",
+      chars: [["Model", "APO100"], ["Loading depth", "75 mm"], ["SWL @ 3 m", "192 kg/m"], ["SWL @ 4.5 m", "85 kg/m"], ["SWL @ 6 m", "48 kg/m"], ["NEMA class", "20AA"]] },
+    { id: "apo125", system: "apo", name: "Cable ladder APO125", type: "Cable ladder", sys: "APO125", image: IMG.apo, code: "APO125",
+      chars: [["Model", "APO125"], ["Loading depth", "100 mm"], ["SWL @ 3 m", "416 kg/m"], ["SWL @ 4.5 m", "185 kg/m"], ["SWL @ 6 m", "104 kg/m"], ["NEMA class", "20A"]] },
+    { id: "apo150", system: "apo", name: "Cable ladder APO150", type: "Cable ladder", sys: "APO150", image: IMG.apo, code: "APO150",
+      chars: [["Model", "APO150"], ["Loading depth", "125 mm"], ["SWL @ 3 m", "540 kg/m"], ["SWL @ 4.5 m", "240 kg/m"], ["SWL @ 6 m", "135 kg/m"], ["NEMA class", "20B"]] },
+    { id: "apo-el90", system: "apo", name: "90° horizontal elbow", type: "Flat elbow", sys: "APO common", image: IMG.tee, code: "APO-EL90",
+      chars: [["Type", "Flat elbow"], ["Unit", "pc"]] },
+    { id: "apo-splice", system: "apo", name: "Straight splice plate", type: "Splice connector", sys: "APO common", image: IMG.body, code: "APO-SP",
+      chars: [["Type", "Splice connector"], ["Unit", "pc"]] },
+    { id: "apo-cover", system: "apo", name: "Cover for straight ladder", type: "Cover", sys: "APO common", image: IMG.body, code: "APO-LC",
+      chars: [["Type", "Cover"], ["Unit", "m"]] },
+
+    /* ACD */
+    { id: "acd-str", system: "acd", name: "Cable ladder straight section", type: "Cable ladder", sys: "ACD", image: IMG.acd, code: "ACD-STR",
+      chars: [["Series", "ACD"], ["Standard", "IEC 61537:2006"], ["Safety factor", "×1.7"], ["Certificate", "2018MA0594-ACD-IEC61537"]] },
+    { id: "acd100", system: "acd", name: "Cable ladder ACD100", type: "Cable ladder", sys: "ACD100", image: IMG.acd, code: "ACD100",
+      chars: [["Model", "ACD100"], ["Loading depth", "75 mm"], ["SWL @ 3 m", "239 kg/m"], ["SWL @ 4.5 m", "106 kg/m"], ["SWL @ 6 m", "60 kg/m"], ["Standard", "IEC 61537"]] },
+    { id: "acd125", system: "acd", name: "Cable ladder ACD125", type: "Cable ladder", sys: "ACD125", image: IMG.acd, code: "ACD125",
+      chars: [["Model", "ACD125"], ["Loading depth", "100 mm"], ["SWL @ 3 m", "560 kg/m"], ["SWL @ 4.5 m", "249 kg/m"], ["SWL @ 6 m", "140 kg/m"]] },
+    { id: "acd150", system: "acd", name: "Cable ladder ACD150", type: "Cable ladder", sys: "ACD150", image: IMG.acd, code: "ACD150",
+      chars: [["Model", "ACD150"], ["Loading depth", "125 mm"], ["SWL @ 3 m", "579 kg/m"], ["SWL @ 4.5 m", "257 kg/m"], ["SWL @ 6 m", "145 kg/m"]] },
+    { id: "acd-el90", system: "acd", name: "90° horizontal elbow", type: "Flat elbow", sys: "ACD common", image: IMG.tee, code: "ACD-EL90",
+      chars: [["Type", "Flat elbow"], ["Unit", "pc"]] },
+    { id: "acd-splice", system: "acd", name: "Straight splice plate", type: "Splice connector", sys: "ACD common", image: IMG.body, code: "ACD-SP",
+      chars: [["Type", "Splice connector"], ["Unit", "pc"]] },
+
+    /* ART / AMT trays */
+    { id: "art50", system: "art", name: "Cable tray ART50", type: "Cable tray", sys: "ART50", image: IMG.art, code: "ART50",
+      chars: [["Model", "ART50"], ["Height", "50 mm"], ["SWL @ 1.5 m", "484 kg/m"], ["SWL @ 2 m", "272 kg/m"], ["SWL @ 3 m", "121 kg/m"], ["NEMA class", "20AA"]] },
+    { id: "art-cover", system: "art", name: "Cover for cable tray", type: "Cover", sys: "ART common", image: IMG.tray, code: "ART-LC",
+      chars: [["Type", "Cover"], ["Unit", "m"]] },
+    { id: "art-splice", system: "art", name: "Splice plate", type: "Splice connector", sys: "ART common", image: IMG.tray, code: "ART-SP",
+      chars: [["Type", "Splice connector"], ["Unit", "pc"]] },
+    { id: "amt100", system: "amt", name: "Cable tray AMT100", type: "Cable tray", sys: "AMT100", image: IMG.tray, code: "AMT100",
+      chars: [["Model", "AMT100"], ["Height", "100 mm"], ["SWL @ 1.5 m", "716 kg/m"], ["SWL @ 2 m", "403 kg/m"], ["SWL @ 3 m", "179 kg/m"], ["NEMA class", "20B"]] },
+    { id: "amt-cover", system: "amt", name: "Cover for cable tray", type: "Cover", sys: "AMT common", image: IMG.tray, code: "AMT-LC",
+      chars: [["Type", "Cover"], ["Unit", "m"]] },
+    { id: "amt-elbow", system: "amt", name: "90° elbow tray", type: "Flat elbow", sys: "AMT common", image: IMG.tray, code: "AMT-EL90",
+      chars: [["Type", "Flat elbow"], ["Unit", "pc"]] }
+  ];
+
+  /* ========== STATE ========== */
+  const state = {
+    filters: { systems: new Set(), types: new Set(), q: "" }
+  };
+
+  function esc(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function groupById(id) { return GROUPS.find((g) => g.id === id); }
+  function articlesForSystem(sysId) { return ARTICLES.filter((a) => a.system === sysId); }
+  function articlesForGroup(groupId) {
+    const sysIds = groupById(groupId)?.systems || [];
+    return ARTICLES.filter((a) => sysIds.includes(a.system));
+  }
+
+  /* ========== ROUTER ========== */
+  function parseHash() {
+    const h = (location.hash || "#/").replace(/^#\/?/, "");
+    const parts = h.split("/").filter(Boolean);
+    if (!parts.length) return { page: "home" };
+    if (parts[0] === "article" && parts[1]) return { page: "article", id: parts[1] };
+    if (parts[0] === "system" && parts[1]) return { page: "system", id: parts[1] };
+    if (groupById(parts[0])) return { page: "group", id: parts[0] };
+    return { page: "home" };
+  }
+
+  function go(path) {
+    location.hash = "#/" + path.replace(/^\//, "");
+  }
+
+  function setNav(active) {
+    document.querySelectorAll(".top-nav a").forEach((a) => {
+      const r = a.getAttribute("data-route");
+      a.classList.toggle("is-active", r === active || (active === "group" && r === active));
+    });
+  }
+
+  /* ========== RENDERERS ========== */
+  function renderHome() {
+    setNav("home");
+    return `
+      <div class="breadcrumb"><span>Products</span></div>
+      <h1 class="page-title">Products</h1>
+      <p class="page-intro">Browse Array Metal cable support systems and engineered products. Select a product group to explore systems, components and technical data.</p>
+      <div class="group-grid">
+        ${GROUPS.map((g) => `
+          <button type="button" class="group-card" data-go="group/${g.id}">
+            <div class="thumb"><img src="${esc(g.image)}" alt="" loading="lazy" /></div>
+            <div class="body">
+              <div class="meta">${esc(g.category)}</div>
+              <h2>${esc(g.name)}</h2>
+              <p>${esc(g.blurb)}</p>
+            </div>
+          </button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderGroup(groupId) {
+    const g = groupById(groupId);
+    if (!g) return renderHome();
+    setNav(groupId === "cable-ladders" || groupId === "cable-trays" ? groupId : "home");
+
+    if (!g.systems.length) {
+      return `
+        <div class="breadcrumb">
+          <a href="#/" data-go="home">Products</a> / <span>${esc(g.name)}</span>
+        </div>
+        <h1 class="page-title">${esc(g.name)}</h1>
+        <p class="page-intro">${esc(g.blurb)}</p>
+        <div class="empty-state">System pages for this group will be expanded next — structure matches Cable Ladders / Cable Trays.</div>
+      `;
+    }
+
+    const systems = g.systems.map((id) => SYSTEMS[id]).filter(Boolean);
+    return `
+      <div class="breadcrumb">
+        <a href="#/" data-go="home">Products</a> / <span>${esc(g.name)}</span>
+      </div>
+      <h1 class="page-title">${esc(g.name)}</h1>
+      <p class="page-intro">${esc(g.blurb)}</p>
+      <div class="system-list">
+        ${systems.map((s) => `
+          <button type="button" class="system-card" data-go="system/${s.id}">
+            <div class="thumb"><img src="${esc(s.image)}" alt="" loading="lazy" /></div>
+            <div class="body">
+              <h2>${esc(s.name)}</h2>
+              <p>${esc(s.short)}</p>
+              <div class="tags">
+                <span class="pill">${esc(s.standard)}</span>
+                <span class="pill">SF ${esc(s.safety)}</span>
+              </div>
+            </div>
+          </button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function filterArticles(list) {
+    const { systems, types, q } = state.filters;
+    return list.filter((a) => {
+      if (systems.size && !systems.has(a.sys)) return false;
+      if (types.size && !types.has(a.type)) return false;
+      if (q) {
+        const hay = (a.name + " " + a.code + " " + a.type + " " + a.sys).toLowerCase();
+        if (!hay.includes(q.toLowerCase())) return false;
+      }
+      return true;
+    });
+  }
+
+  function countBy(list, key) {
+    const m = {};
+    list.forEach((a) => { m[a[key]] = (m[a[key]] || 0) + 1; });
+    return m;
+  }
+
+  function renderSystem(sysId) {
+    const s = SYSTEMS[sysId];
+    if (!s) return renderHome();
+    const g = groupById(s.group);
+    setNav(s.group);
+
+    const all = articlesForSystem(sysId);
+    const filtered = filterArticles(all);
+    const bySys = countBy(all, "sys");
+    const byType = countBy(all, "type");
+    const sysKeys = Object.keys(bySys).sort();
+    const typeKeys = Object.keys(byType).sort();
+    const hasFilters = state.filters.systems.size || state.filters.types.size || state.filters.q;
+
+    return `
+      <div class="breadcrumb">
+        <a href="#/" data-go="home">Products</a> /
+        <a href="#/${esc(s.group)}" data-go="group/${esc(s.group)}">${esc(g?.name || s.group)}</a> /
+        <span>${esc(s.name)}</span>
+      </div>
+      <h1 class="page-title">${esc(s.name)}</h1>
+      <p class="page-intro">${esc(s.overview)}</p>
+
+      <div class="system-layout">
+        <aside class="filter-panel">
+          <div class="filter-head">
+            <h3>Filter products</h3>
+            <button type="button" class="filter-clear" id="clear-filters" ${hasFilters ? "" : "disabled"}>Clear all</button>
+          </div>
+          <div class="filter-section">
+            <h4>System</h4>
+            ${sysKeys.map((k) => `
+              <label class="filter-option">
+                <input type="checkbox" data-filter="sys" value="${esc(k)}" ${state.filters.systems.has(k) ? "checked" : ""} />
+                <span>${esc(k)}</span>
+                <span class="count">(${bySys[k]})</span>
+              </label>
+            `).join("")}
+          </div>
+          <div class="filter-section">
+            <h4>Product type</h4>
+            ${typeKeys.map((k) => `
+              <label class="filter-option">
+                <input type="checkbox" data-filter="type" value="${esc(k)}" ${state.filters.types.has(k) ? "checked" : ""} />
+                <span>${esc(k)}</span>
+                <span class="count">(${byType[k]})</span>
+              </label>
+            `).join("")}
+          </div>
+          <div class="filter-section">
+            <h4>Search</h4>
+            <input class="filter-search" id="filter-q" type="search" placeholder="Name or code…" value="${esc(state.filters.q)}" />
+          </div>
+        </aside>
+
+        <div>
+          <div class="results-bar">
+            <div class="count"><strong>${filtered.length}</strong> results</div>
+            <div class="active-filters" id="active-filters">
+              ${[...state.filters.systems].map((k) => `<span class="chip">${esc(k)} <button type="button" data-remove-sys="${esc(k)}" aria-label="Remove">×</button></span>`).join("")}
+              ${[...state.filters.types].map((k) => `<span class="chip">${esc(k)} <button type="button" data-remove-type="${esc(k)}" aria-label="Remove">×</button></span>`).join("")}
+              ${state.filters.q ? `<span class="chip">“${esc(state.filters.q)}” <button type="button" data-remove-q aria-label="Remove">×</button></span>` : ""}
+            </div>
+          </div>
+
+          ${filtered.length ? `
+            <div class="article-grid">
+              ${filtered.map((a) => `
+                <button type="button" class="article-card" data-go="article/${a.id}">
+                  <div class="thumb"><img src="${esc(a.image)}" alt="" loading="lazy" /></div>
+                  <div class="body">
+                    <h3>${esc(a.name)}</h3>
+                    <p class="sub">${esc(a.code)} · ${esc(a.type)}</p>
+                  </div>
+                </button>
+              `).join("")}
+            </div>
+          ` : `<div class="empty-state">No products match these filters.</div>`}
+
+          <div class="content-block">
+            <h2>System overview</h2>
+            <p>${esc(s.overview)}</p>
+            <div class="link-row">
+              <span class="pill">${esc(s.standard)}</span>
+              <span class="pill">Safety factor ${esc(s.safety)}</span>
+              <span class="pill">Heights ${esc(s.heights)}</span>
+              <span class="pill">Widths ${esc(s.widths)}</span>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <h2>Design details</h2>
+            <div class="design-grid">
+              ${s.design.map((d) => `
+                <div class="design-item">
+                  <h3>${esc(d.t)}</h3>
+                  <p>${esc(d.d)}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="content-block">
+            <h2>Materials</h2>
+            <div class="link-row">
+              ${s.materials.map((m) => `<a class="link-pill" href="https://www.arraymetal.com/materials" target="_blank" rel="noopener">${esc(m)}</a>`).join("")}
+            </div>
+          </div>
+
+          <div class="content-block">
+            <h2>Downloads & load data</h2>
+            <div class="link-row">
+              <a class="link-pill is-primary" href="https://www.arraymetal.com/load-ratings" target="_blank" rel="noopener">Load ratings (SWL tables)</a>
+              <a class="link-pill" href="https://www.arraymetal.com/catalogue" target="_blank" rel="noopener">Catalogues</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderArticle(id) {
+    const a = ARTICLES.find((x) => x.id === id);
+    if (!a) return renderHome();
+    const s = SYSTEMS[a.system];
+    const g = groupById(s.group);
+    setNav(s.group);
+    const related = ARTICLES.filter((x) => x.system === a.system && x.id !== a.id).slice(0, 4);
+
+    return `
+      <div class="breadcrumb">
+        <a href="#/" data-go="home">Products</a> /
+        <a href="#/${esc(s.group)}" data-go="group/${esc(s.group)}">${esc(g?.name)}</a> /
+        <a href="#/system/${esc(s.id)}" data-go="system/${esc(s.id)}">${esc(s.name)}</a> /
+        <span>${esc(a.name)}</span>
+      </div>
+      <h1 class="page-title">${esc(a.name)}</h1>
+
+      <div class="article-layout">
+        <div>
+          <div class="article-media">
+            <img src="${esc(a.image)}" alt="${esc(a.name)}" />
+          </div>
+        </div>
+        <div>
+          <div class="article-meta">
+            <span>${esc(a.code)}</span>
+            <span>${esc(a.type)}</span>
+            <span>${esc(a.sys)}</span>
+          </div>
+          <p style="margin:0 0 8px;color:var(--body)">${esc(s.short)}</p>
+
+          <div class="section-label">Characteristics</div>
+          <table class="char-table">
+            <tbody>
+              ${a.chars.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join("")}
+            </tbody>
+          </table>
+
+          <div class="link-row" style="margin-top:20px">
+            <a class="link-pill is-primary" href="https://www.arraymetal.com/load-ratings" target="_blank" rel="noopener">Load ratings</a>
+            <a class="link-pill" href="https://www.arraymetal.com/contact-us" target="_blank" rel="noopener">Contact sales</a>
+            <button type="button" class="link-pill" data-go="system/${esc(s.id)}">Back to ${esc(s.name)}</button>
+          </div>
+
+          <div class="variant-note">
+            Configure length, width and finish when requesting a quote (Phase 2 inquiry list). This page is technical reference only.
+          </div>
+        </div>
+      </div>
+
+      ${related.length ? `
+        <div class="content-block">
+          <h2>Related products</h2>
+          <div class="related-grid">
+            ${related.map((r) => `
+              <button type="button" class="article-card" data-go="article/${r.id}">
+                <div class="thumb"><img src="${esc(r.image)}" alt="" loading="lazy" /></div>
+                <div class="body">
+                  <h3>${esc(r.name)}</h3>
+                  <p class="sub">${esc(r.code)}</p>
+                </div>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      ` : ""}
+    `;
+  }
+
+  /* ========== MOUNT ========== */
+  const app = document.getElementById("app");
+
+  function render() {
+    const route = parseHash();
+    if (route.page === "system" || route.page === "group") {
+      /* keep filters when staying in same system; reset when changing system */
+    }
+    if (route.page === "home") {
+      state.filters = { systems: new Set(), types: new Set(), q: "" };
+      app.innerHTML = renderHome();
+    } else if (route.page === "group") {
+      state.filters = { systems: new Set(), types: new Set(), q: "" };
+      app.innerHTML = renderGroup(route.id);
+    } else if (route.page === "system") {
+      app.innerHTML = renderSystem(route.id);
+      bindSystemFilters(route.id);
+    } else if (route.page === "article") {
+      app.innerHTML = renderArticle(route.id);
+    } else {
+      app.innerHTML = renderHome();
+    }
+    bindNav();
+    window.scrollTo(0, 0);
+  }
+
+  function bindNav() {
+    app.querySelectorAll("[data-go]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        const path = el.getAttribute("data-go");
+        if (path === "home") go("");
+        else go(path);
+      });
+    });
+  }
+
+  function bindSystemFilters(sysId) {
+    app.querySelectorAll('input[data-filter="sys"]').forEach((input) => {
+      input.addEventListener("change", () => {
+        if (input.checked) state.filters.systems.add(input.value);
+        else state.filters.systems.delete(input.value);
+        app.innerHTML = renderSystem(sysId);
+        bindSystemFilters(sysId);
+        bindNav();
+      });
+    });
+    app.querySelectorAll('input[data-filter="type"]').forEach((input) => {
+      input.addEventListener("change", () => {
+        if (input.checked) state.filters.types.add(input.value);
+        else state.filters.types.delete(input.value);
+        app.innerHTML = renderSystem(sysId);
+        bindSystemFilters(sysId);
+        bindNav();
+      });
+    });
+    const q = document.getElementById("filter-q");
+    if (q) {
+      q.addEventListener("input", () => {
+        state.filters.q = q.value;
+        /* debounce-ish: re-render on input is fine for demo size */
+        const pos = q.selectionStart;
+        app.innerHTML = renderSystem(sysId);
+        bindSystemFilters(sysId);
+        bindNav();
+        const nq = document.getElementById("filter-q");
+        if (nq) { nq.focus(); nq.setSelectionRange(pos, pos); }
+      });
+    }
+    document.getElementById("clear-filters")?.addEventListener("click", () => {
+      state.filters = { systems: new Set(), types: new Set(), q: "" };
+      app.innerHTML = renderSystem(sysId);
+      bindSystemFilters(sysId);
+      bindNav();
+    });
+    app.querySelectorAll("[data-remove-sys]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.filters.systems.delete(btn.getAttribute("data-remove-sys"));
+        app.innerHTML = renderSystem(sysId);
+        bindSystemFilters(sysId);
+        bindNav();
+      });
+    });
+    app.querySelectorAll("[data-remove-type]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.filters.types.delete(btn.getAttribute("data-remove-type"));
+        app.innerHTML = renderSystem(sysId);
+        bindSystemFilters(sysId);
+        bindNav();
+      });
+    });
+    app.querySelectorAll("[data-remove-q]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.filters.q = "";
+        app.innerHTML = renderSystem(sysId);
+        bindSystemFilters(sysId);
+        bindNav();
+      });
+    });
+  }
+
+  window.addEventListener("hashchange", render);
+  document.querySelectorAll(".top-nav a, .brand").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const route = a.getAttribute("data-route");
+      if (!route) return;
+      e.preventDefault();
+      if (route === "home") go("");
+      else go(route);
+    });
+  });
+
+  render();
+})();
+</script>

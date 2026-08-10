@@ -1,6 +1,34 @@
 # CMS Field Map — Phase 1 Catalogue
 
-## Sub Products (`sub-products`) — catalogue items
+**Updated:** 2026-08-05 — Systems collection reorg started.
+
+## Systems (`systems`) — Level 3 series — NEW
+
+| Display name | slug | Type | Notes |
+|--------------|------|------|-------|
+| Name | `name` | PlainText | Required |
+| Slug | `slug` | PlainText | Short: `aml`, `art` |
+| Family | `family` | Ref → ProductArrays | Parent group |
+| Image | `image` | Image | Card / hero |
+| Short Description | `short-description` | PlainText | Card blurb |
+| Overview | `overview` | RichText | System intro |
+| Design Details | `design-details` | RichText | Design notes |
+| Standards Summary | `standards-summary` | PlainText | Badge line |
+| Heights Available | `heights-available` | PlainText | Range summary |
+| Widths Available | `widths-available` | PlainText | Range summary |
+| Materials | `materials` | MultiRef → Materials | Series finishes |
+| Load Ratings Link | `load-ratings-link` | Link | `/load-ratings` |
+| Catalogues | `catalogues` | MultiRef → Catalogues | PDFs |
+| Sort Order | `sort-order` | Number | Group page order |
+| Catalogue Visible | `catalogue-visible` | Switch | Show in grids |
+
+**Collection ID:** `6a72d851ab5b05191add4ce9`  
+**Template page ID:** `6a72d851ab5b05191add4d11` (`/systems/{slug}`)  
+**Phase 1 draft items:** AML `6a72d8733fb49a264517a00a` · ART `6a72d8733fb49a264517a00c`
+
+---
+
+## Sub Products (`sub-products`) — components only
 
 | Display name | Slug | Type | Filter? | Notes |
 |--------------|------|------|---------|-------|
@@ -23,6 +51,8 @@
 | **Unit** | `unit` | Option | — | pc / m / set |
 | **Sort Order** | `sort-order` | Number | — | Ascending |
 | **Catalogue Visible** | `catalogue-visible` | Switch | **required** | Only show if true |
+| **System** | `system` | Ref → Systems | **parent** | **Source of truth** for series ownership after reorg |
+| **Is System** | `is-system` | Switch | legacy | **Deprecate** after hubs moved to Systems |
 | **Characteristics** | `characteristics` | PlainText | — | `Name\|Value` per line |
 | **Long Description** | `long-description` | RichText | — | Detail body |
 | **Load Ratings Link** | `load-ratings-link` | Link | — | `/load-ratings` |

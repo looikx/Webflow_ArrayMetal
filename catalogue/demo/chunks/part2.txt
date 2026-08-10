@@ -1,0 +1,290 @@
+false;
+}
+return true;
+});
+}
+function countBy(list, key) {
+const m = {};
+list.forEach((a) => { m[a[key]] = (m[a[key]] || 0) + 1; });
+return m;
+}
+function renderSystem(sysId) {
+const s = SYSTEMS[sysId];
+if (!s) return renderHome();
+const g = groupById(s.group);
+setNav(s.group);
+const all = articlesForSystem(sysId);
+const filtered = filterArticles(all);
+const bySys = countBy(all, "sys");
+const byType = countBy(all, "type");
+const sysKeys = Object.keys(bySys).sort();
+const typeKeys = Object.keys(byType).sort();
+const hasFilters = state.filters.systems.size || state.filters.types.size || state.filters.q;
+return `
+<div class="breadcrumb">
+<a href="#/" data-go="home">Products</a> /
+<a href="#/${esc(s.group)}" data-go="group/${esc(s.group)}">${esc(g?.name || s.group)}</a> /
+<span>${esc(s.name)}</span>
+</div>
+<h1 class="page-title">${esc(s.name)}</h1>
+<p class="page-intro">${esc(s.overview)}</p>
+<div class="system-layout">
+<aside class="filter-panel">
+<div class="filter-head">
+<h3>Filter products</h3>
+<button type="button" class="filter-clear" id="clear-filters" ${hasFilters ? "" : "disabled"}>Clear all</button>
+</div>
+<div class="filter-section">
+<h4>System</h4>
+${sysKeys.map((k) => `
+<label class="filter-option">
+<input type="checkbox" data-filter="sys" value="${esc(k)}" ${state.filters.systems.has(k) ? "checked" : ""} />
+<span>${esc(k)}</span>
+<span class="count">(${bySys[k]})</span>
+</label>
+`).join("")}
+</div>
+<div class="filter-section">
+<h4>Product type</h4>
+${typeKeys.map((k) => `
+<label class="filter-option">
+<input type="checkbox" data-filter="type" value="${esc(k)}" ${state.filters.types.has(k) ? "checked" : ""} />
+<span>${esc(k)}</span>
+<span class="count">(${byType[k]})</span>
+</label>
+`).join("")}
+</div>
+<div class="filter-section">
+<h4>Search</h4>
+<input class="filter-search" id="filter-q" type="search" placeholder="Name or code…" value="${esc(state.filters.q)}" />
+</div>
+</aside>
+<div>
+<div class="results-bar">
+<div class="count"><strong>${filtered.length}</strong> results</div>
+<div class="active-filters" id="active-filters">
+${[...state.filters.systems].map((k) => `<span class="chip">${esc(k)} <button type="button" data-remove-sys="${esc(k)}" aria-label="Remove">×</button></span>`).join("")}
+${[...state.filters.types].map((k) => `<span class="chip">${esc(k)} <button type="button" data-remove-type="${esc(k)}" aria-label="Remove">×</button></span>`).join("")}
+${state.filters.q ? `<span class="chip">“${esc(state.filters.q)}” <button type="button" data-remove-q aria-label="Remove">×</button></span>` : ""}
+</div>
+</div>
+${filtered.length ? `
+<div class="article-grid">
+${filtered.map((a) => `
+<button type="button" class="article-card" data-go="article/${a.id}">
+<div class="thumb"><img src="${esc(a.image)}" alt="" loading="lazy" /></div>
+<div class="body">
+<h3>${esc(a.name)}</h3>
+<p class="sub">${esc(a.code)} · ${esc(a.type)}</p>
+</div>
+</button>
+`).join("")}
+</div>
+` : `<div class="empty-state">No products match these filters.</div>`}
+<div class="content-block">
+<h2>System overview</h2>
+<p>${esc(s.overview)}</p>
+<div class="link-row">
+<span class="pill">${esc(s.standard)}</span>
+<span class="pill">Safety factor ${esc(s.safety)}</span>
+<span class="pill">Heights ${esc(s.heights)}</span>
+<span class="pill">Widths ${esc(s.widths)}</span>
+</div>
+</div>
+<div class="content-block">
+<h2>Design details</h2>
+<div class="design-grid">
+${s.design.map((d) => `
+<div class="design-item">
+<h3>${esc(d.t)}</h3>
+<p>${esc(d.d)}</p>
+</div>
+`).join("")}
+</div>
+</div>
+<div class="content-block">
+<h2>Materials</h2>
+<div class="link-row">
+${s.materials.map((m) => `<a class="link-pill" href="https://www.arraymetal.com/materials" target="_blank" rel="noopener">${esc(m)}</a>`).join("")}
+</div>
+</div>
+<div class="content-block">
+<h2>Downloads & load data</h2>
+<div class="link-row">
+<a class="link-pill is-primary" href="https://www.arraymetal.com/load-ratings" target="_blank" rel="noopener">Load ratings (SWL tables)</a>
+<a class="link-pill" href="https://www.arraymetal.com/catalogue" target="_blank" rel="noopener">Catalogues</a>
+</div>
+</div>
+</div>
+</div>
+`;
+}
+function renderArticle(id) {
+const a = ARTICLES.find((x) => x.id === id);
+if (!a) return renderHome();
+const s = SYSTEMS[a.system];
+const g = groupById(s.group);
+setNav(s.group);
+const related = ARTICLES.filter((x) => x.system === a.system && x.id !== a.id).slice(0, 4);
+return `
+<div class="breadcrumb">
+<a href="#/" data-go="home">Products</a> /
+<a href="#/${esc(s.group)}" data-go="group/${esc(s.group)}">${esc(g?.name)}</a> /
+<a href="#/system/${esc(s.id)}" data-go="system/${esc(s.id)}">${esc(s.name)}</a> /
+<span>${esc(a.name)}</span>
+</div>
+<h1 class="page-title">${esc(a.name)}</h1>
+<div class="article-layout">
+<div>
+<div class="article-media">
+<img src="${esc(a.image)}" alt="${esc(a.name)}" />
+</div>
+</div>
+<div>
+<div class="article-meta">
+<span>${esc(a.code)}</span>
+<span>${esc(a.type)}</span>
+<span>${esc(a.sys)}</span>
+</div>
+<p style="margin:0 0 8px;color:var(--body)">${esc(s.short)}</p>
+<div class="section-label">Characteristics</div>
+<table class="char-table">
+<tbody>
+${a.chars.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join("")}
+</tbody>
+</table>
+<div class="link-row" style="margin-top:20px">
+<a class="link-pill is-primary" href="https://www.arraymetal.com/load-ratings" target="_blank" rel="noopener">Load ratings</a>
+<a class="link-pill" href="https://www.arraymetal.com/contact-us" target="_blank" rel="noopener">Contact sales</a>
+<button type="button" class="link-pill" data-go="system/${esc(s.id)}">Back to ${esc(s.name)}</button>
+</div>
+<div class="variant-note">
+Configure length, width and finish when requesting a quote (Phase 2 inquiry list). This page is technical reference only.
+</div>
+</div>
+</div>
+${related.length ? `
+<div class="content-block">
+<h2>Related products</h2>
+<div class="related-grid">
+${related.map((r) => `
+<button type="button" class="article-card" data-go="article/${r.id}">
+<div class="thumb"><img src="${esc(r.image)}" alt="" loading="lazy" /></div>
+<div class="body">
+<h3>${esc(r.name)}</h3>
+<p class="sub">${esc(r.code)}</p>
+</div>
+</button>
+`).join("")}
+</div>
+</div>
+` : ""}
+`;
+}
+const app = document.getElementById("app");
+function render() {
+const route = parseHash();
+if (route.page === "system" || route.page === "group") {
+}
+if (route.page === "home") {
+state.filters = { systems: new Set(), types: new Set(), q: "" };
+app.innerHTML = renderHome();
+} else if (route.page === "group") {
+state.filters = { systems: new Set(), types: new Set(), q: "" };
+app.innerHTML = renderGroup(route.id);
+} else if (route.page === "system") {
+app.innerHTML = renderSystem(route.id);
+bindSystemFilters(route.id);
+} else if (route.page === "article") {
+app.innerHTML = renderArticle(route.id);
+} else {
+app.innerHTML = renderHome();
+}
+bindNav();
+window.scrollTo(0, 0);
+}
+function bindNav() {
+app.querySelectorAll("[data-go]").forEach((el) => {
+el.addEventListener("click", (e) => {
+e.preventDefault();
+const path = el.getAttribute("data-go");
+if (path === "home") go("");
+else go(path);
+});
+});
+}
+function bindSystemFilters(sysId) {
+app.querySelectorAll('input[data-filter="sys"]').forEach((input) => {
+input.addEventListener("change", () => {
+if (input.checked) state.filters.systems.add(input.value);
+else state.filters.systems.delete(input.value);
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+app.querySelectorAll('input[data-filter="type"]').forEach((input) => {
+input.addEventListener("change", () => {
+if (input.checked) state.filters.types.add(input.value);
+else state.filters.types.delete(input.value);
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+const q = document.getElementById("filter-q");
+if (q) {
+q.addEventListener("input", () => {
+state.filters.q = q.value;
+const pos = q.selectionStart;
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+const nq = document.getElementById("filter-q");
+if (nq) { nq.focus(); nq.setSelectionRange(pos, pos); }
+});
+}
+document.getElementById("clear-filters")?.addEventListener("click", () => {
+state.filters = { systems: new Set(), types: new Set(), q: "" };
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+app.querySelectorAll("[data-remove-sys]").forEach((btn) => {
+btn.addEventListener("click", () => {
+state.filters.systems.delete(btn.getAttribute("data-remove-sys"));
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+app.querySelectorAll("[data-remove-type]").forEach((btn) => {
+btn.addEventListener("click", () => {
+state.filters.types.delete(btn.getAttribute("data-remove-type"));
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+app.querySelectorAll("[data-remove-q]").forEach((btn) => {
+btn.addEventListener("click", () => {
+state.filters.q = "";
+app.innerHTML = renderSystem(sysId);
+bindSystemFilters(sysId);
+bindNav();
+});
+});
+}
+window.addEventListener("hashchange", render);
+document.querySelectorAll(".top-nav a, .brand").forEach((a) => {
+a.addEventListener("click", (e) => {
+const route = a.getAttribute("data-route");
+if (!route) return;
+e.preventDefault();
+if (route === "home") go("");
+else go(route);
+});
+});
+render();
+})();
+</script>

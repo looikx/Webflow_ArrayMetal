@@ -35,7 +35,9 @@ Both `Cable Ladder Load Ratings` and `Perforated Metal Calculator` follow the sa
 
 ## website-platform/ — current focus
 
-Planning for the replacement of arraymetal.com with a Next.js platform. **Read `website-platform/BUILD_PLAN.md` first** — it is the index, the decision log, and the phase plan. It links to `ARCHITECTURE.md` (the why), `catalogue-ux.html` (page-by-page visual spec) and `stack-and-subscriptions.html` (hosting and services).
+Planning for the replacement of arraymetal.com with a Next.js platform. **Read `website-platform/BUILD_PLAN.md` first** — it is the index, the decision log, and the phase plan. It links to `ARCHITECTURE.md` (the why), `DESIGN_SYSTEM.md` + `design-system.html` (the brand tokens the new site must keep), `catalogue-ux.html` (page-by-page visual spec) and `stack-and-subscriptions.html` (hosting and services).
+
+Design continuity is locked by decisions D-14/D-15: the new site keeps arraymetal.com's existing look — the five brand colours (`#0c1b2b`, `#09318b`, `#5f6e7e`, `#dae5eb`, white), Maison Neue + Halyard Display, the white/Alice-Blue section banding, 1300 px container. Those values were extracted from the live Webflow stylesheet and must not be re-invented; read `website-platform/DESIGN_SYSTEM.md` before proposing any styling. Note `catalogue-ux.html` uses a *document* palette for readability — it is not the brand.
 
 Key context: the SKU system of record is the **costing app** at `Software Projects/array-metal-costing` (574,609 items in Supabase). The website reads a price-free `catalog` projection from it — never the costing tables directly, and never anything from `price_records` except `weightKg`. Do not propose duplicating dimensions into a CMS.
 
